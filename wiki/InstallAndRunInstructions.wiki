@@ -1,0 +1,49 @@
+Here are instructions for installing and running Audiotron, connecting Wiimotes, and changing config options.
+
+= Installation =
+
+Here's how to install Audiotron, at least for development purposes (we can make a stand-alone executable for the end user eventually).
+  * Download and install Panda3D version 1.4.2 for Windows from [http://panda3d.org/download.php here].  Let it install to the default directory, "C:\Panda3D-1.4.2\", since the installation and shortcut depend on this.
+  * Download the files from the SVN repository to any directory.
+  * In the main folder, run "install.bat" by double-clicking it.  This will install the ctypes and pywiiuse packages to Panda's copy of Python, and copy the Wiiuse DLL into Panda's bin folder.
+
+
+= Connecting Wiimotes =
+
+You should be able to connect a Wiimote through whatever process you use to normally connect a bluetooth device, though I've had problems going through the My Bluetooth Places wizard.  The following is what does work for me.  There's also a tutorial for using BlueSoleil [http://www.wiili.org/index.php/How_To:_BlueSoleil here], but I wasn't able to get BlueSoleil to work with the Thinkpad's bluetooth radio.
+
+  * Turn your bluetooth radio on, right click on the icon in the system tray, and click Bluetooth Setup Wizard.
+  * Select "I want to find a specific bluetooth device..." and hit next.
+  * Press the 1 and 2 buttons on your wiimote repeatedly throughout the next several   steps.  Make sure there are no Wiis turned on the area.
+  * The search should turn up a device with Nintendo in the name, select it and hit next.
+  * Skip the pairing/security code step.
+  * One service will show up in the service dialog, select it (check the checkbox) and hit finish.
+  * Repeat for another wiimote if you want to use the cursor, but when it searches for devices, ignore the one with green arrows, it's the one that's already connected.
+
+Fortunately you only have to go through this process once each time you start up windows, regardless of how many times you launch and relaunch programs that use the wiimotes.
+
+If you need to use a Wii's sensor bar for IR light, turn the Wii on after all these steps are complete.
+
+To reduce jitteriness, turn off your Thinkpad's IR port.  Open the Access IBM panel (big blue button), go to configure > connections > manage connections > infrared port, and disable it.
+
+
+= Running the game =
+
+First, connect two Wiimotes to your computer via Bluetooth as explained above, unless you're emulating the Wiimotes with mouse and keyboard (as explained below).
+
+Then, just double-click the "Audiotron" shortcut to run the game.  This executes panda's version of python on main.py.  Currently, the shortcut will not work if you copy it anywhere else, since it references main.py by relative path.
+
+
+= Config Options = 
+
+You can change some options about how the game runs by editing the file "code\config.py".  Set each variable for 'True' or '1' to turn it on, and 'False' or '0' to turn it off.
+
+  * EMULATE_WIIMOTE - The game will not try to connect to any wiimotes, and will instead let you control the game with the mouse and keyboard.  Use the mouse to aim the cursor and fire, emulating the pointer wiimote, and use WSAD to move the headtracker position (this doesn't currently work with controlling depth).
+
+  * FULLSCREEN - Run the game fullscreen instead of windowed.  Currently, you have to press ALT-F4 to exit the game when you do this.
+
+  * HEADTRACK_3D - Whether to use the 2D or 3D version of the headtracker code.  The 3D version is based more directly on Johnny Lee's code, and tracks depth, but it's harder for me to understand and tweak currently.  The 2D version is much simpler and easier to understand, and only has to have one IR point to track instead of 2, but it fixes the depth of the player's perspective and only lets their X and Z movement affect the camera and game.
+
+  * SHOW_HEADTRACK_POINTS - Shows the raw positions of the two IR points that the headtracker sees (useful for debugging the 3D headtracker).
+
+  * MANUAL_CAMERA_CONTROL - Control the camera with the mouse instead of with the headtracker (emulated or otherwise).  This is Panda's default mouse camera control.  Drag with the left mouse button to pan, right to zoom, and middle to rotate.
