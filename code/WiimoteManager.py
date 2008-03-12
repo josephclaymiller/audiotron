@@ -1,5 +1,6 @@
 import PyWiiUse as wiiuse
 import threading
+import sys
 
 class IRPoint:
 	def __init__(self):
