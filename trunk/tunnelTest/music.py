@@ -46,8 +46,8 @@ class MusicController(DirectObject):
 		for i in range(0,self.numSixteenths):
 			self.pulseQueue.append([])
 			self.lightQueue.append([])
-		print "pulse queue len: " +str(len(self.pulseQueue))
-		print "light queue len: " +str(len(self.lightQueue))
+		#print "pulse queue len: " +str(len(self.pulseQueue))
+		#print "light queue len: " +str(len(self.lightQueue))
 		
 
 		taskMgr.add(self.playMusic, "playMusic")
@@ -68,7 +68,7 @@ class MusicController(DirectObject):
 			
 			#delete temp sound clips
 			for i in range(len(self.tempMusic)):
-				print "delete"
+				#print "delete"
 				self.tempMusic[0].stop()
 				loader.unloadSfx(self.tempMusic[0])
 				del self.tempMusic[0]
@@ -77,49 +77,49 @@ class MusicController(DirectObject):
 			for i in range(len(self.music)):
 				self.music[i].setTime(globalClock.getRealTime()-time)
 				self.music[i].play()
-				print i
+				#print i
 				
 		return Task.cont
 	
 	def addSound(self, name):
 		i=len(self.music)
-		print i
+		#print i
 		if (i+len(self.tempMusic))<self.maxSounds:
 			self.music.append(loader.loadSfx(name))
 			self.music[i].setTime(globalClock.getRealTime()-self.loopStartTime)
 			self.music[i].play()
 			return i
-		print len(self.music)
+		#print len(self.music)
 		return -1
 	
 	def queueSound(self, name):
 		i=len(self.music)
-		print i
+		#print i
 		if (i+len(self.tempMusic))<self.maxSounds:
 			self.music.append(loader.loadSfx(name))
 			return i
-		print len(self.music)
+		#print len(self.music)
 		return -1
 	
 	def removeSound(self, x):
 		i=len(self.tempMusic)
 		if x<len(self.music):
-			print len(self.music)
+			#print len(self.music)
 			self.music[x].stop()
 			self.tempMusic.append(self.music.pop(x))
 			self.tempMusic[i].setTime(globalClock.getRealTime()-self.loopStartTime)
 			self.tempMusic[i].play()
-			print len(self.music)
+			#print len(self.music)
 			return i
 		return -1
 	
 	def killSound(self, x):
 		if x<len(self.music):
-			print len(self.music)
+			#print len(self.music)
 			self.music[x].stop()
 			loader.unloadSfx(self.music[x])
 			del self.music[x]
-			print len(self.music)
+			#print len(self.music)
 			return x
 		return -1
 	
@@ -128,9 +128,9 @@ class MusicController(DirectObject):
 		i=self.queueSound(name)
 		if i<0:
 			self.killSound(x)
-			print "hi"
+			#print "hi"
 			return self.queueSound(name)
-		print "remove"
+		#print "remove"
 		self.removeSound(x)
 		return i
 	
@@ -149,7 +149,7 @@ class MusicController(DirectObject):
 
 		deflate=(time-self.lastPulseTime)*(.25/(self.secondsPerLoop/self.numMeasures))
 		fade=(time-self.lastPulseTime)*(-1.0/(self.secondsPerLoop/self.numMeasures))
-		#print str(fade)
+		##print str(fade)
 		
 		#decrease scale of all pulsing elements
 		for i in range(len(self.pulseElements)):
@@ -166,7 +166,7 @@ class MusicController(DirectObject):
 			#pulse elements by light
 			for i in range(len(self.lightQueue[self.sixteenth])):
 				addBrightness(self.lightQueue[self.sixteenth][i],200)#I can add whatever I want because the max lumens is restricted by restrain
-				print "Pulse! " + str(self.sixteenth)
+				#print "Pulse! " + str(self.sixteenth)
 				
 			#increment sixteenth and check if a new loop has started
 			self.sixteenth+=1
@@ -180,13 +180,13 @@ class MusicController(DirectObject):
 		self.pulseElements.append(element)
 		for i in range(len(beats)):
 			self.pulseQueue[beats[i]].append(element)
-			print "added pulse"
+			#print "added pulse"
 			
 	def addLitElement(self, light, beats):
 		self.litElements.append(light)
 		for i in range(len(beats)):
 			self.lightQueue[beats[i]].append(light)
-			print "added light pulse to" + str(beats[i])
+			#print "added light pulse to" + str(beats[i])
 
 #Simple function to keep a value in a given range (by default .5 and 1)
 def restrain(i, mn = .5, mx = 1): return min(max(i, mn), mx)
