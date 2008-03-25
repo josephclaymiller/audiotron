@@ -10,8 +10,8 @@ import config
 
 
 if config.SHOW_HEADTRACK_POINTS:
-	trackdot1 = OnscreenImage(image = 'target.PNG', pos = (0, 0, 0), scale = (32.0/800/4, 0, 32.0/600/4), parent = render2d)
-	trackdot2 = OnscreenImage(image = 'target.PNG', pos = (0, 0, 0), scale = (32.0/800/4, 0, 32.0/600/4), parent = render2d)
+	trackdot1 = OnscreenImage(image = '../assets/images/target.PNG', pos = (0, 0, 0), scale = (32.0/800/4, 0, 32.0/600/4), parent = render2d)
+	trackdot2 = OnscreenImage(image = '../assets/images/target.PNG', pos = (0, 0, 0), scale = (32.0/800/4, 0, 32.0/600/4), parent = render2d)
 
 	def headtrackerPoints(task):
 		trackerLock.acquire()

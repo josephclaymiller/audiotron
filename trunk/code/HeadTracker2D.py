@@ -8,9 +8,9 @@ from WiimoteManager import *
 
 class HeadTracker(DirectObject):
 	def __init__(self):
-		self.basePos = Point3(0, -10, 7)
+		self.basePos = Point3(0, 0, 0)
 		self.headPos = Point3(self.basePos)
-		self.lookPos = Point3(0, 50, 5)
+		self.lookPos = Point3(0, 100, 0)
 		
 		#These are the settings I am using in my tunnel demo (I would have coded directly into the game, but I cannot install it) -Brian
 		#self.basePose = Point3(0, 0, 0)
