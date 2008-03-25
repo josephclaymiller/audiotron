@@ -1,7 +1,6 @@
 # Code base on a tutorial by: Shao Zhang and Phil Saltzman
 # Last Updated: 4/18/2005
 
-import direct.directbase.DirectStart 
 from pandac.PandaModules import Fog
 from direct.showbase.DirectObject import DirectObject
 from direct.interval.MetaInterval import Sequence #needed to continuously move the tunnel
@@ -9,8 +8,7 @@ from pandac.PandaModules import VBase3, VBase4
 from direct.interval.LerpInterval import LerpPosHprInterval #needed to move and rotate tunnel
 from direct.interval.FunctionInterval import Func #needed to continuously move the tunnel
 from pandac.PandaModules import NodePath, PandaNode #used to make a tunnel Node Path which controlls tunnel specific lights
-from pandac.PandaModules import DirectionalLight, AmbientLight #needed to setup lighting
-import sys #used to exit
+from pandac.PandaModules import DirectionalLight #needed to setup lighting
 from music import MusicController #needed for playing game music and pulsing lights
 
 #Global variables for the tunnel dimensions and speed of travel
