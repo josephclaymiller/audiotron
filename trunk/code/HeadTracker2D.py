@@ -12,6 +12,11 @@ class HeadTracker(DirectObject):
 		self.headPos = Point3(self.basePos)
 		self.lookPos = Point3(0, 50, 5)
 		
+		#These are the settings I am using in my tunnel demo (I would have coded directly into the game, but I cannot install it) -Brian
+		#self.basePose = Point3(0, 0, 0)
+		#self.headPos = Point3(self.basePos)
+		#self.lookPos = Point3(0, 0, -100) #I'm not sure this needs to be -100 as opposed to -50 or -500
+		
 		self.rangeX = 20.0
 		self.rangeZ = 10.0
 		
