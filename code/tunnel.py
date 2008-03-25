@@ -28,6 +28,7 @@ class Tunnel(DirectObject):
 		#creates a NodePath handle for doing stuff to the entire tunnel
 		self.NP = NodePath(PandaNode("tunnelNP"))
 		self.NP.reparentTo(render)
+		self.NP.setHpr(0, 90, 0)
 		
 		#adding tunnel lights
 		dlight = DirectionalLight('dlight')

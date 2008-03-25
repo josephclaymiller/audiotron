@@ -7,6 +7,7 @@ from direct.gui.OnscreenImage import OnscreenImage
 from pandac.PandaModules import CollisionNode
 from pandac.PandaModules import CollisionRay
 from pandac.PandaModules import CollisionTraverser
+from pandac.PandaModules import CollisionHandlerQueue
 from pandac.PandaModules import GeomNode
 from pandac.PandaModules import BitMask32
 
@@ -39,10 +40,11 @@ class Player (DirectObject):
 		cNodePath = base.camera.attachNewNode(self.cShootNode)
 		cNodePath.show()
 		
+		self.cHandler = CollisionHandlerQueue()
 		self.cRayTrav = CollisionTraverser('ShootingRayTraverser')
-		self.cRayTrav.addCollider(cNodePath, base.cHandler)
+		self.cRayTrav.addCollider(cNodePath, self.cHandler)
 		
-		self.accept('cPlayerShootRay-into-cEnemy', self.collisionRayEnemy)
+		#self.accept('cPlayerShootRay-into-cEnemy', self.collisionRayEnemy)
 		self.accept("FireButton", self.fire)
 		taskMgr.add(self.update, "PlayerUpdate")
 	
@@ -60,8 +62,14 @@ class Player (DirectObject):
 		if (pointerData.ir.valid):
 			print "Fire ", pointerData.screen.x, " ", pointerData.screen.y
 			self.cRayTrav.traverse(render)
+			
+			if (self.cHandler.getNumEntries() > 0):
+				self.cHandler.sortEntries()
+				shotNode = self.cHandler.getEntry(0).getIntoNodePath()
+				messenger.send("cPlayerShootRay-into-" + shotNode.getName())
+				
 		
 		pointerLock.release()
 
 	def collisionRayEnemy(self, event):
-		print "Collision!"
+		print "Player shot enemy!"
