@@ -30,16 +30,16 @@ class Tunnel(DirectObject):
 		self.NP.reparentTo(render)
 		
 		#adding tunnel lights
-		self.dlight = DirectionalLight('dlight')
-		self.dlight.setColor(VBase4(1, 1, 1, 1))
-		self.dlnp = self.NP.attachNewNode(self.dlight)
-		self.dlnp.setHpr(0, -60, 0)
-		self.NP.setLight(self.dlnp)
+		dlight = DirectionalLight('dlight')
+		dlight.setColor(VBase4(1, 1, 1, 1))
+		dlnp = self.NP.attachNewNode(dlight)
+		dlnp.setHpr(0, -60, 0)
+		self.NP.setLight(dlnp)
 		
 		#pulsing dlight
 		pulse = [x*8 for x in range(self.GMC.numSixteenths/8)]
 		print str(len(pulse))
-		self.GMC.addLitElement(self.dlight, pulse)
+		self.GMC.addLitElement(dlight, pulse)
 		
 		for x in range(5):
 			#Load a copy of the tunnel
