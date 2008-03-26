@@ -1,10 +1,10 @@
 #import direct.directbase.DirectStart
 from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
-from WiimoteManager import *
+import WiimoteManager as wm
 
 class WiimoteEmulator(DirectObject):
-	def __init__(self):
+	def __init__(self, wiimoteManager):
 		self.accept('mouse1', self.mouseClick)
 		self.accept('w', self.startMoveUp)
 		self.accept('s', self.startMoveDown)
@@ -20,31 +20,33 @@ class WiimoteEmulator(DirectObject):
 		self.xSpeed = 12
 		self.ySpeed = 12
 		
-		trackerData.ir.valid = True
-		trackerData.ir.x = SCREEN_WIDTH / 2
-		trackerData.ir.y = SCREEN_HEIGHT / 2
+		self.wm = wiimoteManager
 		
-		pointerData.ir.valid = True
-		pointerData.ir.x = SCREEN_WIDTH / 2
-		pointerData.ir.y = SCREEN_HEIGHT / 2
+		self.wm.trackerData.ir.valid = True
+		self.wm.trackerData.ir.x = wm.SCREEN_WIDTH / 2
+		self.wm.trackerData.ir.y = wm.SCREEN_HEIGHT / 2
+		
+		self.wm.pointerData.ir.valid = True
+		self.wm.pointerData.ir.x = wm.SCREEN_WIDTH / 2
+		self.wm.pointerData.ir.y = wm.SCREEN_HEIGHT / 2
 	
 	def update(self, task):
-		trackerLock.acquire()
-		pointerLock.acquire()
+		self.wm.trackerLock.acquire()
+		self.wm.pointerLock.acquire()
 		if base.mouseWatcherNode.hasMouse():
-			pointerData.ir.x =  base.mouseWatcherNode.getMouseX() * SCREEN_WIDTH  / 2 + SCREEN_WIDTH  / 2
-			pointerData.ir.y = -base.mouseWatcherNode.getMouseY() * SCREEN_HEIGHT / 2 + SCREEN_HEIGHT / 2
+			self.wm.pointerData.ir.x =  base.mouseWatcherNode.getMouseX() * self.wm.SCREEN_WIDTH  / 2 + self.wm.SCREEN_WIDTH  / 2
+			self.wm.pointerData.ir.y = -base.mouseWatcherNode.getMouseY() * self.wm.SCREEN_HEIGHT / 2 + self.wm.SCREEN_HEIGHT / 2
 		
-		trackerData.ir.x = min(SCREEN_WIDTH,  max(0, trackerData.ir.x + self.xMove))
-		trackerData.ir.y = min(SCREEN_HEIGHT, max(0, trackerData.ir.y - self.yMove))
+		self.wm.trackerData.ir.x = min(self.wm.SCREEN_WIDTH,  max(0, self.wm.trackerData.ir.x + self.xMove))
+		self.wm.trackerData.ir.y = min(self.wm.SCREEN_HEIGHT, max(0, self.wm.trackerData.ir.y - self.yMove))
 		
-		for wmdata in (pointerData, trackerData):
+		for wmdata in (wm.pointerData, self.wm.trackerData):
 			wmdata.screen.valid = True
-			wmdata.screen.x = (wmdata.ir.x - (SCREEN_WIDTH/2.0)) / (SCREEN_WIDTH/2.0)
-			wmdata.screen.y = ((SCREEN_HEIGHT/2.0) - wmdata.ir.y) / (SCREEN_HEIGHT/2.0)
+			wmdata.screen.x = (wmdata.ir.x - (self.wm.SCREEN_WIDTH/2.0)) / (self.wm.SCREEN_WIDTH/2.0)
+			wmdata.screen.y = ((self.wm.SCREEN_HEIGHT/2.0) - wmdata.ir.y) / (self.wm.SCREEN_HEIGHT/2.0)
 			
-		trackerLock.release()
-		pointerLock.release()
+		self.wm.trackerLock.release()
+		self.wm.pointerLock.release()
 		return Task.cont
 	
 	def mouseClick(self):

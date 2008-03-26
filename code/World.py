@@ -14,7 +14,7 @@ from pandac.PandaModules import CollisionHandlerEvent
 from pandac.PandaModules import CollisionTraverser
 
 import config
-from WiimoteManager import *
+from WiimoteManager import WiimoteManager
 from WiimoteEmulator import WiimoteEmulator
 from Enemy import Enemy
 from Player import Player
@@ -27,13 +27,15 @@ class World (DirectObject):
 	def __init__(self):
 		if config.EMULATE_WIIMOTE:
 			self.wiimoteEmulator = WiimoteEmulator()
-			taskMgr.add(self.wiimoteEmulator.update, "updateEmulator")
 		else:
 			self.wiimoteManager = WiimoteManager()
 			self.wiimoteManager.setDaemon(True)
-			self.wiimoteManager.start()
+		
+		self.accept('escape', sys.exit)
 		
 	def start(self):
+		
+		base.setBackgroundColor(0,0,0) #set the background color to black
 		
 		self.setupCollision()
 		
@@ -43,12 +45,15 @@ class World (DirectObject):
 		for i in range(4):
 			self.testEnemy = Enemy(i, self.enemyHandle, "enemysxx", Point3((i - 2) * 5, 10, 5))
 			
-		base.setBackgroundColor(0,0,0)	
-			
-		self.player = Player()
+		self.player = Player(self.wiimoteManager)
 		
-		self.musicCont = MusicController()
-		self.tunnel = Tunnel(self.musicCont)
+		self.musicController = MusicController()
+		self.tunnel = Tunnel(self.musicController)
+		
+		if config.EMULATE_WIIMOTE:
+			taskMgr.add(self.wiimoteEmulator.update, "updateEmulator")
+		else:
+			self.wiimoteManager.start()
 	
 	def setupCollision(self):
 		self.cHandler = CollisionHandlerEvent()
