@@ -11,19 +11,20 @@ from pandac.PandaModules import NodePath, PandaNode #used to make a tunnel Node 
 from pandac.PandaModules import DirectionalLight #needed to setup lighting
 from music import MusicController #needed for playing game music and pulsing lights
 
-#Global variables for the tunnel dimensions and speed of travel
-TUNNEL_SEGMENT_LENGTH = 40					 
-TUNNEL_TIME = 1.846	 #Amount of time for one segment to travel the
-					 #distance of TUNNEL_SEGMENT_LENGTH
 
 class Tunnel(DirectObject):
 	#Code to initialize the tunnel
 	def __init__(self, GMC):
+		#tunnel atributes
+		self.tunnelSegmentLength = 20					 
+		self.tunnelTime = 1.846		#Amount of time for one segment to travel the
+								#distance of self.tunnelSegmentLength
+		
 		#instantiating music controller
 		self.GMC=GMC
 		
 		#Creates the list [None, None, None, None]
-		self.tunnel = [None for i in range(5)]
+		self.tunnel = [None for i in range(10)]
 		
 		#creates a NodePath handle for doing stuff to the entire tunnel
 		self.NP = NodePath(PandaNode("tunnelNP"))
@@ -42,7 +43,7 @@ class Tunnel(DirectObject):
 		print str(len(pulse))
 		self.GMC.addLitElement(dlight, pulse)
 		
-		for x in range(5):
+		for x in range(10):
 			#Load a copy of the tunnel
 			self.tunnel[x] = loader.loadModelCopy('..//assets//models//tunneltrapazoid.egg')
 			#The front segment needs to be attached to render
@@ -53,7 +54,7 @@ class Tunnel(DirectObject):
 			else: self.tunnel[x].reparentTo(self.tunnel[x-1])
 			#We have to offset each segment by its length so that they stack onto
 			#each other. Otherwise, they would all occupy the same space.
-			self.tunnel[x].setPos(0, 0, -TUNNEL_SEGMENT_LENGTH)
+			self.tunnel[x].setPos(0, 0, -self.tunnelSegmentLength)
 			#Now we have a tunnel consisting of 4 repeating segments with a
 			#hierarchy like this:
 			#render<-tunnel[0]<-tunnel[1]<-tunnel[2]<-tunnel[3]<-tunnel[4]
@@ -77,7 +78,7 @@ class Tunnel(DirectObject):
 		#This line uses slices to take the front of the list and put it on the
 		#back. For more information on slices check the Python manual
 		self.tunnel = self.tunnel[1:]+ self.tunnel[0:1]
-		#Set the front segment (which was at TUNNEL_SEGMENT_LENGTH) to 0, which
+		#Set the front segment (which was at self.tunnelSegmentLength) to 0, which
 		#is where the previous segment started
 		self.tunnel[0].setZ(0)
 		#Reparent the front to render to preserve the hierarchy outlined above
@@ -86,16 +87,16 @@ class Tunnel(DirectObject):
 		#inherited, the rest of the segments have a scale of 1)
 		self.tunnel[0].setScale(.155, .155, .5) #old (.155, .155, .305)
 		#Set the new back to the values that the rest of teh segments have
-		self.tunnel[4].reparentTo(self.tunnel[3])
-		self.tunnel[4].setZ(-TUNNEL_SEGMENT_LENGTH)
-		self.tunnel[4].setScale(1)
+		self.tunnel[9].reparentTo(self.tunnel[8])
+		self.tunnel[9].setZ(-self.tunnelSegmentLength)
+		self.tunnel[9].setScale(1)
 		
 		#Set up the tunnel to move one segment and then call contTunnel again
 		#to make the tunnel move infinitely
 		self.tunnelMove = Sequence(
 			LerpPosHprInterval(self.tunnel[0],
-							 duration = TUNNEL_TIME,
-							 pos=VBase3(0,0,(TUNNEL_SEGMENT_LENGTH*.5)), #change .5 to .305
+							 duration = self.tunnelTime,
+							 pos=VBase3(0,0,(self.tunnelSegmentLength*.5)), #change .5 to .305
 							 hpr=VBase3(36,0,0),
 							 startPos=VBase3(0,0,0),
 							 startHpr=VBase3(0,0,0)
