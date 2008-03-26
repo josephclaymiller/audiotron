@@ -43,7 +43,7 @@ class World (DirectObject):
 		for i in range(4):
 			self.testEnemy = Enemy(i, self.enemyHandle, "enemysxx", Point3((i - 2) * 5, 10, 5))
 			
-			
+		base.setBackgroundColor(0,0,0)	
 			
 		self.player = Player()
 		
