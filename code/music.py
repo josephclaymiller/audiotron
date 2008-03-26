@@ -22,16 +22,16 @@ class MusicController(DirectObject):
 		
 		#TRIAL
 		#self.music.append(loader.loadSfx("SFX//NeverHome.mp3"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Drums Full.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Rhythm Guitar.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Tom Hon Solo.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin hachacha.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Melody Guitar.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Trumpet.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals Hi.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin Backup Guitar.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane upbeat Vidaurri.wav"))#TRIAL DELETE
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Drums Full.wav"))
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Rhythm Guitar.wav"))
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Tom Hon Solo.wav"))
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin hachacha.wav"))
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Melody Guitar.wav"))
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Trumpet.wav"))
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals.wav"))
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals Hi.wav"))
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin Backup Guitar.wav"))
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane upbeat Vidaurri.wav"))#TRIAL DELETE
 		
 		
 		self.sixteenth=0
