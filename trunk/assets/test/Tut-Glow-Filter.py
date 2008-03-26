@@ -80,7 +80,7 @@ class GlowDemo(DirectObject):
         fun = []
         for i in range(0, 272/8):
             fun.append(i*8)
-        self.gameMusic.addPulsingElement(self.handle, fun)
+        #self.gameMusic.addPulsingElement(self.handle, fun)
 
         #put some lighting on the tron model
         dlight = DirectionalLight('dlight')
@@ -92,6 +92,8 @@ class GlowDemo(DirectObject):
         dlnp.setHpr(0, -60, 0) 
         render.setLight(dlnp)
         render.setLight(alnp)
+        self.gameMusic.addLitElement(dlight, fun)
+        #self.gameMusic.addLitElement(alight, fun)
 
         # create the glow buffer. This buffer renders like a normal scene,
         # except that only the glowing materials should show up nonblack.

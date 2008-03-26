@@ -32,7 +32,7 @@ class Player (DirectObject):
 			taskMgr.add(self.headTracker.update, "HeadTrackerUpdate")
 			base.disableMouse()
 
-		self.targetImage = OnscreenImage(image = '..//assets//images//target.png', pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
+		self.targetImage = OnscreenImage(image = "..//assets//images//targetCursor.png", pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
 		self.targetImage.setTransparency(TransparencyAttrib.MAlpha)
 		
 		self.cShootNode = CollisionNode('cPlayerShootRay')

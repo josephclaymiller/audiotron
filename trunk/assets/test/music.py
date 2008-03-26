@@ -4,6 +4,8 @@ from pandac.PandaModules import ClockObject #for the global clock
 from direct.showbase.Loader import Loader #for loading & unloading SFX
 #import direct.directbase.DirectStart #for loading SFX old(not sure if this is needed)
 from pandac.PandaModules import AudioSound #for setTime()
+import colorsys #so I can change RGB to HSB
+from pandac.PandaModules import Vec4 #for Vec4
 
 class music(DirectObject):
     
@@ -38,12 +40,16 @@ class music(DirectObject):
         self.secondsPerSixteenth=self.secondsPerLoop/self.numSixteenths
         self.pulseQueue = [] #a list of every pulse (divided into 16th notes)
         self.pulseElements = [] # a list of every pulsing element
+        self.lightQueue = []
+        self.litElements = []
         self.lastPulseTime=globalClock.getRealTime()
         
         #initialize pulse queue
         for i in range(0,self.numSixteenths):
             self.pulseQueue.append([])
-        print "queue len: " +str(len(self.pulseQueue))
+            self.lightQueue.append([])
+        print "pulse queue len: " +str(len(self.pulseQueue))
+        print "light queue len: " +str(len(self.lightQueue))
         
 
         taskMgr.add(self.playMusic, "playMusic")
@@ -143,13 +149,30 @@ class music(DirectObject):
     def pulseManager(self, task):
         time=globalClock.getRealTime()
 
-        deflate=(time-self.lastPulseTime)*(.25/(self.secondsPerLoop/self.numMeasures))
+        deflate=(time-self.lastPulseTime)*(4/(self.secondsPerLoop/self.numMeasures))
+        
+        #decrease scale of all pulsing elements
         for i in range(len(self.pulseElements)):
             self.pulseElements[i].setScale(self.pulseElements[i].getSx()-deflate)
+            
+        #decrease lumens of all lit elements
+        for i in range(len(self.litElements)):
+            color = self.litElements[i].getColor()
+            h, s, b = colorsys.rgb_to_hsv( color[0], color[1], color[2] )
+            brightness = restrain(b - deflate)
+            r, g, b = colorsys.hsv_to_rgb( h, s, brightness )
+            self.litElements[i].setColor( Vec4( r, g, b, 1 ) )
         
         if (self.loopStartTime+(self.sixteenth*self.secondsPerSixteenth)) < time:
             for i in range(len(self.pulseQueue[self.sixteenth])):
                 self.pulseQueue[self.sixteenth][i].setScale(1)
+            for i in range(len(self.lightQueue[self.sixteenth])):
+                color = self.lightQueue[self.sixteenth][i].getColor()
+                h, s, b = colorsys.rgb_to_hsv( color[0], color[1], color[2] )
+                brightness = 5
+                r, g, b = colorsys.hsv_to_rgb( h, s, brightness )
+                self.lightQueue[self.sixteenth][i].setColor( Vec4( r, g, b, 1 ) )
+                #print "PULSE!"
             self.sixteenth+=1
             if self.sixteenth==self.numSixteenths:
                 self.sixteenth=0
@@ -162,3 +185,12 @@ class music(DirectObject):
         for i in range(len(beats)):
             self.pulseQueue[beats[i]].append(element)
             print "added pulse"
+            
+    def addLitElement(self, light, beats):
+        self.litElements.append(light)
+        for i in range(len(beats)):
+            self.lightQueue[beats[i]].append(light)
+            print "added light pulse"
+
+#Simple function to keep a value in a given range (by default 0 to 2)
+def restrain(i, mn = .5, mx = 2): return min(max(i, .5), 2)
