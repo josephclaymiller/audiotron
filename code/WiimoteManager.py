@@ -70,7 +70,7 @@ class WiimoteManager(threading.Thread):
 
 
 	def handle_status(self, wmp, attachment, speaker, ir, led, battery_level):
-		print "wiimote status change"
+		print "wiimote status change"\
 		
 	def handle_disconnect(self, wmp):
 		print "wiimote disconnected\n"
