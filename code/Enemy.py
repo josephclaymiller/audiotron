@@ -22,9 +22,9 @@ class Enemy (DirectObject):
 		self.model.setPos(startpos)
 		self.model.reparentTo(self.handle)
 		
-		self.tex = loader.loadTexture('../assets/images/target.PNG')
+		#self.tex = loader.loadTexture('../assets/images/target.PNG')
 		#self.model.find('**/enemypom').setTexture(self.tex)
-		self.model.setTexture(self.tex)
+		#self.model.setTexture(self.tex)
 
 		cs = CollisionSphere(0, 0, 0, 5)
 		cNodePath = self.model.attachNewNode(CollisionNode('cEnemy' + str(self.uid)))

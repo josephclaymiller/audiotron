@@ -4,6 +4,7 @@ import threading
 from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
 from direct.gui.OnscreenImage import OnscreenImage
+from pandac.PandaModules import TransparencyAttrib
 
 from pandac.PandaModules import CollisionNode
 from pandac.PandaModules import CollisionRay
@@ -31,8 +32,9 @@ class Player (DirectObject):
 			taskMgr.add(self.headTracker.update, "HeadTrackerUpdate")
 			base.disableMouse()
 
-		self.targetImage = OnscreenImage(image = '../assets/images/target.PNG', pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
-	
+		self.targetImage = OnscreenImage(image = '..//assets//images//target.png', pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
+		self.targetImage.setTransparency(TransparencyAttrib.MAlpha)
+		
 		self.cShootNode = CollisionNode('cPlayerShootRay')
 		self.cShootNode.setFromCollideMask(BitMask32(42))
 		self.cShootNode.setIntoCollideMask(BitMask32.allOff())
