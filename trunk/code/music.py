@@ -1,11 +1,13 @@
 from direct.showbase.DirectObject import DirectObject #needed
 from direct.task import Task #for the task manager & stuff
-from pandac.PandaModules import ClockObject #for the global clock
+#from pandac.PandaModules import ClockObject #for the global clock
 from direct.showbase.Loader import Loader #for loading & unloading SFX
 #import direct.directbase.DirectStart #for loading SFX old(not sure if this is needed)
 from pandac.PandaModules import AudioSound #for setTime()
 import colorsys #so I can change RGB to HSB
 from pandac.PandaModules import Vec4 #for Vec4
+
+GLOBAL_CLOCK_TEMP=0 #tempararily replacing any instances of "globalClock.getRealTime()"
 
 class MusicController(DirectObject):
 	
@@ -15,23 +17,23 @@ class MusicController(DirectObject):
 		self.numSixteenths=self.numMeasures*16
 		self.maxSounds=1000
 		self.secondsPerLoop=float(self.numMeasures*240)/self.bpm #=(#measures per loop * beats per measure) * (seconds per beat) = (17*4)*(60/bpm)
-		self.loopStartTime=globalClock.getRealTime()
+		self.loopStartTime=GLOBAL_CLOCK_TEMP
 		self.loopEndTime=0 #initialized at 0 to start loop at game start! ***NOTE: should be set to self.loopStartTime+self.secondsPerLoop :NOTE***
 		self.music = [] #needs to be filled with sounds loaded like "self.music.append(loader.loadSfx("SoundFile.wav"))"
 		self.tempMusic = [] #a temp array for playing music...gets cleared every new loop
 		
 		#TRIAL
 		#self.music.append(loader.loadSfx("SFX//NeverHome.mp3"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Drums Full.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Rhythm Guitar.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Tom Hon Solo.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin hachacha.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Melody Guitar.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Trumpet.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals Hi.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin Backup Guitar.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane upbeat Vidaurri.wav"))#TRIAL DELETE
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Drums Full.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Rhythm Guitar.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Tom Hon Solo.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin hachacha.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Melody Guitar.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Trumpet.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals Hi.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin Backup Guitar.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane upbeat Vidaurri.wav"))#TRIAL DELETE
 		
 		
 		self.sixteenth=0
@@ -40,7 +42,7 @@ class MusicController(DirectObject):
 		self.pulseElements = [] # a list of every pulsing element
 		self.lightQueue = []
 		self.litElements = []
-		self.lastPulseTime=globalClock.getRealTime()
+		self.lastPulseTime=GLOBAL_CLOCK_TEMP
 		
 		#initialize pulse queue
 		for i in range(0,self.numSixteenths):
@@ -57,7 +59,7 @@ class MusicController(DirectObject):
 		return float((gobalClock.getRealTime-self.loopStartTime)/self.secondsPerLoop)
 	
 	def playMusic(self, task):
-		time=globalClock.getRealTime()
+		time=GLOBAL_CLOCK_TEMP
 		
 		if time>=self.loopEndTime:
 			self.loopStartTime=time
@@ -75,7 +77,7 @@ class MusicController(DirectObject):
 			
 			#play sound clips
 			for i in range(len(self.music)):
-				self.music[i].setTime(globalClock.getRealTime()-time)
+				self.music[i].setTime(GLOBAL_CLOCK_TEMP-time)
 				self.music[i].play()
 				#print i
 				
@@ -86,7 +88,7 @@ class MusicController(DirectObject):
 		#print i
 		if (i+len(self.tempMusic))<self.maxSounds:
 			self.music.append(loader.loadSfx(name))
-			self.music[i].setTime(globalClock.getRealTime()-self.loopStartTime)
+			self.music[i].setTime(GLOBAL_CLOCK_TEMP-self.loopStartTime)
 			self.music[i].play()
 			return i
 		#print len(self.music)
@@ -107,7 +109,7 @@ class MusicController(DirectObject):
 			#print len(self.music)
 			self.music[x].stop()
 			self.tempMusic.append(self.music.pop(x))
-			self.tempMusic[i].setTime(globalClock.getRealTime()-self.loopStartTime)
+			self.tempMusic[i].setTime(GLOBAL_CLOCK_TEMP-self.loopStartTime)
 			self.tempMusic[i].play()
 			#print len(self.music)
 			return i
@@ -139,13 +141,13 @@ class MusicController(DirectObject):
 			self.music[x].stop()
 			loader.unloadSfx(self.music[x])
 			self.music[x]=loader.loadSfx(name)
-			self.music[x].setTime(globalClock.getRealTime()-self.loopStartTime)
+			self.music[x].setTime(GLOBAL_CLOCK_TEMP-self.loopStartTime)
 			self.music[x].play()
 			return x
 		return -1
 	
 	def pulseManager(self, task):
-		time=globalClock.getRealTime()
+		time=GLOBAL_CLOCK_TEMP
 
 		deflate=(time-self.lastPulseTime)*(.25/(self.secondsPerLoop/self.numMeasures))
 		fade=(time-self.lastPulseTime)*(-1.0/(self.secondsPerLoop/self.numMeasures))
