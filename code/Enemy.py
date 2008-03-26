@@ -32,7 +32,7 @@ class Enemy (DirectObject):
 		cNodePath.node().setFromCollideMask(BitMask32.allOff())
 		cNodePath.node().setIntoCollideMask(BitMask32.allOn())
 		cNodePath.node().setCollideMask(BitMask32(42))
-		cNodePath.show()
+		#cNodePath.show()
 		base.cTrav.addCollider(cNodePath, base.cHandler)
 		self.accept('cPlayerShootRay-into-cEnemy' + str(self.uid), self.shotByPlayer)
 
