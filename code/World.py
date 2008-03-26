@@ -25,11 +25,11 @@ from music import MusicController
 class World (DirectObject):
 
 	def __init__(self):
+		self.wiimoteManager = WiimoteManager()
+		self.wiimoteManager.setDaemon(True)
+		
 		if config.EMULATE_WIIMOTE:
-			self.wiimoteEmulator = WiimoteEmulator()
-		else:
-			self.wiimoteManager = WiimoteManager()
-			self.wiimoteManager.setDaemon(True)
+			self.wiimoteEmulator = WiimoteEmulator(self.wiimoteManager)
 		
 		self.accept('escape', sys.exit)
 		
