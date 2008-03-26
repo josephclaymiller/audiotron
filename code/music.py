@@ -7,17 +7,16 @@ from pandac.PandaModules import AudioSound #for setTime()
 import colorsys #so I can change RGB to HSB
 from pandac.PandaModules import Vec4 #for Vec4
 
-GLOBAL_CLOCK_TEMP=0 #tempararily replacing any instances of "globalClock.getRealTime()"
-
 class MusicController(DirectObject):
 	
 	def __init__(self):
+		self.GLOBAL_CLOCK_TEMP=0 #tempararily replacing any instances of "globalClock.getRealTime()"
 		self.bpm=130
 		self.numMeasures=17
 		self.numSixteenths=self.numMeasures*16
 		self.maxSounds=1000
 		self.secondsPerLoop=float(self.numMeasures*240)/self.bpm #=(#measures per loop * beats per measure) * (seconds per beat) = (17*4)*(60/bpm)
-		self.loopStartTime=GLOBAL_CLOCK_TEMP
+		self.loopStartTime=self.GLOBAL_CLOCK_TEMP
 		self.loopEndTime=0 #initialized at 0 to start loop at game start! ***NOTE: should be set to self.loopStartTime+self.secondsPerLoop :NOTE***
 		self.music = [] #needs to be filled with sounds loaded like "self.music.append(loader.loadSfx("SoundFile.wav"))"
 		self.tempMusic = [] #a temp array for playing music...gets cleared every new loop
@@ -42,7 +41,7 @@ class MusicController(DirectObject):
 		self.pulseElements = [] # a list of every pulsing element
 		self.lightQueue = []
 		self.litElements = []
-		self.lastPulseTime=GLOBAL_CLOCK_TEMP
+		self.lastPulseTime=self.GLOBAL_CLOCK_TEMP
 		
 		#initialize pulse queue
 		for i in range(0,self.numSixteenths):
@@ -59,7 +58,7 @@ class MusicController(DirectObject):
 		return float((gobalClock.getRealTime-self.loopStartTime)/self.secondsPerLoop)
 	
 	def playMusic(self, task):
-		time=GLOBAL_CLOCK_TEMP
+		time=self.GLOBAL_CLOCK_TEMP
 		
 		if time>=self.loopEndTime:
 			self.loopStartTime=time
@@ -77,7 +76,7 @@ class MusicController(DirectObject):
 			
 			#play sound clips
 			for i in range(len(self.music)):
-				self.music[i].setTime(GLOBAL_CLOCK_TEMP-time)
+				self.music[i].setTime(self.GLOBAL_CLOCK_TEMP-time)
 				self.music[i].play()
 				#print i
 				
@@ -88,7 +87,7 @@ class MusicController(DirectObject):
 		#print i
 		if (i+len(self.tempMusic))<self.maxSounds:
 			self.music.append(loader.loadSfx(name))
-			self.music[i].setTime(GLOBAL_CLOCK_TEMP-self.loopStartTime)
+			self.music[i].setTime(self.GLOBAL_CLOCK_TEMP-self.loopStartTime)
 			self.music[i].play()
 			return i
 		#print len(self.music)
@@ -109,7 +108,7 @@ class MusicController(DirectObject):
 			#print len(self.music)
 			self.music[x].stop()
 			self.tempMusic.append(self.music.pop(x))
-			self.tempMusic[i].setTime(GLOBAL_CLOCK_TEMP-self.loopStartTime)
+			self.tempMusic[i].setTime(self.GLOBAL_CLOCK_TEMP-self.loopStartTime)
 			self.tempMusic[i].play()
 			#print len(self.music)
 			return i
@@ -141,13 +140,13 @@ class MusicController(DirectObject):
 			self.music[x].stop()
 			loader.unloadSfx(self.music[x])
 			self.music[x]=loader.loadSfx(name)
-			self.music[x].setTime(GLOBAL_CLOCK_TEMP-self.loopStartTime)
+			self.music[x].setTime(self.GLOBAL_CLOCK_TEMP-self.loopStartTime)
 			self.music[x].play()
 			return x
 		return -1
 	
 	def pulseManager(self, task):
-		time=GLOBAL_CLOCK_TEMP
+		time=self.GLOBAL_CLOCK_TEMP
 
 		deflate=(time-self.lastPulseTime)*(.25/(self.secondsPerLoop/self.numMeasures))
 		fade=(time-self.lastPulseTime)*(-1.0/(self.secondsPerLoop/self.numMeasures))
