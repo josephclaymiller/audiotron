@@ -12,7 +12,6 @@ from pandac.PandaModules import CollisionHandlerQueue
 from pandac.PandaModules import GeomNode
 from pandac.PandaModules import BitMask32
 
-from WiimoteManager import WiimoteManager
 import config
 
 if config.HEADTRACK_3D:

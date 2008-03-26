@@ -5,7 +5,6 @@ from direct.gui.OnscreenImage import OnscreenImage
 
 import math
 
-import WiimoteManager as wm
 import config
 
 

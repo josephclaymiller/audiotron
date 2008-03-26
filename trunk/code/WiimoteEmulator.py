@@ -1,7 +1,6 @@
 #import direct.directbase.DirectStart
 from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
-import WiimoteManager as wm
 
 class WiimoteEmulator(DirectObject):
 	def __init__(self, wiimoteManager):
@@ -23,12 +22,12 @@ class WiimoteEmulator(DirectObject):
 		self.wm = wiimoteManager
 		
 		self.wm.trackerData.ir.valid = True
-		self.wm.trackerData.ir.x = wm.SCREEN_WIDTH / 2
-		self.wm.trackerData.ir.y = wm.SCREEN_HEIGHT / 2
+		self.wm.trackerData.ir.x = self.wm.SCREEN_WIDTH / 2
+		self.wm.trackerData.ir.y = self.wm.SCREEN_HEIGHT / 2
 		
 		self.wm.pointerData.ir.valid = True
-		self.wm.pointerData.ir.x = wm.SCREEN_WIDTH / 2
-		self.wm.pointerData.ir.y = wm.SCREEN_HEIGHT / 2
+		self.wm.pointerData.ir.x = self.wm.SCREEN_WIDTH / 2
+		self.wm.pointerData.ir.y = self.wm.SCREEN_HEIGHT / 2
 	
 	def update(self, task):
 		self.wm.trackerLock.acquire()
@@ -40,7 +39,7 @@ class WiimoteEmulator(DirectObject):
 		self.wm.trackerData.ir.x = min(self.wm.SCREEN_WIDTH,  max(0, self.wm.trackerData.ir.x + self.xMove))
 		self.wm.trackerData.ir.y = min(self.wm.SCREEN_HEIGHT, max(0, self.wm.trackerData.ir.y - self.yMove))
 		
-		for wmdata in (wm.pointerData, self.wm.trackerData):
+		for wmdata in (self.wm.pointerData, self.wm.trackerData):
 			wmdata.screen.valid = True
 			wmdata.screen.x = (wmdata.ir.x - (self.wm.SCREEN_WIDTH/2.0)) / (self.wm.SCREEN_WIDTH/2.0)
 			wmdata.screen.y = ((self.wm.SCREEN_HEIGHT/2.0) - wmdata.ir.y) / (self.wm.SCREEN_HEIGHT/2.0)
