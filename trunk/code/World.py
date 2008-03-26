@@ -21,6 +21,10 @@ from Player import Player
 from tunnel import Tunnel
 from music import MusicController
 
+#trial delete
+from pandac.PandaModules import DirectionalLight, AmbientLight #needed to setup lighting
+from pandac.PandaModules import VBase3, VBase4
+
 
 class World (DirectObject):
 
@@ -41,14 +45,58 @@ class World (DirectObject):
 		
 		self.enemyHandle = NodePath(PandaNode("EnemyHandle"))
 		self.enemyHandle.reparentTo(render)
+		self.enemyHandle.setPos(Point3(0,10,0))
 		self.numEnemies = 10
-		for i in range(4):
-			self.testEnemy = Enemy(i, self.enemyHandle, "enemysxx", Point3((i - 2) * 5, 10, 5))
+		self.testEnemy = []
+		for i in range(2):
+			self.testEnemy.append(Enemy(i, self.enemyHandle, "enemysxx", Point3(i, 10+i*20, -1)))
+			self.enemyHandle.setScale(.25)
+		
 			
 		self.player = Player(self.wiimoteManager)
 		
 		self.musicController = MusicController()
 		self.tunnel = Tunnel(self.musicController)
+		
+		#TEST DELETE*************************************************
+		#create lighting
+		alight = AmbientLight('alight')
+		alight.setColor(VBase4(.5, 0, 0, 1))
+		alnp = self.enemyHandle.attachNewNode(alight)
+		self.enemyHandle.setLight(alnp)
+		
+		dlight = DirectionalLight('dlight')
+		dlight.setColor(VBase4(0, 0, .75, 1))
+		dlnp = self.enemyHandle.attachNewNode(dlight)
+		dlnp.setHpr(0, -60, 0)
+		self.enemyHandle.setLight(dlnp)
+		
+		dlight = DirectionalLight('dlight')
+		dlight.setColor(VBase4(1, 1, 1, 1))
+		dlnp = self.enemyHandle.attachNewNode(dlight)
+		dlnp.setHpr(0, 60, 0)
+		self.enemyHandle.setLight(dlnp)
+		
+		#create pulse
+		pulse = [x*4 for x in range(self.musicController.numSixteenths/4)]
+		self.musicController.addPulsingElement(self.enemyHandle, pulse)
+		
+		#rotate stuff
+		self.enemyMove = LerpHprInterval(self.testEnemy[0].model,
+							 duration = 107.385,
+							 hpr=VBase3(360,360,360),
+							 startHpr=VBase3(0,0,0)
+							 )
+		self.enemyMove.start()
+		
+		#rotate stuff
+		self.enemyMove1 = LerpHprInterval(self.testEnemy[0].model,
+							 duration = 107.385,
+							 hpr=VBase3(360,360,360),
+							 startHpr=VBase3(0,0,0)
+							 )
+		self.enemyMove1.start()
+		#TRIAL DELETE END**************************************************************
 		
 		if config.EMULATE_WIIMOTE:
 			taskMgr.add(self.wiimoteEmulator.update, "updateEmulator")
