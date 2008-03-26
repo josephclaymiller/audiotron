@@ -15,44 +15,45 @@ class WMData:
 		self.ir1 = IRPoint()
 		self.ir2 = IRPoint()
 
-
-WM_ID_TRACKER = 0
-WM_ID_POINTER = 1
-
-trackerData = WMData()
-pointerData = WMData()
-
-trackerLock = threading.Lock()
-pointerLock = threading.Lock()
-
-CAMERA_WIDTH = 1024
-CAMERA_HEIGHT = 768
-
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
-	
-
 class WiimoteManager(threading.Thread):
 
 	def __init__(self):
 		threading.Thread.__init__(self)
-	
-		nmotes = 2
-		self.wiimotes = wiiuse.init(nmotes, [WM_ID_TRACKER, WM_ID_POINTER], self.handle_event, self.handle_status, self.handle_disconnect)
 
-		found = wiiuse.find(self.wiimotes, nmotes, 5)
+		self.WM_ID_TRACKER = 0
+		self.WM_ID_POINTER = 1
+
+		self.trackerData = WMData()
+		self.pointerData = WMData()
+
+		self.trackerLock = threading.Lock()
+		self.pointerLock = threading.Lock()
+
+		self.CAMERA_WIDTH = 1024
+		self.CAMERA_HEIGHT = 768
+
+		self.SCREEN_WIDTH = 800
+		self.SCREEN_HEIGHT = 600
+	
+		self.nmotes = 2
+		
+		
+	def run(self):
+		self.wiimotes = wiiuse.init(self.nmotes, [self.WM_ID_TRACKER, self.WM_ID_POINTER], self.handle_event, self.handle_status, self.handle_disconnect)
+
+		found = wiiuse.find(self.wiimotes, self.nmotes, 5)
 		if not found:
 			print 'No wiimotes found'
 			sys.exit(1)
 
-		connected = wiiuse.connect(self.wiimotes, nmotes)
+		connected = wiiuse.connect(self.wiimotes, self.nmotes)
 		if connected:
 			print 'Connected to %i wiimotes (of %i found).' % (connected, found)
 		else:
 			print 'failed to connect to any wiimote.'
 			sys.exit(1)
 
-		for i in range(nmotes):
+		for i in range(self.nmotes):
 			wm = self.wiimotes[i]
 			wiiuse.set_leds(wm, wiiuse.LED[i])
 			wiiuse.set_ir(wm, 1)
@@ -61,9 +62,8 @@ class WiimoteManager(threading.Thread):
 			wiiuse.set_ir_position(wm, wiiuse.IR_BELOW)
 			wiiuse.set_ir_vres(wm, 800, 600)
 
-
-	def run(self):
 		while (True):
+			print "polling"
 			wiiuse.poll(self.wiimotes, 2)
 
 
@@ -76,12 +76,12 @@ class WiimoteManager(threading.Thread):
 	def handle_event(self, wmp):
 		wm = wmp.contents
 		
-		if (wm.unid == WM_ID_TRACKER):
-			trackerLock.acquire()
-			wmdata = trackerData
+		if (wm.unid == self.WM_ID_TRACKER):
+			self.trackerLock.acquire()
+			wmdata = self.trackerData
 		else:
-			pointerLock.acquire()
-			wmdata = pointerData
+			self.pointerLock.acquire()
+			wmdata = self.pointerData
 
 		if (wiiuse.is_just_pressed(wm, wiiuse.button['A'])):
 			wiiuse.toggle_rumble(wmp)
@@ -110,14 +110,14 @@ class WiimoteManager(threading.Thread):
 				wmdata.ir.x = wm.ir.x
 				wmdata.ir.y = wm.ir.y
 				wmdata.screen.valid = True
-				wmdata.screen.x = (wmdata.ir.x - (SCREEN_WIDTH/2.0)) / (SCREEN_WIDTH/2.0)
-				wmdata.screen.y = ((SCREEN_HEIGHT/2.0) - wmdata.ir.y) / (SCREEN_HEIGHT/2.0)
+				wmdata.screen.x = (wmdata.ir.x - (self.SCREEN_WIDTH/2.0)) / (self.SCREEN_WIDTH/2.0)
+				wmdata.screen.y = ((self.SCREEN_HEIGHT/2.0) - wmdata.ir.y) / (self.SCREEN_HEIGHT/2.0)
 			else:
 				wmdata.ir.valid = False
 		
-		if (wm.unid == WM_ID_TRACKER):
-			trackerLock.release()
+		if (wm.unid == self.WM_ID_TRACKER):
+			self.trackerLock.release()
 		else:
-			pointerLock.release()
+			self.pointerLock.release()
 
 

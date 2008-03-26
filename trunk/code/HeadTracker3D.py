@@ -5,7 +5,7 @@ from direct.gui.OnscreenImage import OnscreenImage
 
 import math
 
-from WiimoteManager import *
+import WiimoteManager as wm
 import config
 
 
@@ -14,12 +14,12 @@ if config.SHOW_HEADTRACK_POINTS:
 	trackdot2 = OnscreenImage(image = '../assets/images/target.PNG', pos = (0, 0, 0), scale = (32.0/800/4, 0, 32.0/600/4), parent = render2d)
 
 	def headtrackerPoints(task):
-		trackerLock.acquire()
-		if (trackerData.ir1.valid):
+		wm.trackerLock.acquire()
+		if (wm.trackerData.ir1.valid):
 			trackdot1.setPos((trackerData.ir1.x - 512) / 512.0, 0, (384 - trackerData.ir1.y) / 384.0)
-		if (trackerData.ir2.valid):
+		if (wm.trackerData.ir2.valid):
 			trackdot2.setPos((trackerData.ir2.x - 512) / 512.0, 0, (384 - trackerData.ir2.y) / 384.0)
-		trackerLock.release()
+		wm.trackerLock.release()
 		return Task.cont
 
 	taskMgr.add(headtrackerPoints, "headtrackerPoints")

@@ -1,4 +1,5 @@
 import sys
+import threading
 
 from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
@@ -11,7 +12,7 @@ from pandac.PandaModules import CollisionHandlerQueue
 from pandac.PandaModules import GeomNode
 from pandac.PandaModules import BitMask32
 
-from WiimoteManager import *
+from WiimoteManager import WiimoteManager
 import config
 
 if config.HEADTRACK_3D:
@@ -22,15 +23,16 @@ else:
 
 class Player (DirectObject):
 
-	def __init__(self):
+	def __init__(self, wiimoteManager):
 	
-		self.headTracker = HeadTracker()
+		self.wm = wiimoteManager
+		self.headTracker = HeadTracker(wiimoteManager)
 
 		if not config.MANUAL_CAMERA_CONTROL:
 			taskMgr.add(self.headTracker.update, "HeadTrackerUpdate")
 			base.disableMouse()
 
-		self.targetImage = OnscreenImage(image = '../assets/images/target.PNG', pos = (0, 0, 0), scale = (32.0/SCREEN_WIDTH, 0, 32.0/SCREEN_HEIGHT), parent = render2d)
+		self.targetImage = OnscreenImage(image = '../assets/images/target.PNG', pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
 	
 		self.cShootNode = CollisionNode('cPlayerShootRay')
 		self.cShootNode.setFromCollideMask(BitMask32(42))
@@ -49,18 +51,18 @@ class Player (DirectObject):
 		taskMgr.add(self.update, "PlayerUpdate")
 	
 	def update(self, task):
-		pointerLock.acquire()
-		if (pointerData.screen.valid):
-			self.shootRay.setFromLens(base.camNode, pointerData.screen.x, pointerData.screen.y)
-			self.targetImage.setPos(pointerData.screen.x, 0, pointerData.screen.y)
+		self.wm.pointerLock.acquire()
+		if (self.wm.pointerData.screen.valid):
+			self.shootRay.setFromLens(base.camNode, self.wm.pointerData.screen.x, self.wm.pointerData.screen.y)
+			self.targetImage.setPos(self.wm.pointerData.screen.x, 0, self.wm.pointerData.screen.y)
 		
-		pointerLock.release()
+		self.wm.pointerLock.release()
 		return Task.cont
 
 	def fire(self):
-		pointerLock.acquire()
-		if (pointerData.ir.valid):
-			print "Fire ", pointerData.screen.x, " ", pointerData.screen.y
+		self.wm.pointerLock.acquire()
+		if (self.wm.pointerData.ir.valid):
+			print "Fire ", self.wm.pointerData.screen.x, " ", self.wm.pointerData.screen.y
 			self.cRayTrav.traverse(render)
 			
 			if (self.cHandler.getNumEntries() > 0):
@@ -69,7 +71,7 @@ class Player (DirectObject):
 				messenger.send("cPlayerShootRay-into-" + shotNode.getName())
 				
 		
-		pointerLock.release()
+		self.wm.pointerLock.release()
 
 	def collisionRayEnemy(self, event):
 		print "Player shot enemy!"
