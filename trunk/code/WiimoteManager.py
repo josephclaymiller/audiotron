@@ -52,9 +52,6 @@ class WiimoteManager(threading.Thread):
 		else:
 			print 'failed to connect to any wiimote.'
 			sys.exit(1)
-		
-		wiiuse.toggle_rumble(self.wiimotes[0])
-		wiiuse.toggle_rumble(self.wiimotes[0])
 
 		for i in range(self.nmotes):
 			wm = self.wiimotes[i]

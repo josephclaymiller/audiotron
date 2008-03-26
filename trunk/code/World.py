@@ -87,14 +87,16 @@ class World (DirectObject):
 							 hpr=VBase3(360,360,360),
 							 startHpr=VBase3(0,0,0)
 							 )
+		self.enemyMove.loop()
 		self.enemyMove.start()
 		
 		#rotate stuff
-		self.enemyMove1 = LerpHprInterval(self.testEnemy[0].model,
+		self.enemyMove1 = LerpHprInterval(self.testEnemy[1].model,
 							 duration = 107.385,
 							 hpr=VBase3(360,360,360),
 							 startHpr=VBase3(0,0,0)
 							 )
+		self.enemyMove.loop()
 		self.enemyMove1.start()
 		#TRIAL DELETE END**************************************************************
 		
