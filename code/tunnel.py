@@ -51,7 +51,8 @@ class Tunnel(DirectObject):
 				self.tunnel[x].reparentTo(self.NP)
 			#The rest of the segments parent to the previous one, so that by moving
 			#the front segement, the entire tunnel is moved
-			else: self.tunnel[x].reparentTo(self.tunnel[x-1])
+			else:
+				self.tunnel[x].reparentTo(self.tunnel[x-1])
 			#We have to offset each segment by its length so that they stack onto
 			#each other. Otherwise, they would all occupy the same space.
 			self.tunnel[x].setPos(0, 0, -self.tunnelSegmentLength)
@@ -66,7 +67,7 @@ class Tunnel(DirectObject):
 		self.fog.setColor(0, 0, 0)
 		#Set the density/falloff of the fog.	The range is 0-1.
 		#The higher the numer, the "bigger" the fog effect.
-		self.fog.setExpDensity(.03)
+		self.fog.setExpDensity(.025)
 		#Set fog to only affect the Tunnel...set to render if you want fog to affect everything
 		self.NP.setFog(self.fog)
 		
