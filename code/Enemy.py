@@ -17,20 +17,18 @@ from pandac.PandaModules import VBase3, VBase4
 class Enemy (DirectObject):
 
 	def __init__(self, uid, handle, modelName, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
-	
 		self.uid = uid		
 		self.handle = handle
-	
+		self.deleteMe = False
+		
+		taskMgr.add(self.update, "EnemyUpdate" + str(self.uid))
+		
 		self.model = Actor("../assets/models/" + str(modelName) + ".egg")
 		self.model.reparentTo(self.handle)
 		self.model.setScale(0.1, 0.1, 0.1)
 		self.model.setPos(startPos)
 		self.model.setHpr(startHpr)
-		#self.model.reparentTo(self.handle)
-		
-		#self.tex = loader.loadTexture('../assets/images/target.PNG')
-		#self.model.find('**/enemypom').setTexture(self.tex)
-		#self.model.setTexture(self.tex)
+		self.model.reparentTo(self.handle)
 
 		cs = CollisionSphere(0, 0, 0, 5)
 		cNodePath = self.model.attachNewNode(CollisionNode('cEnemy' + str(self.uid)))
@@ -50,58 +48,16 @@ class Enemy (DirectObject):
 							 )
 		self.enemyMove.loop()
 		
-		taskMgr.add(self.update, "EnemyUpdate")
+	
+	def destroy(self):
+		self.model.cleanup()
+		self.model.remove()
+		taskMgr.remove("EnemyUpdate" + str(self.uid))
+		self.deleteMe = True
 	
 	def update(self, task):
 		return Task.cont
 
 	def shotByPlayer(self):
-		print "Enemy", self.uid, " shot by player!"
-
-#returns a handle
-def spawnCircle(num=5, r=2, modelName="emenytb_t1", startPos=Point3(0,20,0), uid=0):
-	handle = NodePath(PandaNode("handle"+str(uid)))
-	handle.reparentTo(render)
-	handle.setPos(startPos)
-	
-	t=0
-	step=(2*math.pi)/num
-	
-	enemies = []
-	for i in range(num):
-		x=math.cos(t)*r
-		z=math.sin(t)*r
-		if i == 0:
-			enemies.append(Enemy(uid, handle, modelName, Point3(x,0,z)))
-		else:
-			enemies.append(Enemy(uid, handle, modelName, Point3(x,0,z)))
-		t+=step
-		uid+=1
-		#print "made enemy at x:" + str(x) + " z:" + str(z)
-		
-	return handle
-	
-	#returns a handle
-def spawnSpiral(num=5, r=2, direction=1, depth=50, modelName="emenytb_t1", startPos=Point3(0,20,0), uid=0):
-	handle = NodePath(PandaNode("handle"+str(uid)))
-	handle.reparentTo(render)
-	handle.setPos(startPos)
-	
-	t=0
-	step=(2*math.pi)/num
-	depth/=num
-	
-	enemies = []
-	for i in range(num):
-		x=math.cos(t)*r*direction
-		z=math.sin(t)*r*direction
-		if i == 0:
-			enemies.append(Enemy(uid, handle, modelName, Point3(x,0,z)))
-		else:
-			enemies.append(Enemy(uid, handle, modelName, Point3(x,depth*i,z)))
-		t+=step
-		uid+=1
-		#print "made enemy at x:" + str(x) + " z:" + str(z)
-	
-	return handle
-		
+		#print "Enemy", self.uid, " shot by player!"
+		self.destroy()

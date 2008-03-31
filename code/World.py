@@ -1,11 +1,12 @@
 import sys
 import math
 import threading
+from random import random
+from random import uniform
 
 from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
 from direct.actor.Actor import Actor
-#from direct.interval.IntervalGlobal import *
 from direct.gui.OnscreenImage import OnscreenImage
 from pandac.PandaModules import NodePath
 from pandac.PandaModules import PandaNode
@@ -16,7 +17,8 @@ from pandac.PandaModules import CollisionTraverser
 import config
 from WiimoteManager import WiimoteManager
 from WiimoteEmulator import WiimoteEmulator
-from Enemy import Enemy, spawnCircle, spawnSpiral
+from Enemy import Enemy
+from EnemyManager import EnemyManager
 from Player import Player
 from tunnel import Tunnel
 from music import MusicController
@@ -36,31 +38,24 @@ class World (DirectObject):
 			self.wiimoteEmulator = WiimoteEmulator(self.wiimoteManager)
 		
 		self.accept('escape', sys.exit)
-		
-		self.enemyUID=0
+		taskMgr.add(self.spawnMoreEnemy, "spawnMoreEnemy")
+	
+	def spawnMoreEnemy(self, task):
+		if (task.frame % 600 == 0):
+			self.enemyManager.spawnSpiral()
+		elif ((task.frame + 300) % 600 == 0):
+			self.enemyManager.spawnCircle()
+		return Task.cont
 		
 	def start(self):
-		
 		base.setBackgroundColor(0,0,0) #set the background color to black
-		
 		self.setupCollision()
-		
-	#	self.enemyHandle = NodePath(PandaNode("EnemyHandle"))
-	#	self.enemyHandle.reparentTo(render)
-	#	self.enemyHandle.setPos(Point3(0,10,0))
-	#	self.numEnemies = 10
-	#	self.testEnemy = []
-	#	for i in range(2):
-	#		self.enemyUID+=1
-	#		self.testEnemy.append(Enemy(self.enemyUID, self.enemyHandle, "emenytb_t1", Point3(0,0,0)))
-	#		self.enemyHandle.setScale(.25)
-		
-		self.enemyHandle = spawnCircle()		
-			
 		self.player = Player(self.wiimoteManager)
-		
+		self.enemyManager = EnemyManager()
 		self.musicController = MusicController()
 		self.tunnel = Tunnel(self.musicController)
+		
+		self.enemyHandle = self.enemyManager.spawnCircle()
 		
 		#TEST DELETE*************************************************
 		#create lighting
@@ -84,24 +79,6 @@ class World (DirectObject):
 		#create pulse
 		pulse = [x*4 for x in range(self.musicController.numSixteenths/4)]
 		self.musicController.addPulsingElement(self.enemyHandle, pulse)
-		
-		#rotate stuff
-		#self.enemyMove = LerpHprInterval(self.testEnemy[0].model,
-		#					 duration = 107.385,
-		#					 hpr=VBase3(360,360,360),
-		#					 startHpr=VBase3(0,0,0)
-		#					 )
-		#self.enemyMove.loop()
-		#self.enemyMove.start()
-		
-		#rotate stuff
-		#self.enemyMove1 = LerpHprInterval(self.testEnemy[1].model,
-		#					 duration = 107.385,
-		#					 hpr=VBase3(360,360,360),
-		#					 startHpr=VBase3(0,0,0)
-		#					 )
-		#self.enemyMove.loop()
-		#self.enemyMove1.start()
 		#TRIAL DELETE END**************************************************************
 		
 		if config.EMULATE_WIIMOTE:
