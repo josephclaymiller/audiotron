@@ -3,6 +3,7 @@ import math
 import threading
 from random import random
 from random import uniform
+import gc
 
 from direct.showbase.DirectObject import DirectObject
 from direct.task import Task
@@ -38,13 +39,37 @@ class World (DirectObject):
 			self.wiimoteEmulator = WiimoteEmulator(self.wiimoteManager)
 		
 		self.accept('escape', sys.exit)
+		self.accept('m', self.garbageDebug)
 		taskMgr.add(self.spawnMoreEnemy, "spawnMoreEnemy")
 	
+	def garbageDebug(self):
+		#print gc.get_objects()
+		
+		print "\n***\nEnemies\n****"
+		for enemy in self.enemyManager.enemies:
+			print gc.get_referents(enemy)
+			
+		print "\n***\nModels\n****"
+		for enemy in self.enemyManager.enemies:
+			print gc.get_referents(enemy.model)
+			
 	def spawnMoreEnemy(self, task):
-		if (task.frame % 600 == 0):
-			self.enemyManager.spawnSpiral()
-		elif ((task.frame + 300) % 600 == 0):
-			self.enemyManager.spawnCircle()
+		#self.enemyManager.spawnCircle()
+		#self.garbageDebug()
+		#for enemy in self.enemyManager.enemies:
+		#	enemy.shotByPlayer(enemy.uid)
+		#self.garbageDebug()
+			
+	#	if (task.frame % 100 == 0):
+	#		self.enemyManager.spawnSpiral()
+	#	elif ((task.frame + 50) % 100 == 0):
+	#		self.enemyManager.spawnCircle()
+	#	
+	#	if (len(self.enemyManager.enemies) > 0):
+	#		for i in range(2):
+	#			index = int(uniform(0, len(self.enemyManager.enemies)))
+	#			print "Delete enemy ", index
+	#			self.enemyManager.enemies[index].shotByPlayer()
 		return Task.cont
 		
 	def start(self):

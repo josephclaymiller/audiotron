@@ -48,10 +48,11 @@ class MusicController(DirectObject):
 			self.lightQueue.append([])
 		#print "pulse queue len: " +str(len(self.pulseQueue))
 		#print "light queue len: " +str(len(self.lightQueue))
-		
 
 		taskMgr.add(self.playMusic, "playMusic")
 		taskMgr.add(self.pulseManager, "pulseManager")
+		
+		self.accept('removeEnemyHandle', self.removeElement)
 	
 	def getPos(self):
 		return float((gobalClock.getRealTime-self.loopStartTime)/self.secondsPerLoop)
@@ -187,6 +188,12 @@ class MusicController(DirectObject):
 		for i in range(len(beats)):
 			self.lightQueue[beats[i]].append(light)
 			#print "added light pulse to" + str(beats[i])
+	
+	def removeElement(self, element):
+		if (self.pulseElements.count(element)):
+			self.pulseElements.remove(element)
+		elif (self.litElements.count(element)):
+			self.litElements.remove(element)
 
 #Simple function to keep a value in a given range (by default .5 and 1)
 def restrain(i, mn = .5, mx = 1): return min(max(i, mn), mx)

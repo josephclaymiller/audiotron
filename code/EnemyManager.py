@@ -17,6 +17,7 @@ class EnemyManager (DirectObject):
 		self.enemies = []
 		self.enemiesSpawned = 0
 		
+		self.handles = []
 		self.handlesCreated = 0
 		
 		taskMgr.add(self.cleanupEnemies, "EnemyCleanup")
@@ -26,18 +27,34 @@ class EnemyManager (DirectObject):
 		self.enemies.append(enemy)
 		self.enemiesSpawned += 1
 	
+	def createHandle(self, startPos = Point3(0,20,0)):
+		handle = NodePath(PandaNode("EnemyHandle"+str(self.handlesCreated)))
+		handle.reparentTo(render)
+		handle.setPos(startPos)
+		handle.setTag("enemyChildren", str(0))
+		self.handlesCreated += 1
+		self.handles.append(handle)
+		return handle
+		
+	
 	def cleanupEnemies(self, task):
 		for enemy in self.enemies:
 			if (enemy.deleteMe):
-				del enemy
+				self.enemies.remove(enemy)
+			
+		for handle in self.handles:
+			if (int(handle.getTag("enemyChildren")) == 0):
+				print "Removing ", handle.getName()
+				#messenger.send('removeEnemyHandle', [handle])
+				self.handles.remove(handle)
+				#handle.removeNode()
+				
+				
 		return Task.cont
 	
 	
 	def spawnCircle(self, num = 5, r = 2, modelName = "emenytb_t1", startPos = Point3(0,20,0)):
-		handle = NodePath(PandaNode("handle"+str(self.handlesCreated)))
-		handle.reparentTo(render)
-		handle.setPos(startPos)
-		
+		handle = self.createHandle(startPos)
 		t = 0
 		step = (2 * math.pi) / num
 		
@@ -47,14 +64,11 @@ class EnemyManager (DirectObject):
 			self.spawnEnemy(handle, modelName, Point3(x,0,z))
 			t += step
 		
-		self.handlesCreated += 1
 		return handle
 		
 	#returns a handle
 	def spawnSpiral(self, num = 5, r = 2, direction = 1, depth = 50, modelName = "emenytb_t1", startPos = Point3(0,20,0)):
-		handle = NodePath(PandaNode("handle"+str(self.handlesCreated)))
-		handle.reparentTo(render)
-		handle.setPos(startPos)
+		handle = self.createHandle(startPos)
 		
 		t = 0
 		step = (2 * math.pi) / num
@@ -66,6 +80,5 @@ class EnemyManager (DirectObject):
 			self.spawnEnemy(handle, modelName, Point3(x, depth * i, z))
 			t += step
 		
-		self.handlesCreated += 1
 		return handle
 			

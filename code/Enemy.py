@@ -21,6 +21,8 @@ class Enemy (DirectObject):
 		self.handle = handle
 		self.deleteMe = False
 		
+		handle.setTag("enemyChildren", str(int(handle.getTag("enemyChildren")) + 1))
+		
 		taskMgr.add(self.update, "EnemyUpdate" + str(self.uid))
 		
 		self.model = Actor("../assets/models/" + str(modelName) + ".egg")
@@ -38,7 +40,8 @@ class Enemy (DirectObject):
 		cNodePath.node().setCollideMask(BitMask32(42))
 		cNodePath.show()
 		base.cTrav.addCollider(cNodePath, base.cHandler)
-		self.accept('cPlayerShootRay-into-cEnemy' + str(self.uid), self.shotByPlayer)
+		self.cNodePath = cNodePath
+		self.accept('cPlayerShootRay-into-cEnemy', self.shotByPlayer)
 		
 		#rotate stuff
 		self.enemyMove = LerpHprInterval(self.model,
@@ -50,14 +53,20 @@ class Enemy (DirectObject):
 		
 	
 	def destroy(self):
-		self.model.cleanup()
-		self.model.remove()
-		taskMgr.remove("EnemyUpdate" + str(self.uid))
-		self.deleteMe = True
+		if not self.deleteMe:
+			base.cTrav.removeCollider(self.cNodePath)
+			self.model.cleanup()
+			self.model.remove()
+			self.cNodePath.remove()
+			self.handle.setTag("enemyChildren", str(int(self.handle.getTag("enemyChildren")) - 1))
+			taskMgr.remove("EnemyUpdate" + str(self.uid))
+			self.ignoreAll()
+			self.deleteMe = True
 	
 	def update(self, task):
 		return Task.cont
 
-	def shotByPlayer(self):
+	def shotByPlayer(self, id):
 		#print "Enemy", self.uid, " shot by player!"
-		self.destroy()
+		if (id == self.uid):
+			self.destroy()
