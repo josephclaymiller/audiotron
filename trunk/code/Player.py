@@ -69,7 +69,7 @@ class Player (DirectObject):
 			if (self.cHandler.getNumEntries() > 0):
 				self.cHandler.sortEntries()
 				shotNode = self.cHandler.getEntry(0).getIntoNodePath()
-				messenger.send("cPlayerShootRay-into-" + shotNode.getName())
+				messenger.send('cPlayerShootRay-into-cEnemy', [int(shotNode.getName().strip('cEnemy'))])
 				
 		
 		self.wm.pointerLock.release()
