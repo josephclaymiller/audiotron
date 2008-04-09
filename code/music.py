@@ -192,8 +192,22 @@ class MusicController(DirectObject):
 	def removeElement(self, element):
 		if (self.pulseElements.count(element)):
 			self.pulseElements.remove(element)
-		elif (self.litElements.count(element)):
-			self.litElements.remove(element)
+			
+		for sixteenth in self.pulseQueue:
+			if (sixteenth.count(element)):
+				sixteenth.remove(element)
+	
+	def debugPrint(self):
+		print "\n****************"
+		print "Pulse elements: ", len(self.pulseElements)
+		print "Lit elements: ", len(self.litElements)
+		print "\n*** Pulse queue:"
+		for i in range(len(self.pulseQueue)):
+			print i, "/16:\t", len(self.pulseQueue[i])
+		print "\n*** Light queue:"
+		for i in range(len(self.lightQueue)):
+			print i, "/16:\t", len(self.lightQueue[i])
+		print "****************\n"
 
 #Simple function to keep a value in a given range (by default .5 and 1)
 def restrain(i, mn = .5, mx = 1): return min(max(i, mn), mx)

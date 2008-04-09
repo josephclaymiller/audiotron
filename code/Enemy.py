@@ -44,10 +44,10 @@ class Enemy (DirectObject):
 		
 		#rotate stuff
 		self.enemyMove = LerpHprInterval(self.model,
-							 duration = 31.384,
-							 hpr=VBase3(360,360,360),
-							 startHpr=VBase3(0,0,0)
-							 )
+							duration = 31.384,
+							hpr=VBase3(360,360,360),
+							startHpr=VBase3(0,0,0)
+							)
 		self.enemyMove.loop()
 		
 		
@@ -56,9 +56,9 @@ class Enemy (DirectObject):
 	def destroy(self):
 		if not self.deleteMe:
 			base.cTrav.removeCollider(self.cNodePath)
+			self.cNodePath.remove()
 			self.model.cleanup()
 			self.model.remove()
-			self.cNodePath.remove()
 			self.handle.setTag("enemyChildren", str(int(self.handle.getTag("enemyChildren")) - 1))
 			taskMgr.remove("EnemyUpdate" + str(self.uid))
 			self.ignoreAll()

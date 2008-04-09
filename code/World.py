@@ -44,32 +44,25 @@ class World (DirectObject):
 	
 	def garbageDebug(self):
 		#print gc.get_objects()
-		
-		print "\n***\nEnemies\n****"
-		for enemy in self.enemyManager.enemies:
-			print gc.get_referents(enemy)
-			
-		print "\n***\nModels\n****"
-		for enemy in self.enemyManager.enemies:
-			print gc.get_referents(enemy.model)
+		#self.musicController.debugPrint()
+		render.ls()
 			
 	def spawnMoreEnemy(self, task):
 		#self.enemyManager.spawnCircle()
-		#self.garbageDebug()
 		#for enemy in self.enemyManager.enemies:
-		#	enemy.shotByPlayer(enemy.uid)
-		#self.garbageDebug()
+		#	enemy.destroy()
 			
-	#	if (task.frame % 100 == 0):
-	#		self.enemyManager.spawnSpiral()
-	#	elif ((task.frame + 50) % 100 == 0):
-	#		self.enemyManager.spawnCircle()
-	#	
-	#	if (len(self.enemyManager.enemies) > 0):
-	#		for i in range(2):
-	#			index = int(uniform(0, len(self.enemyManager.enemies)))
-	#			print "Delete enemy ", index
-	#			self.enemyManager.enemies[index].shotByPlayer()
+		#if (task.frame % 100 == 0):
+		#	self.enemyManager.spawnSpiral()
+		#elif ((task.frame + 50) % 100 == 0):
+		#	self.enemyManager.spawnCircle()
+		
+		#if (len(self.enemyManager.enemies) > 0):
+		#	for i in range(2):
+		#		index = int(uniform(0, len(self.enemyManager.enemies)))
+		#		print "Delete enemy ", index
+		#		self.enemyManager.enemies[index].destroy()
+		
 		return Task.cont
 		
 	def start(self):
@@ -82,29 +75,6 @@ class World (DirectObject):
 		
 		self.enemyHandle = self.enemyManager.spawnCircle()
 		
-		#TEST DELETE*************************************************
-		#create lighting
-		alight = AmbientLight('alight')
-		alight.setColor(VBase4(.5, 0, 0, 1))
-		alnp = self.enemyHandle.attachNewNode(alight)
-		self.enemyHandle.setLight(alnp)
-		
-		dlight = DirectionalLight('dlight')
-		dlight.setColor(VBase4(0, 0, .75, 1))
-		dlnp = self.enemyHandle.attachNewNode(dlight)
-		dlnp.setHpr(0, -60, 0)
-		self.enemyHandle.setLight(dlnp)
-		
-		dlight = DirectionalLight('dlight')
-		dlight.setColor(VBase4(1, 1, 1, 1))
-		dlnp = self.enemyHandle.attachNewNode(dlight)
-		dlnp.setHpr(0, 60, 0)
-		self.enemyHandle.setLight(dlnp)
-		
-		#create pulse
-		pulse = [x*4 for x in range(self.musicController.numSixteenths/4)]
-		self.musicController.addPulsingElement(self.enemyHandle, pulse)
-		#TRIAL DELETE END**************************************************************
 		
 		if config.EMULATE_WIIMOTE:
 			taskMgr.add(self.wiimoteEmulator.update, "updateEmulator")
