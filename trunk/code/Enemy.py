@@ -11,11 +11,15 @@ from pandac.PandaModules import Point3
 from direct.interval.LerpInterval import LerpHprInterval #needed to move and rotate enemies
 from pandac.PandaModules import VBase3, VBase4
 
+from EnemyData import enemyData
+
 
 class Enemy (DirectObject):
 
-	def __init__(self, uid, handle, modelName, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
+	def __init__(self, uid, type, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
 		self.uid = uid
+		self.type = type
+		self.data = enemyData[type]
 		self.handle = handle
 		self.targetted = False
 		self.deleteMe = False
@@ -24,7 +28,7 @@ class Enemy (DirectObject):
 		
 		taskMgr.add(self.update, "EnemyUpdate" + str(self.uid))
 		
-		self.model = Actor("../assets/models/" + str(modelName) + ".egg")
+		self.model = Actor("../assets/models/" + str(self.data['model']) + ".egg")
 		self.model.reparentTo(self.handle)
 		self.model.setScale(0.1, 0.1, 0.1)
 		self.model.setPos(startPos)
