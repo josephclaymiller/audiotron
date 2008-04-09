@@ -28,8 +28,8 @@ class EnemyManager (DirectObject):
 		self.setupLights()
 		taskMgr.add(self.cleanupEnemies, "EnemyCleanup")
 	
-	def spawnEnemy(self, handle, modelName, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
-		enemy = Enemy(self.enemiesSpawned, handle, modelName, startPos, startHpr)
+	def spawnEnemy(self, type, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
+		enemy = Enemy(self.enemiesSpawned, type, handle, startPos, startHpr)
 		self.enemies.append(enemy)
 		self.enemiesSpawned += 1
 	
@@ -87,7 +87,7 @@ class EnemyManager (DirectObject):
 		self.DLBwhiteNP.setHpr(0, 60, 0)
 	
 	
-	def spawnCircle(self, num = 5, r = 2, modelName = "emenytb_t1", startPos = Point3(0,20,0)):
+	def spawnCircle(self, num = 5, r = 2, type = "testEnemy", startPos = Point3(0,20,0)):
 		handle = self.createHandle(startPos)
 		t = 0
 		step = (2 * math.pi) / num
@@ -95,7 +95,7 @@ class EnemyManager (DirectObject):
 		for i in range(num):
 			x = math.cos(t) * r
 			z = math.sin(t) * r
-			self.spawnEnemy(handle, modelName, Point3(x,0,z))
+			self.spawnEnemy(type, handle, Point3(x,0,z))
 			t += step
 		
 		
@@ -112,7 +112,7 @@ class EnemyManager (DirectObject):
 		return handle
 		
 	#returns a handle
-	def spawnSpiral(self, num = 5, r = 2, direction = 1, depth = 50, modelName = "emenytb_t1", startPos = Point3(0,0,0)):
+	def spawnSpiral(self, num = 5, r = 2, direction = 1, depth = 50, type = "testEnemy", startPos = Point3(0,0,0)):
 		handle = self.createHandle(startPos)
 		
 		t = 0
@@ -122,7 +122,7 @@ class EnemyManager (DirectObject):
 		for i in range(num):
 			x = math.cos(t) * r * direction
 			z = math.sin(t) * r * direction
-			self.spawnEnemy(handle, modelName, Point3(x, depth * i, z))
+			self.spawnEnemy(type, handle, Point3(x, depth * i, z))
 			t += step
 		
 		return handle
