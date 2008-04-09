@@ -73,9 +73,8 @@ class World (DirectObject):
 		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
-		self.enemyHandle = self.enemyManager.spawnCircle()
-		self.enemyManager.moveSpiral(self.enemyHandle)
-		
+		self.enemyHandle = self.enemyManager.spawnSpiral()
+		self.enemyManager.moveForward(self.enemyHandle)
 		
 		if config.EMULATE_WIIMOTE:
 			taskMgr.add(self.wiimoteEmulator.update, "updateEmulator")
