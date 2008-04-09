@@ -76,8 +76,8 @@ class World (DirectObject):
 		base.setBackgroundColor(0,0,0) #set the background color to black
 		self.setupCollision()
 		self.player = Player(self.wiimoteManager)
-		self.enemyManager = EnemyManager()
 		self.musicController = MusicController()
+		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
 		self.enemyHandle = self.enemyManager.spawnCircle()
