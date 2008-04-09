@@ -47,7 +47,11 @@ class EnemyManager (DirectObject):
 		for lightName in enemyData[enemyType]['lighting']:
 			handle.setLight(self.lights[lightName])
 		
-		self.musicController.addPulsingElement(handle, enemyData[enemyType]['beatsPulse'])
+		if len(enemyData[enemyType]['beatsPulse']) > 0:
+			self.musicController.addPulsingElement(handle, enemyData[enemyType]['beatsPulse'])
+		
+		if len(enemyData[enemyType]['beatsLight']) > 0:
+			self.musicController.addLitElement(handle, enemyData[enemyType]['beatsLight'])
 		
 		return handle
 		
