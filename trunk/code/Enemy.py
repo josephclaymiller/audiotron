@@ -1,5 +1,3 @@
-import math #for spawining circles and such
-
 from direct.showbase.DirectObject import DirectObject
 from direct.actor.Actor import Actor
 from direct.task import Task
@@ -17,7 +15,7 @@ from pandac.PandaModules import VBase3, VBase4
 class Enemy (DirectObject):
 
 	def __init__(self, uid, handle, modelName, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
-		self.uid = uid		
+		self.uid = uid
 		self.handle = handle
 		self.deleteMe = False
 		
@@ -50,6 +48,8 @@ class Enemy (DirectObject):
 							 startHpr=VBase3(0,0,0)
 							 )
 		self.enemyMove.loop()
+		
+		
 		
 	
 	def destroy(self):
