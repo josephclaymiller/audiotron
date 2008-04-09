@@ -4,7 +4,8 @@ from direct.task import Task
 
 class WiimoteEmulator(DirectObject):
 	def __init__(self, wiimoteManager):
-		self.accept('mouse1', self.mouseClick)
+		self.accept('mouse1', self.mouseDown)
+		self.accept('mouse1-up', self.mouseUp)
 		self.accept('w', self.startMoveUp)
 		self.accept('s', self.startMoveDown)
 		self.accept('a', self.startMoveLeft)
@@ -48,8 +49,11 @@ class WiimoteEmulator(DirectObject):
 		self.wm.pointerLock.release()
 		return Task.cont
 	
-	def mouseClick(self):
-		messenger.send("FireButton")
+	def mouseDown(self):
+		messenger.send("FireButtonDown")
+		
+	def mouseUp(self):
+		messenger.send("FireButtonUp")
 		
 	def startMoveUp(self):
 		self.yMove -= self.ySpeed

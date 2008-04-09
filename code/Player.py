@@ -31,6 +31,9 @@ class Player (DirectObject):
 		if not config.MANUAL_CAMERA_CONTROL:
 			taskMgr.add(self.headTracker.update, "HeadTrackerUpdate")
 			base.disableMouse()
+		
+		self.targettedEnemies = []
+		self.targetting = False
 
 		self.targetImage = OnscreenImage(image = "..//assets//images//targetCursor.png", pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
 		self.targetImage.setTransparency(TransparencyAttrib.MAlpha)
@@ -47,15 +50,31 @@ class Player (DirectObject):
 		self.cRayTrav = CollisionTraverser('ShootingRayTraverser')
 		self.cRayTrav.addCollider(cNodePath, self.cHandler)
 		
-		#self.accept('cPlayerShootRay-into-cEnemy', self.collisionRayEnemy)
-		self.accept("FireButton", self.fire)
+		self.accept("FireButtonDown", self.fireButtonDown)
+		self.accept("FireButtonUp", self.fireButtonUp)
 		taskMgr.add(self.update, "PlayerUpdate")
+	
+	def fireButtonDown(self):
+		self.targetting = True
+		
+	def fireButtonUp(self):
+		self.targetting = False
+		for enemy in self.targettedEnemies:
+			enemy.destroy()
 	
 	def update(self, task):
 		self.wm.pointerLock.acquire()
 		if (self.wm.pointerData.screen.valid):
-			self.shootRay.setFromLens(base.camNode, self.wm.pointerData.screen.x, self.wm.pointerData.screen.y)
 			self.targetImage.setPos(self.wm.pointerData.screen.x, 0, self.wm.pointerData.screen.y)
+			
+			if (self.targetting):
+				self.shootRay.setFromLens(base.camNode, self.wm.pointerData.screen.x, self.wm.pointerData.screen.y)
+				self.cRayTrav.traverse(render)
+				
+				if (self.cHandler.getNumEntries() > 0):
+					self.cHandler.sortEntries()
+					shotNode = self.cHandler.getEntry(0).getIntoNodePath()
+					messenger.send('cPlayerShootRay-into-cEnemy', [int(shotNode.getName().strip('cEnemy')), self])
 		
 		self.wm.pointerLock.release()
 		return Task.cont
