@@ -8,18 +8,24 @@ from pandac.PandaModules import NodePath
 from pandac.PandaModules import PandaNode
 from pandac.PandaModules import Point3
 
+from pandac.PandaModules import AmbientLight, DirectionalLight #needed to setup lighting
+from pandac.PandaModules import VBase4
+
 from Enemy import Enemy
 
 
 class EnemyManager (DirectObject):
 
-	def __init__(self):
+	def __init__(self, musicController):
+		self.musicController = musicController
+		
 		self.enemies = []
 		self.enemiesSpawned = 0
 		
 		self.handles = []
 		self.handlesCreated = 0
 		
+		self.setupLights()
 		taskMgr.add(self.cleanupEnemies, "EnemyCleanup")
 	
 	def spawnEnemy(self, handle, modelName, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
@@ -51,6 +57,34 @@ class EnemyManager (DirectObject):
 				
 				
 		return Task.cont
+		
+	def setupLights(self):
+		#red ambient light
+		self.ALred = AmbientLight('ALred')
+		self.ALred.setColor(VBase4(1,0,0,1))
+		self.ALredNP = render.attachNewNode(self.ALred)
+		
+		#green ambient light
+		self.ALgreen = AmbientLight('ALgreen')
+		self.ALgreen.setColor(VBase4(0,1,0,1))
+		self.ALgreenNP = render.attachNewNode(self.ALgreen)
+		
+		#blue ambient light
+		self.ALblue = AmbientLight('ALblue')
+		self.ALblue.setColor(VBase4(0,0,1,1))
+		self.ALblueNP = render.attachNewNode(self.ALblue)
+		
+		#blue right directional Light
+		self.DLRblue = DirectionalLight('self.DLRblue')
+		self.DLRblue.setColor(VBase4(0, 0, 1, 1))
+		self.DLRblueNP = render.attachNewNode(self.DLRblue)
+		self.DLRblueNP.setHpr(45, -45, 0)
+		
+		#white bottom directional light
+		self.DLBwhite = DirectionalLight('self.DLBwhite')
+		self.DLBwhite.setColor(VBase4(1, 1, 1, 1))
+		self.DLBwhiteNP = render.attachNewNode(self.DLBwhite)
+		self.DLBwhiteNP.setHpr(0, 60, 0)
 	
 	
 	def spawnCircle(self, num = 5, r = 2, modelName = "emenytb_t1", startPos = Point3(0,20,0)):
@@ -64,10 +98,21 @@ class EnemyManager (DirectObject):
 			self.spawnEnemy(handle, modelName, Point3(x,0,z))
 			t += step
 		
+		
+		#TRIAL ADD LIGHTS AND PULSE
+		handle.setLight(self.ALredNP)
+		handle.setLight(self.DLRblueNP)
+		handle.setLight(self.DLBwhiteNP)
+		
+		
+		pulse = [x*4 for x in range(self.musicController.numSixteenths/4)]
+		self.musicController.addPulsingElement(handle, pulse)
+		
+		#END TRIAL ADD LIGHTS AND PULSE
 		return handle
 		
 	#returns a handle
-	def spawnSpiral(self, num = 5, r = 2, direction = 1, depth = 50, modelName = "emenytb_t1", startPos = Point3(0,20,0)):
+	def spawnSpiral(self, num = 5, r = 2, direction = 1, depth = 50, modelName = "emenytb_t1", startPos = Point3(0,0,0)):
 		handle = self.createHandle(startPos)
 		
 		t = 0
