@@ -17,6 +17,7 @@ class Enemy (DirectObject):
 	def __init__(self, uid, handle, modelName, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
 		self.uid = uid
 		self.handle = handle
+		self.targetted = False
 		self.deleteMe = False
 		
 		handle.setTag("enemyChildren", str(int(handle.getTag("enemyChildren")) + 1))
@@ -66,7 +67,8 @@ class Enemy (DirectObject):
 	def update(self, task):
 		return Task.cont
 
-	def shotByPlayer(self, id):
-		#print "Enemy", self.uid, " shot by player!"
-		if (id == self.uid):
-			self.destroy()
+	def shotByPlayer(self, id, player):
+		if (id == self.uid and not self.targetted):
+			print "Enemy", self.uid, " shot by player!"
+			player.targettedEnemies.append(self)
+			self.targetted = True

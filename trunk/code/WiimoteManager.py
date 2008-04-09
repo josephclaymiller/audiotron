@@ -82,12 +82,13 @@ class WiimoteManager(threading.Thread):
 			self.pointerLock.acquire()
 			wmdata = self.pointerData
 
-		if (wiiuse.is_just_pressed(wm, wiiuse.button['A'])):
+		if (config.TOGGLE_RUMBLE_TEST and wiiuse.is_just_pressed(wm, wiiuse.button['A'])):
 			wiiuse.toggle_rumble(wmp)
 		
-		
 		if (wiiuse.is_just_pressed(wm, wiiuse.button['B'])):
-			messenger.send("FireButton")
+			messenger.send("FireButtonDown")
+		elif (wiiuse.is_released(wm, wiiuse.button['B'])):
+			messenger.send("FireButtonUp")
 
 		if (wiiuse.using_ir(wm)):
 			if (wm.ir.dot[0].visible):
