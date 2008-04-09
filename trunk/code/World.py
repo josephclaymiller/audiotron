@@ -73,7 +73,7 @@ class World (DirectObject):
 		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
-		self.enemyHandle = self.enemyManager.spawnCircle()
+		self.enemyHandle = self.enemyManager.spawnSpiral()
 		
 		
 		if config.EMULATE_WIIMOTE:
