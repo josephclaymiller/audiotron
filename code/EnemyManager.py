@@ -103,8 +103,9 @@ class EnemyManager (DirectObject):
 		self.lights['DLBwhite'] = self.DLBwhiteNP
 	
 	
-	def spawnCircle(self, num = 5, r = 2, type = "testEnemy", startPos = Point3(0,20,0)):
+	def spawnCircle(self, type = "testEnemy", num = 5, r = 2, startPos = Point3(0,20,0)):
 		handle = self.createHandle(type, startPos)
+		
 		t = 0
 		step = (2 * math.pi) / num
 		
@@ -118,7 +119,7 @@ class EnemyManager (DirectObject):
 		
 		
 	#returns a handle
-	def spawnSpiral(self, num = 5, r = 2, direction = 1, depth = 50, type = "testEnemy", startPos = Point3(0,0,0)):
+	def spawnSpiral(self, type = "testEnemy", num = 5, r = 2, direction = 1, depth = 50, startPos = Point3(0,0,0)):
 		handle = self.createHandle(type, startPos)
 		
 		t = 0
@@ -130,18 +131,6 @@ class EnemyManager (DirectObject):
 			z = math.sin(t) * r * direction
 			self.spawnEnemy(type, handle, Point3(x, depth * i, z))
 			t += step
-		
-		
-		#TRIAL ADD LIGHTS AND PULSE
-		handle.setLight(self.ALredNP)
-		handle.setLight(self.DLRblueNP)
-		handle.setLight(self.DLBwhiteNP)
-		
-		
-		pulse = [x*4 for x in range(self.musicController.numSixteenths/4)]
-		self.musicController.addPulsingElement(handle, pulse)
-		
-		#END TRIAL ADD LIGHTS AND PULSE
 		
 		return handle
 		
