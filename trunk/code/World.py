@@ -12,10 +12,16 @@ from direct.gui.OnscreenImage import OnscreenImage
 from pandac.PandaModules import NodePath
 from pandac.PandaModules import PandaNode
 from pandac.PandaModules import Point3
+from pandac.PandaModules import Vec3
 from pandac.PandaModules import CollisionHandlerEvent
 from pandac.PandaModules import CollisionTraverser
+from pandac.PandaModules import CollisionPlane
+from pandac.PandaModules import CollisionNode
+from pandac.PandaModules import Plane
+from pandac.PandaModules import BitMask32
 
 import config
+import CollisionBitMasks
 from WiimoteManager import WiimoteManager
 from WiimoteEmulator import WiimoteEmulator
 from Enemy import Enemy
@@ -73,8 +79,8 @@ class World (DirectObject):
 		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
-		self.enemyHandle = self.enemyManager.spawnSpiral()
-		self.enemyManager.moveForward(self.enemyHandle)
+		self.enemyHandle = self.enemyManager.spawnCircle()
+		self.enemyManager.moveSpiral(self.enemyHandle)
 		
 		if config.EMULATE_WIIMOTE:
 			taskMgr.add(self.wiimoteEmulator.update, "updateEmulator")
@@ -88,5 +94,13 @@ class World (DirectObject):
 
 		self.cTrav = CollisionTraverser()
 		base.cTrav = self.cTrav
-
+		
+		enemyKillPlane = CollisionPlane(Plane(Vec3(0, 1, 0), Point3(0, -10, 0)))
+		cKillPlaneNode = CollisionNode('cEnemyKillPlane')
+		cKillPlaneNode.setFromCollideMask(BitMask32.allOff())
+		cKillPlaneNode.setIntoCollideMask(CollisionBitMasks.enemyMask)
+		cKillPlaneNode.addSolid(enemyKillPlane)
+		cNodePath = render.attachNewNode(cKillPlaneNode)
+		cNodePath.show()
+		base.cTrav.addCollider(cNodePath, base.cHandler)
 	
