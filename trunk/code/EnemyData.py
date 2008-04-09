@@ -5,7 +5,7 @@ enemyData = \
 {
 	"testEnemy":
 	{
-		"model":		"emenytb_t1",
+		"model":		"enemy_tb_trans_am_incan",
 		"music":		"some.wav",
 		"lighting":		('ALred', 'DLRblue', 'DLBwhite'),
 		"beatsPulse":	[x * 4 for x in range(sixteenths / 4)],
