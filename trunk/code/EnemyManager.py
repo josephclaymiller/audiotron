@@ -51,9 +51,9 @@ class EnemyManager (DirectObject):
 		for handle in self.handles:
 			if (int(handle.getTag("enemyChildren")) == 0):
 				print "Removing ", handle.getName()
-				#messenger.send('removeEnemyHandle', [handle])
+				messenger.send('removeEnemyHandle', [handle])
 				self.handles.remove(handle)
-				#handle.removeNode()
+				handle.removeNode()
 				
 				
 		return Task.cont
