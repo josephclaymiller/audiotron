@@ -28,7 +28,7 @@ class Enemy (DirectObject):
 		
 		taskMgr.add(self.update, "EnemyUpdate" + str(self.uid))
 		
-		self.model = Actor("../assets/models/" + str(self.data['model']) + ".egg")
+		self.model = Actor("..//assets//models//enemies//Enemies Trans Am Incan//" + str(self.data['model']) + ".egg")
 		self.model.reparentTo(self.handle)
 		self.model.setScale(0.1, 0.1, 0.1)
 		self.model.setPos(startPos)

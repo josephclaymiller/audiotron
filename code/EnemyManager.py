@@ -9,7 +9,9 @@ from pandac.PandaModules import PandaNode
 from pandac.PandaModules import Point3
 
 from pandac.PandaModules import AmbientLight, DirectionalLight #needed to setup lighting
-from pandac.PandaModules import VBase4
+from pandac.PandaModules import VBase4, VBase3
+
+from direct.interval.LerpInterval import LerpPosInterval, LerpPosHprInterval #needed for movement
 
 from Enemy import Enemy
 from EnemyData import enemyData
@@ -129,5 +131,34 @@ class EnemyManager (DirectObject):
 			self.spawnEnemy(type, handle, Point3(x, depth * i, z))
 			t += step
 		
+		
+		#TRIAL ADD LIGHTS AND PULSE
+		handle.setLight(self.ALredNP)
+		handle.setLight(self.DLRblueNP)
+		handle.setLight(self.DLBwhiteNP)
+		
+		
+		pulse = [x*4 for x in range(self.musicController.numSixteenths/4)]
+		self.musicController.addPulsingElement(handle, pulse)
+		
+		#END TRIAL ADD LIGHTS AND PULSE
+		
 		return handle
-			
+		
+	def moveForward(self, handle, len=50, steps=4, endPos=Point3(0,0,0)):
+		interval=LerpPosInterval(handle,
+							 duration = steps*1.846,
+							 pos=endPos, 
+							 startPos=VBase3(0,steps*len+endPos.getY(),0)
+							 )
+		interval.start()
+		
+	def moveSpiral(self, handle, direction=1, depth=50, len=50, steps=4, endPos=Point3(0,0,0)):
+		interval=LerpPosHprInterval(handle,
+							 duration = steps*1.846,
+							 pos=VBase3(endPos.getX(), endPos.getY()-depth, endPos.getZ()), #change .5 to .305
+							 hpr=VBase3(0,0,steps*180),
+							 startPos=VBase3(0,steps*len+endPos.getY(),0),
+							 startHpr=VBase3(0,0,0)
+							 )
+		interval.start()
