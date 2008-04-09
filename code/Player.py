@@ -10,10 +10,10 @@ from pandac.PandaModules import CollisionNode
 from pandac.PandaModules import CollisionRay
 from pandac.PandaModules import CollisionTraverser
 from pandac.PandaModules import CollisionHandlerQueue
-from pandac.PandaModules import GeomNode
 from pandac.PandaModules import BitMask32
 
 import config
+import CollisionBitMasks
 
 if config.HEADTRACK_3D:
 	from HeadTracker3D import *
@@ -39,7 +39,7 @@ class Player (DirectObject):
 		self.targetImage.setTransparency(TransparencyAttrib.MAlpha)
 		
 		self.cShootNode = CollisionNode('cPlayerShootRay')
-		self.cShootNode.setFromCollideMask(BitMask32(42))
+		self.cShootNode.setFromCollideMask(CollisionBitMasks.shootRayMask)
 		self.cShootNode.setIntoCollideMask(BitMask32.allOff())
 		self.shootRay = CollisionRay()
 		self.cShootNode.addSolid(self.shootRay)
@@ -74,7 +74,7 @@ class Player (DirectObject):
 				if (self.cHandler.getNumEntries() > 0):
 					self.cHandler.sortEntries()
 					shotNode = self.cHandler.getEntry(0).getIntoNodePath()
-					messenger.send('cPlayerShootRay-into-cEnemy', [int(shotNode.getName().strip('cEnemy')), self])
+					messenger.send('EnemyTargetted', [int(shotNode.getName().strip('cEnemy')), self])
 		
 		self.wm.pointerLock.release()
 		return Task.cont
