@@ -6,8 +6,9 @@ import math
 
 
 class HeadTracker(DirectObject):
-	def __init__(self, wiimoteManager):
+	def __init__(self, wiimoteManager, playerHandle):
 		self.wm = wiimoteManager
+		self.playerHandle = playerHandle
 	
 		self.basePos = Point3(0, 0, 0)
 		self.headPos = Point3(self.basePos)
@@ -38,7 +39,7 @@ class HeadTracker(DirectObject):
 		
 		self.wm.trackerLock.release()
 		
-		base.camera.setPos(self.headPos)
+		self.playerHandle.setPos(self.headPos)
 		base.camera.lookAt(self.lookPos)
 		
 		return Task.cont

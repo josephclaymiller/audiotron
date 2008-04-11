@@ -79,10 +79,10 @@ class World (DirectObject):
 		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
-		self.enemyHandle1 = self.enemyManager.spawnCircle('1', 5, 1)
-		self.enemyHandle2 = self.enemyManager.spawnCircle('2', 5, 2)
-		self.enemyHandle3 = self.enemyManager.spawnCircle('3', 5, 3)
-		#self.enemyManager.moveSpiral(self.enemyHandle)
+		#self.enemyHandle1 = self.enemyManager.spawnCircle('1', 5, 1)
+		#self.enemyHandle2 = self.enemyManager.spawnCircle('2', 5, 2)
+		self.enemyHandle3 = self.enemyManager.spawnCircle('testEnemy', 5, 2)
+		self.enemyManager.moveForward(self.enemyHandle3)
 		
 		for x in range(12,17):
 			print x*16
