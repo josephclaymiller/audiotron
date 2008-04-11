@@ -114,25 +114,25 @@ class EnemyManager (DirectObject):
 		self.lights['DLRblue'] = self.DLRblueNP
 		
 		#red left directional Light
-		self.DLRred = DirectionalLight('DLRred')
-		self.DLRred.setColor(VBase4(1, 0, 0, 1))
-		self.DLRredNP = render.attachNewNode(self.DLRred)
-		self.DLRredNP.setHpr(-45, -45, 0)
-		self.lights['DLRred'] = self.DLRredNP
+		self.DLLred = DirectionalLight('DLLred')
+		self.DLLred.setColor(VBase4(1, 0, 0, 1))
+		self.DLLredNP = render.attachNewNode(self.DLLred)
+		self.DLLredNP.setHpr(-45, -45, 0)
+		self.lights['DLLred'] = self.DLLredNP
 		
 		#green left directional Light
-		self.DLRgreen = DirectionalLight('DLRgreen')
-		self.DLRgreen.setColor(VBase4(0, 1, 0, 1))
-		self.DLRgreenNP = render.attachNewNode(self.DLRgreen)
-		self.DLRgreenNP.setHpr(-45, -45, 0)
-		self.lights['DLRgreen'] = self.DLRgreenNP
+		self.DLLgreen = DirectionalLight('DLLgreen')
+		self.DLLgreen.setColor(VBase4(0, 1, 0, 1))
+		self.DLLgreenNP = render.attachNewNode(self.DLLgreen)
+		self.DLLgreenNP.setHpr(-45, -45, 0)
+		self.lights['DLLgreen'] = self.DLLgreenNP
 		
 		#blue left directional Light
-		self.DLRblue = DirectionalLight('DLRblue')
-		self.DLRblue.setColor(VBase4(0, 0, 1, 1))
-		self.DLRblueNP = render.attachNewNode(self.DLRblue)
-		self.DLRblueNP.setHpr(-45, -45, 0)
-		self.lights['DLRblue'] = self.DLRblueNP
+		self.DLLblue = DirectionalLight('DLLblue')
+		self.DLLblue.setColor(VBase4(0, 0, 1, 1))
+		self.DLLblueNP = render.attachNewNode(self.DLLblue)
+		self.DLLblueNP.setHpr(-45, -45, 0)
+		self.lights['DLLblue'] = self.DLLblueNP
 		
 		#white bottom directional light
 		self.DLBwhite = DirectionalLight('DLBwhite')
