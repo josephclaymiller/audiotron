@@ -23,10 +23,11 @@ else:
 
 class Player (DirectObject):
 
-	def __init__(self, wiimoteManager):
+	def __init__(self, wiimoteManager, musicController):
 	
 		self.wm = wiimoteManager
 		self.headTracker = HeadTracker(wiimoteManager)
+		self.musicController = musicController
 
 		if not config.MANUAL_CAMERA_CONTROL:
 			taskMgr.add(self.headTracker.update, "HeadTrackerUpdate")
@@ -59,8 +60,15 @@ class Player (DirectObject):
 		
 	def fireButtonUp(self):
 		self.targetting = False
+		combo = {}
 		for enemy in self.targettedEnemies:
-			enemy.destroy()
+			if (enemy.type in combo):
+				combo[enemy.type] += 1
+			else:
+				combo[enemy.type] = 1
+		
+		self.musicController.addDestructionElements(self.targettedEnemies)
+		self.targettedEnemies = []
 	
 	def update(self, task):
 		self.wm.pointerLock.acquire()
