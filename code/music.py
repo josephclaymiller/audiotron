@@ -20,19 +20,7 @@ class MusicController(DirectObject):
 		self.music = [] #needs to be filled with sounds loaded like "self.music.append(loader.loadSfx("SoundFile.wav"))"
 		self.tempMusic = [] #a temp array for playing music...gets cleared every new loop
 		
-		#TRIAL
-		#self.music.append(loader.loadSfx("SFX//NeverHome.mp3"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Drums Least.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Rhythm Guitar.wav")) #done
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Tom Hon Solo.wav"))#done
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin hachacha.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Melody Guitar.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Trumpet.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals Hi.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin Backup Guitar.wav"))
-		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane upbeat Vidaurri.wav"))#done #TRIAL DELETE
-		
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Drums Least.wav")) #always load drum track
 		
 		self.sixteenth=0
 		self.secondsPerSixteenth=self.secondsPerLoop/self.numSixteenths
