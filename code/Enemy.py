@@ -46,6 +46,7 @@ class Enemy (DirectObject):
 		
 		self.accept('EnemyTargetted', self.shotByPlayer)
 		self.accept('cEnemy' + str(self.uid) + '-into-cEnemyKillPlane', self.hitKillPlane)
+		self.accept('cEnemy' + str(self.uid) + '-into-cPlayerSphere', self.hitPlayer)
 		
 		#rotate stuff
 		self.enemyMove = LerpHprInterval(self.model,
@@ -57,6 +58,9 @@ class Enemy (DirectObject):
 		
 	def hitKillPlane(self, event):
 		self.destroy()
+	
+	def hitPlayer(self, event):
+		messenger.send("EnemyHitPlayer")
 		
 	def destroy(self):
 		if not self.deleteMe:

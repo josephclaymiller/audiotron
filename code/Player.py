@@ -8,9 +8,12 @@ from pandac.PandaModules import TransparencyAttrib
 
 from pandac.PandaModules import CollisionNode
 from pandac.PandaModules import CollisionRay
+from pandac.PandaModules import CollisionSphere
 from pandac.PandaModules import CollisionTraverser
 from pandac.PandaModules import CollisionHandlerQueue
 from pandac.PandaModules import BitMask32
+from pandac.PandaModules import NodePath
+from pandac.PandaModules import PandaNode
 
 import config
 import CollisionBitMasks
@@ -26,8 +29,12 @@ class Player (DirectObject):
 	def __init__(self, wiimoteManager, musicController):
 	
 		self.wm = wiimoteManager
-		self.headTracker = HeadTracker(wiimoteManager)
+		self.handle = NodePath(PandaNode("PlayerHandle"))
+		self.headTracker = HeadTracker(self.wm, self.handle)
 		self.musicController = musicController
+		
+		self.handle.reparentTo(render)
+		base.camera.reparentTo(self.handle)
 
 		if not config.MANUAL_CAMERA_CONTROL:
 			taskMgr.add(self.headTracker.update, "HeadTrackerUpdate")
@@ -45,7 +52,12 @@ class Player (DirectObject):
 		self.shootRay = CollisionRay()
 		self.cShootNode.addSolid(self.shootRay)
 		cNodePath = base.camera.attachNewNode(self.cShootNode)
-		cNodePath.show()
+		
+		self.cSphereNode = self.handle.attachNewNode(CollisionNode('cPlayerSphere'))
+		self.cSphereNode.node().setFromCollideMask(BitMask32.allOff())
+		self.cSphereNode.node().setIntoCollideMask(CollisionBitMasks.enemyMask)
+		self.cSphereNode.node().addSolid(CollisionSphere(0, 1.35, 0, 0.35))
+		#self.cSphereNode.show()
 		
 		self.cHandler = CollisionHandlerQueue()
 		self.cRayTrav = CollisionTraverser('ShootingRayTraverser')
@@ -53,6 +65,7 @@ class Player (DirectObject):
 		
 		self.accept("FireButtonDown", self.fireButtonDown)
 		self.accept("FireButtonUp", self.fireButtonUp)
+		self.accept("EnemyHitPlayer", self.hitByEnemy)
 		taskMgr.add(self.update, "PlayerUpdate")
 	
 	def fireButtonDown(self):
@@ -69,6 +82,9 @@ class Player (DirectObject):
 		
 		self.musicController.addDestructionElements(self.targettedEnemies)
 		self.targettedEnemies = []
+	
+	def hitByEnemy(self):
+		print "Player hit by enemy!"
 	
 	def update(self, task):
 		self.wm.pointerLock.acquire()
