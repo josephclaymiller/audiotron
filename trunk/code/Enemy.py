@@ -28,19 +28,19 @@ class Enemy (DirectObject):
 		
 		taskMgr.add(self.update, "EnemyUpdate" + str(self.uid))
 		
-		self.model = Actor("..//assets//models//enemies//Enemies Trans Am Incan//" + str(self.data['model']) + ".egg")
+		self.model = Actor("..//assets//models//enemies//Enemies fin//" + str(self.data['model']) + ".egg")
 		self.model.reparentTo(self.handle)
 		self.model.setScale(self.data['scale'])
 		self.model.setPos(startPos)
 		self.model.setHpr(startHpr)
 		self.model.reparentTo(self.handle)
 
-		cs = CollisionSphere(0, 0, 0, 5)
+		cs = CollisionSphere(0, 0, 0, self.data['cScale']) #used to be (0,0,0,5)
 		cNodePath = self.model.attachNewNode(CollisionNode('cEnemy' + str(self.uid)))
 		cNodePath.node().addSolid(cs)
 		cNodePath.node().setFromCollideMask(CollisionBitMasks.enemyMask)
 		cNodePath.node().setIntoCollideMask(CollisionBitMasks.shootRayMask)
-		cNodePath.show()
+		#cNodePath.show()
 		base.cTrav.addCollider(cNodePath, base.cHandler)
 		self.cNodePath = cNodePath
 		

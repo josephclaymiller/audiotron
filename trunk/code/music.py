@@ -22,16 +22,16 @@ class MusicController(DirectObject):
 		
 		#TRIAL
 		#self.music.append(loader.loadSfx("SFX//NeverHome.mp3"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Drums Full.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Rhythm Guitar.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Tom Hon Solo.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin hachacha.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Melody Guitar.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Trumpet.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals Hi.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin Backup Guitar.wav"))
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane upbeat Vidaurri.wav"))#TRIAL DELETE
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Drums Least.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Rhythm Guitar.wav")) #done
+		self.music.append(loader.loadSfx("..//assets//audio//Game2_Tom Hon Solo.wav"))#done
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin hachacha.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Melody Guitar.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Trumpet.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Brian Backup Vocals Hi.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Kevin Backup Guitar.wav"))
+		#self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane upbeat Vidaurri.wav"))#done #TRIAL DELETE
 		
 		
 		self.sixteenth=0
@@ -63,7 +63,7 @@ class MusicController(DirectObject):
 		if time>=self.loopEndTime:
 			self.loopStartTime=time
 			self.loopEndTime=time+self.secondsPerLoop
-			#self.sixteenth=0 #used to need this when sixteenth wasn't reset in the pulseManager (now this is unnecisary)
+			self.sixteenth=0
 			#TRIAL
 			#self.loopEndTime=time+self.music[0].length() #TRIAL DELETE
 			
@@ -171,8 +171,6 @@ class MusicController(DirectObject):
 				
 			#increment sixteenth and check if a new loop has started
 			self.sixteenth+=1
-			if self.sixteenth>=self.numSixteenths:
-				self.sixteenth=0
 		
 		self.lastPulseTime=time
 		return Task.cont
