@@ -40,6 +40,7 @@ class MusicController(DirectObject):
 		self.pulseElements = [] # a list of every pulsing element
 		self.lightQueue = []
 		self.litElements = []
+		self.destructionQueue = []
 		self.lastPulseTime=globalClock.getRealTime()
 		
 		#initialize pulse queue
@@ -52,7 +53,6 @@ class MusicController(DirectObject):
 		taskMgr.add(self.playMusic, "playMusic")
 		taskMgr.add(self.pulseManager, "pulseManager")
 		
-		self.accept('removeEnemyHandle', self.removeElement)
 	
 	def getPos(self):
 		return float((gobalClock.getRealTime-self.loopStartTime)/self.secondsPerLoop)
@@ -153,21 +153,25 @@ class MusicController(DirectObject):
 		#print str(fade)
 		
 		#decrease scale of all pulsing elements
-		for i in range(len(self.pulseElements)):
-			self.pulseElements[i].setScale(self.pulseElements[i].getSx()-deflate)
+		for element in self.pulseElements:
+			element.setScale(element.getSx() - deflate)
 			
 		#decrease lumens of all lit elements
-		for i in range(len(self.litElements)):
-			addBrightness(self.litElements[i],fade)
+		for element in self.litElements:
+			addBrightness(element, fade)
 		
-		if (self.loopStartTime+(self.sixteenth*self.secondsPerSixteenth)) < time:
+		if (self.loopStartTime + (self.sixteenth * self.secondsPerSixteenth)) < time:
 			#pulse elements by scale
-			for i in range(len(self.pulseQueue[self.sixteenth])):
-				self.pulseQueue[self.sixteenth][i].setScale(1)
+			for element in self.pulseQueue[self.sixteenth]:
+				element.setScale(1)
 			#pulse elements by light
-			for i in range(len(self.lightQueue[self.sixteenth])):
-				addBrightness(self.lightQueue[self.sixteenth][i],200)#I can add whatever I want because the max lumens is restricted by restrain
+			for element in self.lightQueue[self.sixteenth]:
+				addBrightness(element, 200)#I can add whatever I want because the max lumens is restricted by restrain
 				#print "Pulse! " + str(self.sixteenth)
+			
+			if (len(self.destructionQueue) > 0):
+				element = self.destructionQueue.pop(0)
+				element.destroy()
 				
 			#increment sixteenth and check if a new loop has started
 			self.sixteenth+=1
@@ -187,7 +191,10 @@ class MusicController(DirectObject):
 			self.lightQueue[beats[i]].append(light)
 			#print "added light pulse to" + str(beats[i])
 	
-	def removeElement(self, element):
+	def addDestructionElements(self, elements):
+		self.destructionQueue.extend(elements)
+	
+	def removePulsingElement(self, element):
 		if (self.pulseElements.count(element)):
 			self.pulseElements.remove(element)
 			

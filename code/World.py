@@ -74,12 +74,14 @@ class World (DirectObject):
 	def start(self):
 		base.setBackgroundColor(0,0,0) #set the background color to black
 		self.setupCollision()
-		self.player = Player(self.wiimoteManager)
 		self.musicController = MusicController()
+		self.player = Player(self.wiimoteManager, self.musicController)
 		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
-		self.enemyHandle = self.enemyManager.spawnCircle()
+		self.enemyHandle1 = self.enemyManager.spawnCircle('1', 5, 1)
+		self.enemyHandle2 = self.enemyManager.spawnCircle('2', 5, 2)
+		self.enemyHandle3 = self.enemyManager.spawnCircle('3', 5, 3)
 		#self.enemyManager.moveSpiral(self.enemyHandle)
 		
 		for x in range(12,17):
