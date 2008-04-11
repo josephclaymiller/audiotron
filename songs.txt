@@ -1,0 +1,20 @@
+#used for enemies
+Game2_Brian Backup Trumpet #late
+Game2_Brian Backup Vocals #late
+Game2_Brian Backup Vocals Hi #late
+Game2_Kevin Backup Guitar #late
+Game2_Kevin hachacha #early
+Game2_Shane Rhythm Guitar #early
+Game2_Shane upbeat Vidaurri #early
+Game2_Tom Hon Solo #early
+
+Game2_Brian Melody Trumpet
+Game2_Shane Melody Guitar
+
+Game2_Shane Drums Full
+Game2_Shane Drums Mid
+Game2_Shane Drums Least
+
+#used when health is low
+Game2_Violin Death
+Game2_Violin Death 2
