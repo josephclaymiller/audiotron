@@ -28,6 +28,8 @@ class EnemyManager (DirectObject):
 		self.handles = []
 		self.handlesCreated = 0
 		
+		self.musicPlaying = {}
+		
 		self.setupLights()
 		taskMgr.add(self.cleanupEnemies, "EnemyCleanup")
 	
@@ -35,6 +37,13 @@ class EnemyManager (DirectObject):
 		enemy = Enemy(self.enemiesSpawned, type, handle, startPos, startHpr)
 		self.enemies.append(enemy)
 		self.enemiesSpawned += 1
+		
+		musicFile = enemyData[type]['music']
+		if musicFile in self.musicPlaying:
+			self.musicPlaying[musicFile]['count'] += 1
+		else:
+			index = self.musicController.queueSound("..//assets//audio//" + musicFile)
+			self.musicPlaying[musicFile] = {'count': 1, 'index': index}
 	
 	def createHandle(self, enemyType, startPos = Point3(0,20,0)):
 		handle = NodePath(PandaNode("EnemyHandle"+str(self.handlesCreated)))
@@ -60,6 +69,12 @@ class EnemyManager (DirectObject):
 		for enemy in self.enemies:
 			if (enemy.deleteMe):
 				self.enemies.remove(enemy)
+				
+				musicFile = enemyData[enemy.type]['music']
+				self.musicPlaying[musicFile]['count'] -= 1
+				if (self.musicPlaying[musicFile]['count'] == 0):
+					self.musicController.killSound(self.musicPlaying[musicFile]['index'])
+					del self.musicPlaying[musicFile]
 			
 		for handle in self.handles:
 			if (int(handle.getTag("enemyChildren")) == 0):
