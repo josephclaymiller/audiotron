@@ -84,19 +84,19 @@ class World (DirectObject):
 		self.enemyHandle3 = self.enemyManager.spawnCircle('testEnemy', 5, 2)
 		#self.enemyManager.moveForward(self.enemyHandle3)
 		
-		for x in range(12,17):
-			print x*16
-			print ','
-			print x*16+2
-			print ','
-			print x*16+6
-			print ','
-			print x*16+10
-			print ','
-			print x*16+12
-			print ','
-			print x*16+14
-			print ','
+	#	for x in range(12,17):
+	#		print x*16
+	#		print ','
+	#		print x*16+2
+	#		print ','
+	#		print x*16+6
+	#		print ','
+	#		print x*16+10
+	#		print ','
+	#		print x*16+12
+	#		print ','
+	#		print x*16+14
+	#		print ','
 			
 		
 		if config.EMULATE_WIIMOTE:

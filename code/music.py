@@ -67,7 +67,8 @@ class MusicController(DirectObject):
 				self.music[i].setTime(globalClock.getRealTime()-time)
 				self.music[i].play()
 				#print i
-				
+		
+		#print str(len(self.music))
 		return Task.cont
 	
 	def addSound(self, name):
@@ -89,6 +90,24 @@ class MusicController(DirectObject):
 			return i
 		#print len(self.music)
 		return -1
+		
+	def fadeOutSound(self, x):
+		if x<len(self.music):
+			taskMgr.add(self.fader, "fader"+str(x), extraArgs=[x, globalClock.getRealTime(), self.music])
+			return x
+		return -1
+	
+	def fader(task, x, time, music):
+		realTime=globalClock.getRealTime()
+		if (realTime-time) < .923:
+			music[x].setVolume(1-((realTime-time)/.923))
+			return Task.cont
+		
+		music[x].stop()
+		loader.unloadSfx(music[x])
+		del music[x]
+		return Task.done
+		
 	
 	def removeSound(self, x):
 		i=len(self.tempMusic)

@@ -73,7 +73,7 @@ class EnemyManager (DirectObject):
 				musicFile = enemyData[enemy.type]['music']
 				self.musicPlaying[musicFile]['count'] -= 1
 				if (self.musicPlaying[musicFile]['count'] == 0):
-					self.musicController.killSound(self.musicPlaying[musicFile]['index'])
+					self.musicController.fadeOutSound(self.musicPlaying[musicFile]['index'])
 					del self.musicPlaying[musicFile]
 			
 		for handle in self.handles:
