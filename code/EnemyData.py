@@ -24,6 +24,7 @@ enemyData = \
 	{
 		'model':		'enmod01',
 		'anim':			'enemy01animation',
+		'playRate':		3.0,
 		'scale':		0.25,
 		'cScale':		2,
 		'music':		'Game2_Brian Backup Trumpet.wav',
