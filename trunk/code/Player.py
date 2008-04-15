@@ -82,6 +82,7 @@ class Player (DirectObject):
 		
 		self.musicController.addDestructionElements(self.targettedEnemies)
 		self.targettedEnemies = []
+		messenger.send("EnemiesComboed", [combo])
 	
 	def hitByEnemy(self):
 		print "Player hit by enemy!"

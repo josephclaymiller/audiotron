@@ -18,6 +18,9 @@
 measures = 17
 sixteenths = measures * 16
 
+enemyLevels = ['testEnemy']
+comboLevels = [4]
+
 enemyData = \
 {
 	'testEnemy':
@@ -27,7 +30,7 @@ enemyData = \
 		'playRate':		3.0,
 		'scale':		0.25,
 		'cScale':		2,
-		'music':		'Game2_Brian Backup Trumpet.wav',
+		'music':		'Game2_Shane Rhythm Guitar.wav',
 		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
 		'beatsPulse':	[0,2,6,10,14,16,18,22,26,30,32,34,38,42,46,48,50,54,58,62,64,66,70,74,78,80,82,86,90,94,96,98,102,106,110,112,114,118,122,126,128,130,134,138,142,144,146,150,154,158,160,162,166,170,174,176,178,182,186,190,192,194,198,202,206,208,210,214,218,222,224,226,230,234,238,240,242,246,250,254,256,258,262,266,270],#[120,124,128,144,160,184],
 		'beatsLight':	[],

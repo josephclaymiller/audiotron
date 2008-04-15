@@ -14,13 +14,15 @@ from pandac.PandaModules import VBase4, VBase3
 from direct.interval.LerpInterval import LerpPosInterval, LerpPosHprInterval #needed for movement
 
 from Enemy import Enemy
-from EnemyData import enemyData
+from EnemyData import enemyData, enemyLevels, comboLevels
 
 
 class EnemyManager (DirectObject):
 
 	def __init__(self, musicController):
 		self.musicController = musicController
+		
+		self.level = 0
 		
 		self.enemies = []
 		self.enemiesSpawned = 0
@@ -31,19 +33,31 @@ class EnemyManager (DirectObject):
 		self.musicPlaying = {}
 		
 		self.setupLights()
-		taskMgr.add(self.cleanupEnemies, "EnemyCleanup")
-	
-	def spawnEnemy(self, type, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
-		enemy = Enemy(self.enemiesSpawned, type, handle, startPos, startHpr)
-		self.enemies.append(enemy)
-		self.enemiesSpawned += 1
 		
-		musicFile = enemyData[type]['music']
+		taskMgr.add(self.cleanupEnemies, "EnemyCleanup")
+		self.accept("EnemiesComboed", self.processCombo)
+	
+	def processCombo(self, combo):
+		if (self.level < len(enemyLevels)):
+			levelType = enemyLevels[self.level]
+			for type, count in combo.iteritems():
+				if (type == levelType and count >= comboLevels[self.level]):
+					self.level += 1
+					self.playMusic(enemyData[type]['music'])
+					print "Unlock music ", enemyData[type]['music']
+	
+	def playMusic(self, musicFile):
 		if musicFile in self.musicPlaying:
 			self.musicPlaying[musicFile]['count'] += 1
 		else:
 			index = self.musicController.queueSound("..//assets//audio//" + musicFile)
 			self.musicPlaying[musicFile] = {'count': 1, 'index': index}
+		
+	def spawnEnemy(self, type, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
+		enemy = Enemy(self.enemiesSpawned, type, handle, startPos, startHpr)
+		self.enemies.append(enemy)
+		self.enemiesSpawned += 1
+		self.playMusic(enemyData[type]['music'])
 	
 	def createHandle(self, enemyType, startPos = Point3(0,20,0)):
 		handle = NodePath(PandaNode("EnemyHandle"+str(self.handlesCreated)))
