@@ -209,6 +209,12 @@ class MusicController(DirectObject):
 			if (sixteenth.count(element)):
 				sixteenth.remove(element)
 	
+	#-------------------------------
+	# CHANGE ME!!!!!!!!!!!
+	#-------------------------------
+	def isOnBeatNow(self):
+		return False
+	
 	def debugPrint(self):
 		print "\n****************"
 		print "Pulse elements: ", len(self.pulseElements)

@@ -41,6 +41,7 @@ class Player (DirectObject):
 			base.disableMouse()
 		
 		self.targettedEnemies = []
+		self.comboSize = 0
 		self.targetting = False
 
 		self.targetImage = OnscreenImage(image = "..//assets//images//targetCursor.png", pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
@@ -70,6 +71,10 @@ class Player (DirectObject):
 	
 	def fireButtonDown(self):
 		self.targetting = True
+		if (self.musicController.isOnBeatNow()):
+			self.maxCombo = 8
+		else:
+			self.maxCombo = 4
 		
 	def fireButtonUp(self):
 		self.targetting = False
@@ -92,7 +97,7 @@ class Player (DirectObject):
 		if (self.wm.pointerData.screen.valid):
 			self.targetImage.setPos(self.wm.pointerData.screen.x, 0, self.wm.pointerData.screen.y)
 			
-			if (self.targetting):
+			if (self.targetting and self.maxCombo > len(self.targettedEnemies)):
 				self.shootRay.setFromLens(base.camNode, self.wm.pointerData.screen.x, self.wm.pointerData.screen.y)
 				self.cRayTrav.traverse(render)
 				
@@ -118,5 +123,3 @@ class Player (DirectObject):
 		
 		self.wm.pointerLock.release()
 
-	def collisionRayEnemy(self, event):
-		print "Player shot enemy!"
