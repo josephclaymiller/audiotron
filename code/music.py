@@ -176,7 +176,7 @@ class MusicController(DirectObject):
 				addBrightness(element, 200)#I can add whatever I want because the max lumens is restricted by restrain
 				#print "Pulse! " + str(self.sixteenth)
 			
-			if (len(self.destructionQueue) > 0):
+			if (len(self.destructionQueue) > 0) and self.sixteenth%2 == 0:
 				element = self.destructionQueue.pop(0)
 				element.destroy()
 				
