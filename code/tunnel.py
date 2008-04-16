@@ -39,7 +39,7 @@ class Tunnel(DirectObject):
 		self.NP.setLight(dlnp)
 		
 		#pulsing dlight
-		pulse = [x*8 for x in range(self.GMC.numSixteenths/8)]
+		pulse = [x*8 for x in range(0,self.GMC.numSixteenths/8)]
 		print str(len(pulse))
 		self.GMC.addLitElement(dlight, pulse)
 		

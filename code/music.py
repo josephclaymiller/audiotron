@@ -6,6 +6,7 @@ from direct.showbase.Loader import Loader #for loading & unloading SFX
 from pandac.PandaModules import AudioSound #for setTime()
 import colorsys #so I can change RGB to HSB
 from pandac.PandaModules import Vec4 #for Vec4
+#import math
 
 class MusicController(DirectObject):
 	
@@ -20,10 +21,12 @@ class MusicController(DirectObject):
 		self.music = [] #needs to be filled with sounds loaded like "self.music.append(loader.loadSfx("SoundFile.wav"))"
 		self.tempMusic = [] #a temp array for playing music...gets cleared every new loop
 		
-		self.music.append(loader.loadSfx("..//assets//audio//Game2_Shane Drums Least.wav")) #always load drum track
+		self.dieSFX = loader.loadSfx("..//assets//audio//FX_135.wav")
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Drums Least.wav")) #always load drum track
 		
 		self.sixteenth=0
 		self.secondsPerSixteenth=self.secondsPerLoop/self.numSixteenths
+		self.timingWindow=self.secondsPerSixteenth/2
 		self.pulseQueue = [] #a list of every pulse (divided into 16th notes)
 		self.pulseElements = [] # a list of every pulsing element
 		self.lightQueue = []
@@ -178,6 +181,7 @@ class MusicController(DirectObject):
 			
 			if (len(self.destructionQueue) > 0) and self.sixteenth%2 == 0:
 				element = self.destructionQueue.pop(0)
+				self.dieSFX.play()
 				element.destroy()
 				
 			#increment sixteenth and check if a new loop has started
@@ -212,7 +216,19 @@ class MusicController(DirectObject):
 	#-------------------------------
 	# CHANGE ME!!!!!!!!!!!
 	#-------------------------------
-	def isOnBeatNow(self):
+	def isOnBeatNow(self, time):
+		thirtysecond=(time-self.loopStartTime)/(self.secondsPerSixteenth/2)
+		beat = int(thirtysecond)%8
+		
+		print "time: " + str(time-self.loopStartTime)
+		print "shot time: " + str(thirtysecond)
+		print "shot beat: " + str(beat)
+		
+		if beat == 0 or beat == 7:
+			print "true"
+			return True
+		
+		print "false"
 		return False
 	
 	def debugPrint(self):
