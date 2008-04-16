@@ -70,8 +70,9 @@ class Player (DirectObject):
 		taskMgr.add(self.update, "PlayerUpdate")
 	
 	def fireButtonDown(self):
+		time=globalClock.getRealTime()
 		self.targetting = True
-		if (self.musicController.isOnBeatNow()):
+		if (self.musicController.isOnBeatNow(time)):
 			self.maxCombo = 8
 		else:
 			self.maxCombo = 4
