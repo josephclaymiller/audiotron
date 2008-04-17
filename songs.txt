@@ -1,20 +1,22 @@
 #used for enemies
-Game2_Brian Backup Trumpet #late
-Game2_Brian Backup Vocals #late
-Game2_Brian Backup Vocals Hi #late
-Game2_Kevin Backup Guitar #late
-Game2_Kevin hachacha #early
-Game2_Shane Rhythm Guitar #early
-Game2_Shane upbeat Vidaurri #early
-Game2_Tom Hon Solo #early
+Game2Stereo_Brian Backup Trumpet #late		4
+Game2Stereo_Brian Backup Vocals #late		5
+Game2Stereo_Brian Backup Vocals Hi #late	5
+Game2Stereo_Kevin Backup Guitar #late		4
+Game2Stereo_Kevin hachacha #early			3
+Game2Stereo_Shane Rhythm Guitar #early		2
+Game2Stereo_Shane upbeat Vidaurri #early	3
+Game2Stereo_Tom Hon Solo #early				1
 
-Game2_Brian Melody Trumpet
-Game2_Shane Melody Guitar
+#points or end
+Game2Stereo_Brian Melody Trumpet
+Game2Stereo_Shane Melody Guitar
 
-Game2_Shane Drums Full
-Game2_Shane Drums Mid
-Game2_Shane Drums Least
+#time or points
+Game2Stereo_Shane Drums Full
+Game2Stereo_Shane Drums Mid
+Game2Stereo_Shane Drums Least
 
 #used when health is low
-Game2_Violin Death
-Game2_Violin Death 2
+Game2Stereo_Violin Death
+Game2Stereo_Violin Death 2
