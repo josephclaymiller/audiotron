@@ -43,6 +43,7 @@ class Player (DirectObject):
 		self.targettedEnemies = []
 		self.comboSize = 0
 		self.targetting = False
+		self.targetTime = 0
 
 		self.targetImage = OnscreenImage(image = "..//assets//images//targetCursor.png", pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
 		self.targetImage.setTransparency(TransparencyAttrib.MAlpha)
@@ -72,13 +73,44 @@ class Player (DirectObject):
 	def fireButtonDown(self):
 		time=globalClock.getRealTime()
 		self.targetting = True
+		
+		#finding fireButtonUp time
+		targetSixteenth=int((time-self.musicController.loopStartTime)/self.musicController.secondsPerSixteenth)
+		beat = targetSixteenth%4
+		#making targetSixteenth always be on beat!
+		targetSixteenth+=(4-beat)
+		
+		print str(beat)
+		
 		if (self.musicController.isOnBeatNow(time)):
-			self.maxCombo = 8
+			print "nice job"
+			self.maxCombo = 800
+			targetSixteenth+=28
+			if beat == 3:
+				targetSixteenth+=4
 		else:
-			self.maxCombo = 4
+			self.maxCombo = 400
+			targetSixteenth+=12
+		
+		self.targetTime = self.musicController.loopStartTime + targetSixteenth*self.musicController.secondsPerSixteenth
+		taskMgr.add(self.fireTimer, "fireTimer")
+	
+	def fireTimer(self, task):
+		if globalClock.getRealTime()>=self.targetTime:
+			if len(self.musicController.destructionQueue) > 0:
+				element = self.musicController.destructionQueue.pop(0)
+				self.musicController.dieSFX.play()
+				element.destroy()
+			self.fireButtonUp()
+		
+		#print str(globalClock.getRealTime()-self.musicController.loopStartTime)
+		#print str(self.targetTime-self.musicController.loopStartTime)
+		return Task.cont
+			
 		
 	def fireButtonUp(self):
 		self.targetting = False
+		taskMgr.remove("fireTimer")
 		combo = {}
 		for enemy in self.targettedEnemies:
 			if (enemy.type in combo):
