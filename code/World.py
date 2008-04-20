@@ -89,6 +89,7 @@ class World (DirectObject):
 	#		print ','
 
 			
+			
 		
 		if config.EMULATE_WIIMOTE:
 			taskMgr.add(self.wiimoteEmulator.update, "updateEmulator")
