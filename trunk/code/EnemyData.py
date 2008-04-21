@@ -43,89 +43,97 @@ enemyData = \
 		'beatsLight':	[],
 	},
 	
+	#level 1 enemy
 	'1': #pyramid dudes
 	{
 		'model':		'enmod01',
 		'scale':		0.25,
 		'cScale':		2,
-		'music':		'some.wav',
+		'music':		'Game2Stereo_Tom Hon Solo.wav',
 		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
 		'beatsPulse':	[x * 4 for x in range(sixteenths / 4)],
 		'beatsLight':	[],
 	},
 	
+	#level 2 enemy
 	'2': #tri-angle tipped pom-poms
 	{
 		'model':		'enmod12',
 		'scale':		0.075,
 		'cScale':		6.66,
-		'music':		'some.wav',
+		'music':		'Game2Stereo_Shane Rhythm Guitar.wav',
 		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
 		'beatsPulse':	[x * 4 for x in range(sixteenths / 4)],
 		'beatsLight':	[],
 	},
 	
+	#level 3 enemy
 	'3': #cube dudes
 	{
 		'model':		'enmod03',
 		'scale':		0.05,
 		'cScale':		10,
-		'music':		'some.wav',
+		'music':		'Game2Stereo_Shane upbeat Vidaurri.wav',
 		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
 		'beatsPulse':	[x * 4 for x in range(sixteenths / 4)],
 		'beatsLight':	[],
 	},
 	
+	#level 3 enemy
 	'4': #squids
 	{
 		'model':		'enmod04',
 		'scale':		0.125,
 		'cScale':		4,
-		'music':		'some.wav',
+		'music':		'Game2Stereo_Kevin hachacha.wav',
 		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
 		'beatsPulse':	[x * 4 for x in range(sixteenths / 4)],
 		'beatsLight':	[],
 	},
 	
+	#level 4 enemy
 	'5': #dradles
 	{
 		'model':		'enmod05',
 		'scale':		0.075,
 		'cScale':		6.66,
-		'music':		'some.wav',
+		'music':		'Game2Stereo_Kevin Backup Guitar.wav',
 		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
 		'beatsPulse':	[x * 4 for x in range(sixteenths / 4)],
 		'beatsLight':	[],
 	},
 	
+	#level 4 enemy
 	'6': #fans
 	{
 		'model':		'enmod06',
 		'scale':		0.075,
 		'cScale':		6.66,
-		'music':		'some.wav',
+		'music':		'Game2Stereo_Brian Backup Trumpet.wav',
 		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
 		'beatsPulse':	[x * 4 for x in range(sixteenths / 4)],
 		'beatsLight':	[],
 	},
 	
+	#level 5 enemy
 	'7': #x's with flare
 	{
 		'model':		'enmod08',
 		'scale':		0.05,
 		'cScale':		10,
-		'music':		'some.wav',
+		'music':		'Game2Stereo_Brian Backup Vocals Hi.wav',
 		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
 		'beatsPulse':	[x * 4 for x in range(sixteenths / 4)],
 		'beatsLight':	[],
 	},
 	
+	#level 6 enemy
 	'8': #spikes
 	{
 		'model':		'enmod13',
 		'scale':		0.075,
 		'cScale':		6.66,
-		'music':		'some.wav',
+		'music':		'Game2Stereo_Brian Backup Vocals.wav',
 		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
 		'beatsPulse':	[x * 4 for x in range(sixteenths / 4)],
 		'beatsLight':	[],
