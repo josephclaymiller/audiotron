@@ -226,7 +226,7 @@ class MusicController(DirectObject):
 			return True
 		
 		print "false"
-		return True
+		return False
 	
 	def debugPrint(self):
 		print "\n****************"
