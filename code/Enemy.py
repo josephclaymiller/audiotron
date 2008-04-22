@@ -69,7 +69,8 @@ class Enemy (DirectObject):
 		self.enemyMove.loop()
 		
 	def hitKillPlane(self, event):
-		self.destroy()
+		if not self.targetted:
+			self.destroy()
 	
 	def hitPlayer(self, event):
 		messenger.send("EnemyHitPlayer")

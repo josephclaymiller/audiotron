@@ -63,12 +63,24 @@ class EnemyManager (DirectObject):
 		else:
 			index = self.musicController.addSound("..//assets//audio//" + musicFile)
 			self.musicPlaying[musicFile] = {'count': 1, 'index': index}
+	
+	def getValidEnemyTypes(self):
+		validTypes = []
+			
+		for level in range(self.level):
+			for (enemy, combo) in levelData[level]:
+				validTypes.append(enemy)
+		
+		for sublevel in self.sublevels:
+			validTypes.append(levelData[self.level][sublevel][0])
+		
+		return validTypes
 		
 	def spawnEnemy(self, type, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
 		enemy = Enemy(self.enemiesSpawned, type, handle, startPos, startHpr)
 		self.enemies.append(enemy)
 		self.enemiesSpawned += 1
-		self.playMusic(enemyData[type]['music'])
+		#self.playMusic(enemyData[type]['music'])
 	
 	def createHandle(self, enemyType, startPos = Point3(0,20,0)):
 		handle = NodePath(PandaNode("EnemyHandle"+str(self.handlesCreated)))
@@ -95,11 +107,11 @@ class EnemyManager (DirectObject):
 			if (enemy.deleteMe):
 				self.enemies.remove(enemy)
 				
-				musicFile = enemyData[enemy.type]['music']
-				self.musicPlaying[musicFile]['count'] -= 1
-				if (self.musicPlaying[musicFile]['count'] == 0):
-					self.musicController.fadeOutSound(self.musicPlaying[musicFile]['index'])
-					del self.musicPlaying[musicFile]
+				#musicFile = enemyData[enemy.type]['music']
+				#self.musicPlaying[musicFile]['count'] -= 1
+				#if (self.musicPlaying[musicFile]['count'] == 0):
+				#	self.musicController.fadeOutSound(self.musicPlaying[musicFile]['index'])
+				#	del self.musicPlaying[musicFile]
 			
 		for handle in self.handles:
 			if (int(handle.getTag("enemyChildren")) == 0):

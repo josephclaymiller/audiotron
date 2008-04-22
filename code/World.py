@@ -1,8 +1,7 @@
 import sys
 import math
 import threading
-from random import random
-from random import uniform
+import random
 import gc
 
 from direct.showbase.DirectObject import DirectObject
@@ -56,33 +55,27 @@ class World (DirectObject):
 		render.ls()
 			
 	def spawnMoreEnemy(self, task):
-		if (len(self.enemyManager.enemies) == 0 and self.enemyManager.level < len(levelData) and task.frame % 1000 == 0):
-			sublevels = self.enemyManager.sublevels
-			if (len(sublevels) == 1):
-				type = levelData[self.enemyManager.level][sublevels[0]][0]
-				print "Spawning type '", type, "'"
-				self.enemyManager.spawnCircle(type, 8)
+		if (self.enemyManager.level == len(levelData)):
+			return Task.done
+			
+		elif (task.frame % self.spawnRate == 0):
+			validEnemies = self.enemyManager.getValidEnemyTypes()
+			numValid = len(validEnemies)
+			
+			if (numValid >= 3):
+				if (random.random() < 0.5):
+					typeToSpawn = validEnemies[random.randint(numValid - 2, numValid - 1)]
+				else:
+					typeToSpawn = validEnemies[random.randint(0, numValid - 3)]
+					
+			elif (numValid == 2):
+				typeToSpawn = validEnemies[random.randint(0, 1)]
+			
 			else:
-				type1 = levelData[self.enemyManager.level][sublevels[0]][0]
-				type2 = levelData[self.enemyManager.level][sublevels[1]][0]
-				print "Spawning types '", type1, "' and '", type2, "'"
-				self.enemyManager.spawnCircle(type1, 8, 2, Point3(0.5, 17, 0.5))
-				self.enemyManager.spawnCircle(type2, 8, 2, Point3(-0.5, 23, -0.5))
-			
-		#self.enemyManager.spawnCircle()
-		#for enemy in self.enemyManager.enemies:
-		#	enemy.destroy()
-			
-		#if (task.frame % 100 == 0):
-		#	self.enemyManager.spawnSpiral()
-		#elif ((task.frame + 50) % 100 == 0):
-		#	self.enemyManager.spawnCircle()
-		
-		#if (len(self.enemyManager.enemies) > 0):
-		#	for i in range(2):
-		#		index = int(uniform(0, len(self.enemyManager.enemies)))
-		#		print "Delete enemy ", index
-		#		self.enemyManager.enemies[index].destroy()
+				typeToSpawn = validEnemies[0]
+				
+			handle = self.enemyManager.spawnCircle(typeToSpawn, random.randint(3, 8))
+			self.enemyManager.moveForward(handle)
 		
 		return Task.cont
 		
@@ -95,12 +88,9 @@ class World (DirectObject):
 		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
-		self.enemyHandle3 = self.enemyManager.spawnCircle('pyramid_hon', 5, 2)
-		#self.enemyManager.moveForward(self.enemyHandle3)
+		self.spawnRate = 100
 		
-		#test
 		self.accept('r', self.player.hitByEnemy)
-			
 		
 		if config.EMULATE_WIIMOTE:
 			taskMgr.add(self.wiimoteEmulator.update, "updateEmulator")
