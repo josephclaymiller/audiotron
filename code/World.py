@@ -30,6 +30,7 @@ from EnemyData import enemyData, levelData
 from Player import Player
 from tunnel import Tunnel
 from music import MusicController
+from hud import HUD
 
 #trial delete
 from pandac.PandaModules import DirectionalLight, AmbientLight #needed to setup lighting
@@ -89,12 +90,16 @@ class World (DirectObject):
 		base.setBackgroundColor(0,0,0) #set the background color to black
 		self.setupCollision()
 		self.musicController = MusicController()
-		self.player = Player(self.wiimoteManager, self.musicController)
+		self.HUD = HUD()
+		self.player = Player(self.wiimoteManager, self.musicController, self.HUD)
 		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
 		self.enemyHandle3 = self.enemyManager.spawnCircle('pyramid_hon', 5, 2)
 		#self.enemyManager.moveForward(self.enemyHandle3)
+		
+		#test
+		self.accept('r', self.player.hitByEnemy)
 			
 		
 		if config.EMULATE_WIIMOTE:
