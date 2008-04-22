@@ -224,6 +224,14 @@ class MusicController(DirectObject):
 			if (sixteenth.count(element)):
 				sixteenth.remove(element)
 	
+	def removeLitElement(self, element):
+		if (self.litElements.count(element)):
+			self.litElements.remove(element)
+			
+		for sixteenth in self.lightQueue:
+			if (sixteenth.count(element)):
+				sixteenth.remove(element)
+	
 	def isOnBeatNow(self, time):
 		thirtysecond=(time-self.loopStartTime)/(self.secondsPerSixteenth/2)
 		beat = int(thirtysecond)%8
