@@ -26,6 +26,7 @@ from WiimoteManager import WiimoteManager
 from WiimoteEmulator import WiimoteEmulator
 from Enemy import Enemy
 from EnemyManager import EnemyManager
+from EnemyData import enemyData, levelData
 from Player import Player
 from tunnel import Tunnel
 from music import MusicController
@@ -54,6 +55,19 @@ class World (DirectObject):
 		render.ls()
 			
 	def spawnMoreEnemy(self, task):
+		if (len(self.enemyManager.enemies) == 0 and self.enemyManager.level < len(levelData) and task.frame % 1000 == 0):
+			sublevels = self.enemyManager.sublevels
+			if (len(sublevels) == 1):
+				type = levelData[self.enemyManager.level][sublevels[0]][0]
+				print "Spawning type '", type, "'"
+				self.enemyManager.spawnCircle(type, 8)
+			else:
+				type1 = levelData[self.enemyManager.level][sublevels[0]][0]
+				type2 = levelData[self.enemyManager.level][sublevels[1]][0]
+				print "Spawning types '", type1, "' and '", type2, "'"
+				self.enemyManager.spawnCircle(type1, 8, 2, Point3(0.5, 17, 0.5))
+				self.enemyManager.spawnCircle(type2, 8, 2, Point3(-0.5, 23, -0.5))
+			
 		#self.enemyManager.spawnCircle()
 		#for enemy in self.enemyManager.enemies:
 		#	enemy.destroy()
@@ -79,16 +93,8 @@ class World (DirectObject):
 		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
-		#self.enemyHandle1 = self.enemyManager.spawnCircle('1', 5, 1)
-		#self.enemyHandle2 = self.enemyManager.spawnCircle('2', 5, 2)
-		self.enemyHandle3 = self.enemyManager.spawnCircle('testEnemy', 5, 2)
+		self.enemyHandle3 = self.enemyManager.spawnCircle('pyramid_hon', 5, 2)
 		#self.enemyManager.moveForward(self.enemyHandle3)
-		
-	#	for x in range(0,272/4):
-	#		print x*4
-	#		print ','
-
-			
 			
 		
 		if config.EMULATE_WIIMOTE:
