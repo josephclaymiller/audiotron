@@ -20,13 +20,19 @@
 #[4,12,20,28,36,44,52,60,68,76,84,92,100,108,116,120,124,128,144,160,184,188,192,220,224,228,236,244,252,260,268]
 
 #Game2Stereo_Brian Backup Vocals
-[0,14,56,60,64,78,84,92,100,108,116,124,132,140,148,156,164,172,180,188,196,204,212,220,228,236,244,252,260,268]
+#[0,14,56,60,64,78,84,92,100,108,116,124,132,140,148,156,164,172,180,188,196,204,212,220,228,236,244,252,260,268]
 
 measures = 17
 sixteenths = measures * 16
 
-enemyLevels = ['testEnemy']
-comboLevels = [4]
+levelData = [
+	[('pyramid_hon', 2)],
+	[('pompom_rhythmGuitar', 3)],
+	[('cube_vidaurri', 4), ('squid_hachacha', 4)],
+	[('dradle_backupGuitar', 5), ('fan_trumpet', 6)],
+	[('xflare_vocalsHi', 7)],
+	[('spikey_vocals', 8)],
+]
 
 enemyData = \
 {
@@ -44,9 +50,10 @@ enemyData = \
 	},
 	
 	#level 1 enemy
-	'1': #pyramid dudes
+	'pyramid_hon': #pyramid dudes
 	{
 		'model':		'enmod01',
+		'anim':			'enmod01',
 		'scale':		0.25,
 		'cScale':		2,
 		'music':		'Game2Stereo_Tom Hon Solo.wav',
@@ -56,9 +63,10 @@ enemyData = \
 	},
 	
 	#level 2 enemy
-	'2': #tri-angle tipped pom-poms
+	'pompom_rhythmGuitar': #tri-angle tipped pom-poms
 	{
 		'model':		'enmod12',
+		'anim':			'enmod12',
 		'scale':		0.075,
 		'cScale':		6.66,
 		'music':		'Game2Stereo_Shane Rhythm Guitar.wav',
@@ -68,9 +76,10 @@ enemyData = \
 	},
 	
 	#level 3 enemy
-	'3': #cube dudes
+	'cube_vidaurri': #cube dudes
 	{
 		'model':		'enmod03',
+		'anim':			'enmod03',
 		'scale':		0.05,
 		'cScale':		10,
 		'music':		'Game2Stereo_Shane upbeat Vidaurri.wav',
@@ -80,9 +89,10 @@ enemyData = \
 	},
 	
 	#level 3 enemy
-	'4': #squids
+	'squid_hachacha': #squids
 	{
 		'model':		'enmod04',
+		'anim':			'enmod04',
 		'scale':		0.125,
 		'cScale':		4,
 		'music':		'Game2Stereo_Kevin hachacha.wav',
@@ -92,9 +102,10 @@ enemyData = \
 	},
 	
 	#level 4 enemy
-	'5': #dradles
+	'dradle_backupGuitar': #dradles
 	{
 		'model':		'enmod05',
+		'anim':			'enmod05',
 		'scale':		0.075,
 		'cScale':		6.66,
 		'music':		'Game2Stereo_Kevin Backup Guitar.wav',
@@ -104,9 +115,10 @@ enemyData = \
 	},
 	
 	#level 4 enemy
-	'6': #fans
+	'fan_trumpet': #fans
 	{
 		'model':		'enmod06',
+		'anim':			'enmod06',
 		'scale':		0.075,
 		'cScale':		6.66,
 		'music':		'Game2Stereo_Brian Backup Trumpet.wav',
@@ -116,9 +128,10 @@ enemyData = \
 	},
 	
 	#level 5 enemy
-	'7': #x's with flare
+	'xflare_vocalsHi': #x's with flare
 	{
 		'model':		'enmod08',
+		'anim':			'enmod08',
 		'scale':		0.05,
 		'cScale':		10,
 		'music':		'Game2Stereo_Brian Backup Vocals Hi.wav',
@@ -128,9 +141,10 @@ enemyData = \
 	},
 	
 	#level 6 enemy
-	'8': #spikes
+	'spikey_vocals': #spikes
 	{
 		'model':		'enmod13',
+		'anim':			'enmod13',
 		'scale':		0.075,
 		'cScale':		6.66,
 		'music':		'Game2Stereo_Brian Backup Vocals.wav',

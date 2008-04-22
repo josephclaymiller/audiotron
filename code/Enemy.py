@@ -41,7 +41,7 @@ class Enemy (DirectObject):
 		self.billboard = loader.loadModelCopy('..//assets//models//plane.egg.pz')
 		self.billboard.reparentTo(self.model)
 		self.billboard.setPos(0, 0, 0)
-		self.billboard.setScale(4)
+		self.billboard.setScale(1 / self.data['scale'])
 		self.billboard.setTexture(loader.loadTexture("..//assets//images//targetCursor.png"))
 		self.billboard.setTransparency(True)
 		self.billboard.setBillboardPointEye()
@@ -85,7 +85,8 @@ class Enemy (DirectObject):
 	def destroy(self):
 		if not self.destroyed:
 			self.model.play('die')
-			self.model.getAnimControl('die').setPlayRate(self.data['playRate'])
+			if (self.model.getCurrentAnim() == 'die'):
+				self.model.getAnimControl('die').setPlayRate(self.data['playRate'])
 			base.cTrav.removeCollider(self.cNodePath)
 			self.cNodePath.remove()
 			self.destroyed = True
@@ -99,6 +100,6 @@ class Enemy (DirectObject):
 		self.deleteMe = True
 	
 	def update(self, task):
-		if (self.destroyed and not self.model.getAnimControl('die').isPlaying()):
+		if (self.destroyed and (self.model.getCurrentAnim() != 'die' or not self.model.getAnimControl('die').isPlaying())):
 			self.cleanup()
 		return Task.cont

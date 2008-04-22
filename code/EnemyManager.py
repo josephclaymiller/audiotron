@@ -14,7 +14,7 @@ from pandac.PandaModules import VBase4, VBase3
 from direct.interval.LerpInterval import LerpPosInterval, LerpPosHprInterval #needed for movement
 
 from Enemy import Enemy
-from EnemyData import enemyData, enemyLevels, comboLevels
+from EnemyData import enemyData, levelData
 
 
 class EnemyManager (DirectObject):
@@ -23,6 +23,7 @@ class EnemyManager (DirectObject):
 		self.musicController = musicController
 		
 		self.level = 0
+		self.sublevels = [0]
 		
 		self.enemies = []
 		self.enemiesSpawned = 0
@@ -38,19 +39,29 @@ class EnemyManager (DirectObject):
 		self.accept("EnemiesComboed", self.processCombo)
 	
 	def processCombo(self, combo):
-		if (self.level < len(enemyLevels)):
-			levelType = enemyLevels[self.level]
+		if (self.level < len(levelData)):
 			for type, count in combo.iteritems():
-				if (type == levelType and count >= comboLevels[self.level]):
-					self.level += 1
-					self.playMusic(enemyData[type]['music'])
-					print "Unlock music ", enemyData[type]['music']
+				for sublevel in self.sublevels:
+				
+					(sublevelType, sublevelCount) = levelData[self.level][sublevel]
+					
+					if (type == sublevelType and count >= sublevelCount):
+						self.playMusic(enemyData[type]['music'])
+						print "Unlock music ", enemyData[type]['music']
+						self.sublevels.remove(sublevel)
+						
+			if (len(self.sublevels) == 0):
+				self.level += 1
+				if (self.level < len(levelData)):
+					self.sublevels = range(len(levelData[self.level]))
+				else:
+					self.sublevels = []
 	
 	def playMusic(self, musicFile):
 		if musicFile in self.musicPlaying:
 			self.musicPlaying[musicFile]['count'] += 1
 		else:
-			index = self.musicController.queueSound("..//assets//audio//" + musicFile)
+			index = self.musicController.addSound("..//assets//audio//" + musicFile)
 			self.musicPlaying[musicFile] = {'count': 1, 'index': index}
 		
 	def spawnEnemy(self, type, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):

@@ -60,8 +60,12 @@ class WiimoteManager(threading.Thread):
 			wiiuse.set_ir(wm, 1)
 			wiiuse.motion_sensing(wm, 1)
 			wiiuse.set_aspect_ratio(wm, wiiuse.ASPECT_4_3)
-			wiiuse.set_ir_position(wm, wiiuse.IR_BELOW)
 			wiiuse.set_ir_vres(wm, 800, 600)
+			#wiiuse.set_ir_sensitivity(wm, 5)
+			if (wm.unid == self.WM_ID_POINTER):
+				wiiuse.set_ir_position(wm, wiiuse.IR_BELOW)
+			else:
+				wiiuse.set_ir_position(wm, wiiuse.IR_ABOVE)
 
 		while (True):
 			wiiuse.poll(self.wiimotes, 2)
@@ -86,10 +90,11 @@ class WiimoteManager(threading.Thread):
 		if (config.TOGGLE_RUMBLE_TEST and wiiuse.is_just_pressed(wm, wiiuse.button['A'])):
 			wiiuse.toggle_rumble(wmp)
 		
-		if (wiiuse.is_just_pressed(wm, wiiuse.button['B'])):
-			messenger.send("FireButtonDown")
-		elif (wiiuse.is_released(wm, wiiuse.button['B'])):
-			messenger.send("FireButtonUp")
+		if (wm.unid == self.WM_ID_POINTER):
+			if (wiiuse.is_just_pressed(wm, wiiuse.button['B'])):
+				messenger.send("FireButtonDown")
+			elif (wiiuse.is_released(wm, wiiuse.button['B'])):
+				messenger.send("FireButtonUp")
 
 		if (wiiuse.using_ir(wm)):
 			if (wm.ir.dot[0].visible):

@@ -3,7 +3,6 @@ from pandac.PandaModules import WindowProperties
 
 import config
 from World import World
-#from ToonShader import ToonShader
 
 props = WindowProperties(base.win.getProperties())
 props.setCursorHidden(True)

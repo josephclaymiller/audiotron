@@ -71,32 +71,32 @@ class Player (DirectObject):
 		taskMgr.add(self.update, "PlayerUpdate")
 	
 	def fireButtonDown(self):
-		time=globalClock.getRealTime()
+		time = globalClock.getRealTime()
 		self.targetting = True
 		
 		#finding fireButtonUp time
-		targetSixteenth=int((time-self.musicController.loopStartTime)/self.musicController.secondsPerSixteenth)
-		beat = targetSixteenth%4
+		targetSixteenth = int((time - self.musicController.loopStartTime) / self.musicController.secondsPerSixteenth)
+		beat = targetSixteenth % 4
 		#making targetSixteenth always be on beat!
-		targetSixteenth+=(4-beat)
+		targetSixteenth += (4 - beat)
 		
 		print str(beat)
 		
 		if (self.musicController.isOnBeatNow(time)):
 			print "nice job"
 			self.maxCombo = 800
-			targetSixteenth+=28
+			targetSixteenth += 28
 			if beat == 3:
-				targetSixteenth+=4
+				targetSixteenth += 4
 		else:
 			self.maxCombo = 400
-			targetSixteenth+=12
+			targetSixteenth += 12
 		
-		self.targetTime = self.musicController.loopStartTime + targetSixteenth*self.musicController.secondsPerSixteenth
+		self.targetTime = self.musicController.loopStartTime + targetSixteenth * self.musicController.secondsPerSixteenth
 		taskMgr.add(self.fireTimer, "fireTimer")
 	
 	def fireTimer(self, task):
-		if globalClock.getRealTime()>=self.targetTime:
+		if globalClock.getRealTime() >= self.targetTime:
 			if len(self.musicController.destructionQueue) > 0:
 				element = self.musicController.destructionQueue.pop(0)
 				self.musicController.dieSFX.play()
