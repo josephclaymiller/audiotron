@@ -170,7 +170,7 @@ class MusicController(DirectObject):
 		time=globalClock.getRealTime()
 
 		deflate=(time-self.lastPulseTime)*(.25/(self.secondsPerLoop/self.numMeasures))
-		fade=(time-self.lastPulseTime)*(-1.0/(self.secondsPerLoop/self.numMeasures))
+		fade=(time-self.lastPulseTime)*(-2.0/(self.secondsPerLoop/self.numMeasures))
 		#print str(fade)
 		
 		#decrease scale of all pulsing elements
