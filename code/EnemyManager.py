@@ -97,7 +97,7 @@ class EnemyManager (DirectObject):
 			self.musicController.addPulsingElement(handle, enemyData[enemyType]['beatsPulse'])
 		
 		if len(enemyData[enemyType]['beatsLight']) > 0:
-			self.musicController.addLitElement(handle, enemyData[enemyType]['beatsLight'])
+			self.musicController.addLitElement(self.pulseLight[enemyData[enemyType]['light']], enemyData[enemyType]['beatsLight'])
 		
 		return handle
 		
@@ -192,6 +192,18 @@ class EnemyManager (DirectObject):
 		self.DLBwhiteNP = render.attachNewNode(self.DLBwhite)
 		self.DLBwhiteNP.setHpr(0, 60, 0)
 		self.lights['DLBwhite'] = self.DLBwhiteNP
+		
+		self.pulseLight = []
+		self.pulseLightNP = []
+		for x in range(0,8):
+			#white bottom directional light
+			self.pulseLight.append(DirectionalLight('pulseLight'+str(x)))
+			self.pulseLight[x].setColor(VBase4(1, 1, 1, 1))
+			self.pulseLightNP.append(render.attachNewNode(self.pulseLight[x]))
+			self.pulseLightNP[x].setHpr(0, 20, 0)
+			self.lights['pulseLight'+str(x)] = self.pulseLightNP[x]
+		
+		
 	
 	
 	def spawnCircle(self, type = "testEnemy", num = 5, r = 2, startPos = Point3(0,20,0)):
