@@ -80,10 +80,21 @@ class MusicController(DirectObject):
 		if (i+len(self.tempMusic))<self.maxSounds:
 			self.music.append(loader.loadSfx(name))
 			self.music[i].setTime(globalClock.getRealTime()-self.loopStartTime)
+			self.music[i].setVolume(0)
 			self.music[i].play()
+			taskMgr.add(self.fadeInSound, "fadeInSound"+str(i), extraArgs=[i, globalClock.getRealTime(), self.music])
 			return i
 		#print len(self.music)
 		return -1
+	
+	def fadeInSound(task, x, time, music):
+		realTime=globalClock.getRealTime()
+		if (realTime-time) < 1.846:
+			music[x].setVolume(((realTime-time)*(realTime-time)/3.408))
+			return Task.cont
+		
+		music[x].setVolume(1)
+		return Task.done
 	
 	def queueSound(self, name):
 		i=len(self.music)

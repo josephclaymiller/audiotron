@@ -26,12 +26,13 @@ else:
 
 class Player (DirectObject):
 
-	def __init__(self, wiimoteManager, musicController):
+	def __init__(self, wiimoteManager, musicController, HUD):
 	
 		self.wm = wiimoteManager
 		self.handle = NodePath(PandaNode("PlayerHandle"))
 		self.headTracker = HeadTracker(self.wm, self.handle)
 		self.musicController = musicController
+		self.HUD = HUD
 		
 		self.handle.reparentTo(render)
 		base.camera.reparentTo(self.handle)
@@ -44,6 +45,9 @@ class Player (DirectObject):
 		self.comboSize = 0
 		self.targetting = False
 		self.targetTime = 0
+		
+		self.lives=3
+		self.health=4
 
 		self.targetImage = OnscreenImage(image = "..//assets//images//targetCursor.png", pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
 		self.targetImage.setTransparency(TransparencyAttrib.MAlpha)
@@ -123,6 +127,14 @@ class Player (DirectObject):
 		messenger.send("EnemiesComboed", [combo])
 	
 	def hitByEnemy(self):
+		self.health-=1
+		if self.health<1:
+			self.health=4
+			self.lives-=1
+			if self.lives<0:
+				print "you loose"
+		
+		self.HUD.hit(self.lives, self.health)
 		print "Player hit by enemy!"
 	
 	def update(self, task):
