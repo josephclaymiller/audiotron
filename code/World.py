@@ -47,6 +47,11 @@ class World (DirectObject):
 		
 		self.accept('escape', sys.exit)
 		self.accept('m', self.garbageDebug)
+		#self.accept('r', self.toggleRumble)
+	
+	#def toggleRumble(self):
+	#	wm = self.wiimoteManager.wiimotes[0]
+	#	WiimoteManager.wiiuse.toggle_rumble(wm, 1)
 	
 	def garbageDebug(self):
 		#print gc.get_objects()
@@ -60,23 +65,35 @@ class World (DirectObject):
 			return Task.done
 			
 		elif (time > self.nextSpawnTime):
-			validEnemies = self.enemyManager.getValidEnemyTypes()
-			numValid = len(validEnemies)
+			currentEnemies = self.enemyManager.getCurrentEnemyTypes()
+			unlockedEnemies = self.enemyManager.getUnlockedEnemyTypes()
 			
-			if (numValid >= 3):
-				if (random.random() < 0.5):
-					typeToSpawn = validEnemies[random.randint(numValid - 2, numValid - 1)]
-				else:
-					typeToSpawn = validEnemies[random.randint(0, numValid - 3)]
-					
-			elif (numValid == 2):
-				typeToSpawn = validEnemies[random.randint(0, 1)]
-			
+			if (len(unlockedEnemies) == 0 or random.random() < 0.6):
+				typeToSpawn = random.choice(currentEnemies)
 			else:
-				typeToSpawn = validEnemies[0]
+				typeToSpawn = random.choice(unlockedEnemies)
+			
+			level = self.enemyManager.level
+			numFormations = 1 #random.randint(1, 1 + level / 2)
+			
+			for i in range(numFormations):
+			
+				numToSpawn = random.randint(3 + math.floor(level / 2), 5 + level)	
+				formation = random.randint(0, 2)
+				pos = Point3(random.uniform(-2.5, 2.5), 0, random.uniform(-2.5, 2.5))
 				
-			handle = self.enemyManager.spawnCircle(typeToSpawn, random.randint(3, 8))
-			self.enemyManager.moveForward(handle)
+				if formation == 0:
+					handle = self.enemyManager.spawnCircle(typeToSpawn, numToSpawn, random.uniform(0.5, 2.5), startPos = pos)
+				elif formation == 1:
+					handle = self.enemyManager.spawnSpiral(typeToSpawn, numToSpawn, random.uniform(0.5, 2.5), random.choice((-1, 1)), startPos = pos)
+				else:
+					handle = self.enemyManager.spawnRect(typeToSpawn, numToSpawn, startPos = pos)
+				
+				movement = random.randint(0, 1)
+				if movement == 0:
+					self.enemyManager.moveForward(handle)
+				elif movement == 1:
+					self.enemyManager.moveSpiral(handle, random.choice((-1, 1)))
 			
 			self.nextSpawnTime += self.spawnRate
 		

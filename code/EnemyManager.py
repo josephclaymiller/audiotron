@@ -71,11 +71,11 @@ class EnemyManager (DirectObject):
 				unlockedTypes.append(enemy)
 		return unlockedTypes
 				
-	def getValidEnemyTypes(self):
-		validTypes = self.getUnlockedEnemyTypes()
+	def getCurrentEnemyTypes(self):
+		currentTypes = []
 		for sublevel in self.sublevels:
-			validTypes.append(levelData[self.level][sublevel][0])
-		return validTypes
+			currentTypes.append(levelData[self.level][sublevel][0])
+		return currentTypes
 		
 	def spawnEnemy(self, type, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
 		enemy = Enemy(self.enemiesSpawned, type, handle, startPos, startHpr)
@@ -221,9 +221,10 @@ class EnemyManager (DirectObject):
 		
 	
 	
-	def spawnCircle(self, type = "testEnemy", num = 5, r = 2, startPos = Point3(0,20,0)):
+	def spawnCircle(self, type = "testEnemy", num = 5, r = 2.0, startPos = Point3(0,20,0)):
 		handle = self.createHandle(type, startPos)
 		
+		r = min(5.0, max(r, 0.5 * num / math.pi))
 		t = 0
 		step = (2 * math.pi) / num
 		
@@ -236,10 +237,28 @@ class EnemyManager (DirectObject):
 		return handle
 		
 		
-	#returns a handle
+	def spawnRect(self, type = "testEnemy", num = 5, spacing = 1.0, startPos = Point3(0,20,0)):
+		handle = self.createHandle(type, startPos)
+		
+		cols = int(math.floor(math.sqrt(num)))
+		rows = int(math.floor(num / cols))
+		
+		right = cols * spacing / 2
+		top = rows * spacing / 2
+		
+		for i in range(rows + 1):
+			for j in range(cols + 1):
+				x = right - spacing * j
+				z = top - spacing * i
+				self.spawnEnemy(type, handle, Point3(x,0,z))
+		
+		return handle
+		
+		
 	def spawnSpiral(self, type = "testEnemy", num = 5, r = 2, direction = 1, depth = 50, startPos = Point3(0,0,0)):
 		handle = self.createHandle(type, startPos)
 		
+		r = min(5.0, max(r, 0.5 * num / math.pi))
 		t = 0
 		step = (2 * math.pi) / num
 		depth /= num
@@ -247,25 +266,25 @@ class EnemyManager (DirectObject):
 		for i in range(num):
 			x = math.cos(t) * r * direction
 			z = math.sin(t) * r * direction
-			self.spawnEnemy(type, handle, Point3(x, depth * i, z))
+			self.spawnEnemy(type, handle, Point3(x, -depth * i, z))
 			t += step
 		
 		return handle
 		
-	def moveForward(self, handle, len=50, steps=4, endPos=Point3(0,0,0)):
+	def moveForward(self, handle, len=50, steps=6, endPos=Point3(0,-100,0)):
 		interval=LerpPosInterval(handle,
 							 duration = steps*1.846,
-							 pos=endPos, 
-							 startPos=VBase3(0,steps*len+endPos.getY(),0)
+							 pos = endPos, 
+							 startPos = VBase3(handle.getPos().getX(), steps * len + endPos.getY(), handle.getPos().getZ())
 							 )
 		interval.start()
 		
-	def moveSpiral(self, handle, direction=1, depth=50, len=50, steps=4, endPos=Point3(0,0,0)):
-		interval=LerpPosHprInterval(handle,
-							 duration = steps*1.846,
-							 pos=VBase3(endPos.getX(), endPos.getY()-depth, endPos.getZ()), #change .5 to .305
-							 hpr=VBase3(0,0,steps*180),
-							 startPos=VBase3(0,steps*len+endPos.getY(),0),
-							 startHpr=VBase3(0,0,0)
+	def moveSpiral(self, handle, direction=1, depth=50, len=50, steps=6, endPos=Point3(0,-100,0)):
+		interval = LerpPosHprInterval(handle,
+							 duration = steps * 1.846,
+							 pos = VBase3(endPos.getX(), endPos.getY() - depth, endPos.getZ()), #change .5 to .305
+							 hpr = VBase3(0, 0, steps * 180),
+							 startPos = VBase3(handle.getPos().getX(), steps * len + endPos.getY(), handle.getPos().getZ()),
+							 startHpr = VBase3(0,0,0)
 							 )
 		interval.start()
