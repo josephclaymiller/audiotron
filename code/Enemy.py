@@ -30,8 +30,8 @@ class Enemy (DirectObject):
 		
 		taskMgr.add(self.update, "EnemyUpdate" + str(self.uid))
 		
-		self.model = Actor("..//assets//models//enemies//Enemies fin//" + str(self.data['anim']) + ".egg")
-		self.model.loadAnims({"die":"..//assets//models//enemies//Enemies fin//" + str(self.data['anim']) + ".egg"})
+		self.model = Actor("..//assets//models//enemies//" + str(self.data['anim']) + ".egg")
+		self.model.loadAnims({"die":"..//assets//models//enemies//" + str(self.data['anim']) + ".egg"})
 		self.model.reparentTo(self.handle)
 		self.model.setScale(self.data['scale'])
 		self.model.setPos(startPos)

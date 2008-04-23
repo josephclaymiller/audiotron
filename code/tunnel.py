@@ -45,7 +45,7 @@ class Tunnel(DirectObject):
 		
 		for x in range(10):
 			#Load a copy of the tunnel
-			self.tunnel[x] = loader.loadModelCopy('..//assets//models//tunneltrapazoid.egg')
+			self.tunnel[x] = loader.loadModelCopy('..//assets//models//tunnels//tunneltrapazoid.egg')
 			#The front segment needs to be attached to render
 			if x == 0:
 				self.tunnel[x].reparentTo(self.NP)
