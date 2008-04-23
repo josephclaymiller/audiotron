@@ -18,6 +18,7 @@ from pandac.PandaModules import CollisionPlane
 from pandac.PandaModules import CollisionNode
 from pandac.PandaModules import Plane
 from pandac.PandaModules import BitMask32
+from pandac.PandaModules import NodePath, PandaNode
 
 import config
 import CollisionBitMasks
@@ -102,11 +103,12 @@ class World (DirectObject):
 		
 	def start(self):
 		base.setBackgroundColor(0,0,0) #set the background color to black
+		self.playerHandle=NodePath(PandaNode("PlayerHandle"))
 		self.setupCollision()
 		self.musicController = MusicController()
-		self.HUD = HUD()
-		self.player = Player(self.wiimoteManager, self.musicController, self.HUD)
-		self.enemyManager = EnemyManager(self.musicController)
+		self.HUD = HUD(self.playerHandle)
+		self.player = Player(self.playerHandle, self.wiimoteManager, self.musicController, self.HUD)
+		self.enemyManager = EnemyManager(self.musicController, self.HUD)
 		self.tunnel = Tunnel(self.musicController)
 		
 		self.spawnRate = self.musicController.secondsPerSixteenth * 16

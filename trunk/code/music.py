@@ -26,7 +26,7 @@ class MusicController(DirectObject):
 		self.dieSFX = loader.loadSfx("..//assets//audio//FX_135.wav")
 		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Drums Least.wav")) #always load drum track
 		
-		self.blinker=OnscreenImage(image='..\\assets\\HUD\\blinker.png', pos=Vec3(0,0,0), scale=Vec3(1.33,0,1))
+		self.blinker=OnscreenImage(image='..//assets//HUD//blinker.png', pos=Vec3(0,0,0), scale=Vec3(1.33,0,1))
 		self.blinker.setColor(1,1,0,1)
 		self.blinkFade=1
 		self.blinker.setTransparency(TransparencyAttrib.MAlpha)
