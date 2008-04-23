@@ -30,6 +30,7 @@ class Tunnel(DirectObject):
 		self.NP = NodePath(PandaNode("tunnelNP"))
 		self.NP.reparentTo(render)
 		self.NP.setHpr(0, 90, 0)
+		self.NP.setScale(2.0)
 		
 		#adding tunnel lights
 		dlight = DirectionalLight('dlight')
