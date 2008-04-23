@@ -22,12 +22,6 @@ class HUD(DirectObject):
 			z=x/2
 			self.life.append(OnscreenImage(image='..\\assets\\HUD\\heart4.png', pos=Vec3(.055*y+y*z*.11,0,-.9), scale=Vec3(.045,0,.045)))
 			self.life[x].setTransparency(TransparencyAttrib.MAlpha)
-		
-		self.beatBarL = OnscreenImage(image='..\\assets\\HUD\\beatBar.png', pos=Vec3(-1.25,0,0), scale=Vec3(.015,0,.6))
-		self.beatBarL.setTransparency(TransparencyAttrib.MAlpha)
-		
-		self.beatBarR = OnscreenImage(image='..\\assets\\HUD\\beatBar.png', pos=Vec3(1.25,0,0), scale=Vec3(.015,0,.6))
-		self.beatBarR.setTransparency(TransparencyAttrib.MAlpha)
 			
 		#self.shoot = []
 		#for x in range(0,4):

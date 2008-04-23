@@ -35,9 +35,6 @@ class Player (DirectObject):
 		self.musicController = musicController
 		self.HUD = HUD
 		
-		self.lastPulseTime=globalClock.getRealTime()
-		taskMgr.add(self.beatBarMove, "beatBarMove")
-		
 		self.handle.reparentTo(render)
 		base.camera.reparentTo(self.handle)
 
@@ -49,6 +46,7 @@ class Player (DirectObject):
 		self.comboSize = 0
 		self.targetting = False
 		self.targetTime = 0
+		self.onBeat=False
 		
 		self.lives=3
 		self.health=4
@@ -88,7 +86,7 @@ class Player (DirectObject):
 		#making targetSixteenth always be on beat!
 		targetSixteenth += (4 - beat)
 		
-		print str(beat)
+		#print str(beat)
 		
 		if (self.musicController.isOnBeatNow(time)):
 			print "nice job"
@@ -96,48 +94,41 @@ class Player (DirectObject):
 			targetSixteenth += 28
 			if beat == 3:
 				targetSixteenth += 4
+			self.targetImage.setColor(1,1,0,1)
+			self.onBeat=True
 		else:
 			self.maxCombo = 400
 			targetSixteenth += 12
+			self.onBeat=False
 		
 		self.targetTime = self.musicController.loopStartTime + targetSixteenth * self.musicController.secondsPerSixteenth
 		taskMgr.add(self.fireTimer, "fireTimer")
 	
 	def fireTimer(self, task):
+		time = globalClock.getRealTime()
+		fade = 1
+		if self.onBeat:
+			fade=1-(self.targetTime-time)/3.7
+			self.targetImage.setColor(1,1,fade,1)
+		else:
+			fade=1-(self.targetTime-time)/1.85
+			self.targetImage.setColor(1,fade,fade,1)
 		if globalClock.getRealTime() >= self.targetTime:
 			if len(self.musicController.destructionQueue) > 0:
 				element = self.musicController.destructionQueue.pop(0)
 				self.musicController.dieSFX.play()
 				element.destroy()
 			self.fireButtonUp()
+			return Task.done
 		
 		#print str(globalClock.getRealTime()-self.musicController.loopStartTime)
 		#print str(self.targetTime-self.musicController.loopStartTime)
 		return Task.cont
-			
-	def beatBarMove(self, task):
-		newTime=globalClock.getRealTime()
-		if not self.targetting:
-			time=newTime-self.musicController.loopStartTime
-			beat=time/.05769
-			
-			deflate=(newTime-self.lastPulseTime)*1.3
-			
-			if int(beat)%8 == 0:
-				self.HUD.beatBarL.setScale(.015,0,.6)
-				self.HUD.beatBarR.setScale(.015,0,.6)
-				#print "whoa"
-			else:
-				#print "hi"
-				self.HUD.beatBarL.setScale(Vec3(.015,0,self.HUD.beatBarL.getSz()-deflate))
-				self.HUD.beatBarR.setScale(Vec3(.015,0,self.HUD.beatBarR.getSz()-deflate))
-			#print "hi "+str(math.sin(time))
-		
-		self.lastBarTime=newTime
-		return Task.cont
 	
 	def fireButtonUp(self):
 		self.targetting = False
+		self.onBeat=False
+		self.targetImage.setColor(1,1,1,1)
 		taskMgr.remove("fireTimer")
 		combo = {}
 		for enemy in self.targettedEnemies:
@@ -181,7 +172,7 @@ class Player (DirectObject):
 	def fire(self):
 		self.wm.pointerLock.acquire()
 		if (self.wm.pointerData.ir.valid):
-			print "Fire ", self.wm.pointerData.screen.x, " ", self.wm.pointerData.screen.y
+			#print "Fire ", self.wm.pointerData.screen.x, " ", self.wm.pointerData.screen.y
 			self.cRayTrav.traverse(render)
 			
 			if (self.cHandler.getNumEntries() > 0):

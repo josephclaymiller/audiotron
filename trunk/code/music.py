@@ -5,7 +5,9 @@ from direct.showbase.Loader import Loader #for loading & unloading SFX
 #import direct.directbase.DirectStart #for loading SFX old(not sure if this is needed)
 from pandac.PandaModules import AudioSound #for setTime()
 import colorsys #so I can change RGB to HSB
-from pandac.PandaModules import Vec4, Vec3 #for Vec4
+from direct.gui.OnscreenImage import OnscreenImage
+from pandac.PandaModules import TransparencyAttrib
+from pandac.PandaModules import Vec4, Vec3
 #import math
 
 class MusicController(DirectObject):
@@ -24,6 +26,11 @@ class MusicController(DirectObject):
 		self.dieSFX = loader.loadSfx("..//assets//audio//FX_135.wav")
 		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Drums Least.wav")) #always load drum track
 		
+		self.blinker=OnscreenImage(image='..\\assets\\HUD\\blinker.png', pos=Vec3(0,0,0), scale=Vec3(1.33,0,1))
+		self.blinker.setColor(1,1,0,1)
+		self.blinkFade=1
+		self.blinker.setTransparency(TransparencyAttrib.MAlpha)
+		
 		self.sixteenth=0
 		self.secondsPerSixteenth=self.secondsPerLoop/self.numSixteenths
 		self.timingWindow=self.secondsPerSixteenth/2
@@ -34,6 +41,7 @@ class MusicController(DirectObject):
 		self.destructionQueue = []
 		self.lastPulseTime=globalClock.getRealTime()
 		
+				
 		#initialize pulse queue
 		for i in range(0,self.numSixteenths):
 			self.pulseQueue.append([])
@@ -171,12 +179,11 @@ class MusicController(DirectObject):
 
 		deflate=(time-self.lastPulseTime)*(.25/(self.secondsPerLoop/self.numMeasures))
 		fade=(time-self.lastPulseTime)*(-2.0/(self.secondsPerLoop/self.numMeasures))
-		#bar=(time-self.lastPulseTime)*1.3
+		self.blinkFade-=(time-self.lastPulseTime)/.6
 		#print str(fade)
 		
 		#self.beatBarR.setScale(Vec3(.015,0,self.beatBarR.getSz()-bar))
 		#self.beatBarL.setScale(Vec3(.015,0,self.beatBarR.getSz()-bar))
-		
 		
 		#decrease scale of all pulsing elements
 		for element in self.pulseElements:
@@ -200,13 +207,16 @@ class MusicController(DirectObject):
 				self.dieSFX.play()
 				element.destroy()
 			
-			#if self.sixteenth%4==0:
+			if self.sixteenth%4==0:
+				self.blinkFade=1
 			#	self.beatBarR.setScale(Vec3(.015,0,.6))
 			#	self.beatBarL.setScale(Vec3(.015,0,.6))
 				
 			#increment sixteenth and check if a new loop has started
+			#print self.sixteenth, " ", time-self.loopStartTime
 			self.sixteenth+=1
 		
+		self.blinker.setColor(self.blinkFade,self.blinkFade,0,1)
 		self.lastPulseTime=time
 		return Task.cont
 	
@@ -245,6 +255,7 @@ class MusicController(DirectObject):
 		thirtysecond=(time-self.loopStartTime)/(self.secondsPerSixteenth/2)
 		beat = int(thirtysecond)%8
 		
+		print "sixteenth" + str(self.sixteenth)
 		print "time: " + str(time-self.loopStartTime)
 		print "shot time: " + str(thirtysecond)
 		print "shot beat: " + str(beat)
