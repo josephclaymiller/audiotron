@@ -27,10 +27,10 @@ else:
 
 class Player (DirectObject):
 
-	def __init__(self, wiimoteManager, musicController, HUD):
+	def __init__(self, handle, wiimoteManager, musicController, HUD):
 	
 		self.wm = wiimoteManager
-		self.handle = NodePath(PandaNode("PlayerHandle"))
+		self.handle = handle
 		self.headTracker = HeadTracker(self.wm, self.handle)
 		self.musicController = musicController
 		self.HUD = HUD
