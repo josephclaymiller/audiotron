@@ -14,6 +14,7 @@ from pandac.PandaModules import CollisionHandlerQueue
 from pandac.PandaModules import BitMask32
 from pandac.PandaModules import NodePath
 from pandac.PandaModules import PandaNode
+from pandac.PandaModules import Vec3
 
 import config
 import CollisionBitMasks
@@ -33,6 +34,9 @@ class Player (DirectObject):
 		self.headTracker = HeadTracker(self.wm, self.handle)
 		self.musicController = musicController
 		self.HUD = HUD
+		
+		self.lastPulseTime=globalClock.getRealTime()
+		taskMgr.add(self.beatBarMove, "beatBarMove")
 		
 		self.handle.reparentTo(render)
 		base.camera.reparentTo(self.handle)
@@ -111,7 +115,27 @@ class Player (DirectObject):
 		#print str(self.targetTime-self.musicController.loopStartTime)
 		return Task.cont
 			
+	def beatBarMove(self, task):
+		newTime=globalClock.getRealTime()
+		if not self.targetting:
+			time=newTime-self.musicController.loopStartTime
+			beat=time/.05769
+			
+			deflate=(newTime-self.lastPulseTime)*1.3
+			
+			if int(beat)%8 == 0:
+				self.HUD.beatBarL.setScale(.015,0,.6)
+				self.HUD.beatBarR.setScale(.015,0,.6)
+				print "whoa"
+			else:
+				print "hi"
+				self.HUD.beatBarL.setScale(Vec3(.015,0,self.HUD.beatBarL.getSz()-deflate))
+				self.HUD.beatBarR.setScale(Vec3(.015,0,self.HUD.beatBarR.getSz()-deflate))
+			#print "hi "+str(math.sin(time))
 		
+		self.lastBarTime=newTime
+		return Task.cont
+	
 	def fireButtonUp(self):
 		self.targetting = False
 		taskMgr.remove("fireTimer")

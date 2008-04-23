@@ -14,15 +14,25 @@ from pandac.PandaModules import Vec3 #for Vec4
 class HUD(DirectObject):
 
 	def __init__(self):
+		self.HUDfont = loader.loadFont('..\\HUD\\ARCADE.TTF')
+		
 		self.life = []
 		for x in range(0,4):
-			self.life.append(OnscreenImage(image='..\\assets\\HUD\\heart4.png', pos=Vec3(-1.235+x*.18,0,-.9), scale=Vec3(.075,0,.075)))
+			y=((x%2)*-2)+1
+			z=x/2
+			self.life.append(OnscreenImage(image='..\\assets\\HUD\\heart4.png', pos=Vec3(.055*y+y*z*.11,0,-.9), scale=Vec3(.045,0,.045)))
 			self.life[x].setTransparency(TransparencyAttrib.MAlpha)
+		
+		self.beatBarL = OnscreenImage(image='..\\assets\\HUD\\beatBar.png', pos=Vec3(-1.25,0,0), scale=Vec3(.015,0,.6))
+		self.beatBarL.setTransparency(TransparencyAttrib.MAlpha)
+		
+		self.beatBarR = OnscreenImage(image='..\\assets\\HUD\\beatBar.png', pos=Vec3(1.25,0,0), scale=Vec3(.015,0,.6))
+		self.beatBarR.setTransparency(TransparencyAttrib.MAlpha)
 			
-		self.shoot = []
-		for x in range(0,4):
-			self.shoot.append(OnscreenImage(image='..\\assets\\HUD\\shoot1.png', pos=Vec3(1.235-x*.18,0,-.9), scale=Vec3(.075,0,.075)))
-			self.shoot[x].setTransparency(TransparencyAttrib.MAlpha)
+		#self.shoot = []
+		#for x in range(0,4):
+		#	self.shoot.append(OnscreenImage(image='..\\assets\\HUD\\shoot1.png', pos=Vec3(1.235-x*.18,0,-.9), scale=Vec3(.0375,0,.0375)))
+		#	self.shoot[x].setTransparency(TransparencyAttrib.MAlpha)
 	
 	def hit(self, lives, health):
 		if health < 4:

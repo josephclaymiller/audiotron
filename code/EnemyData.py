@@ -26,12 +26,11 @@ measures = 17
 sixteenths = measures * 16
 
 levelData = [
-	[('pyramid_hon', 2)],
-	[('pompom_rhythmGuitar', 3)],
-	[('cube_vidaurri', 4), ('squid_hachacha', 4)],
-	[('dradle_backupGuitar', 5), ('fan_trumpet', 6)],
-	[('xflare_vocalsHi', 7)],
-	[('spikey_vocals', 8)],
+	[('pyramid_hon', 4)],
+	[('pompom_rhythmGuitar', 5)],
+	[('cube_vidaurri', 6), ('squid_hachacha', 6)],
+	[('dradle_backupGuitar', 7), ('fan_trumpet', 7)],
+	[('xflare_vocalsHi', 8), ('spikey_vocals', 8)],
 ]
 
 enemyData = \
