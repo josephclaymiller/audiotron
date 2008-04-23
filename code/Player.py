@@ -126,9 +126,9 @@ class Player (DirectObject):
 			if int(beat)%8 == 0:
 				self.HUD.beatBarL.setScale(.015,0,.6)
 				self.HUD.beatBarR.setScale(.015,0,.6)
-				print "whoa"
+				#print "whoa"
 			else:
-				print "hi"
+				#print "hi"
 				self.HUD.beatBarL.setScale(Vec3(.015,0,self.HUD.beatBarL.getSz()-deflate))
 				self.HUD.beatBarR.setScale(Vec3(.015,0,self.HUD.beatBarR.getSz()-deflate))
 			#print "hi "+str(math.sin(time))
