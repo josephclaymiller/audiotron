@@ -64,16 +64,17 @@ class EnemyManager (DirectObject):
 			index = self.musicController.addSound("..//assets//audio//" + musicFile)
 			self.musicPlaying[musicFile] = {'count': 1, 'index': index}
 	
-	def getValidEnemyTypes(self):
-		validTypes = []
-			
+	def getUnlockedEnemyTypes(self):
+		unlockedTypes = []
 		for level in range(self.level):
 			for (enemy, combo) in levelData[level]:
-				validTypes.append(enemy)
-		
+				unlockedTypes.append(enemy)
+		return unlockedTypes
+				
+	def getValidEnemyTypes(self):
+		validTypes = self.getUnlockedEnemyTypes()
 		for sublevel in self.sublevels:
 			validTypes.append(levelData[self.level][sublevel][0])
-		
 		return validTypes
 		
 	def spawnEnemy(self, type, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):

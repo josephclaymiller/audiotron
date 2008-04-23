@@ -47,7 +47,6 @@ class World (DirectObject):
 		
 		self.accept('escape', sys.exit)
 		self.accept('m', self.garbageDebug)
-		taskMgr.add(self.spawnMoreEnemy, "spawnMoreEnemy")
 	
 	def garbageDebug(self):
 		#print gc.get_objects()
@@ -55,10 +54,12 @@ class World (DirectObject):
 		render.ls()
 			
 	def spawnMoreEnemy(self, task):
+		time = globalClock.getRealTime()
+		
 		if (self.enemyManager.level == len(levelData)):
 			return Task.done
 			
-		elif (task.frame % self.spawnRate == 0):
+		elif (time > self.nextSpawnTime):
 			validEnemies = self.enemyManager.getValidEnemyTypes()
 			numValid = len(validEnemies)
 			
@@ -76,8 +77,11 @@ class World (DirectObject):
 				
 			handle = self.enemyManager.spawnCircle(typeToSpawn, random.randint(3, 8))
 			self.enemyManager.moveForward(handle)
+			
+			self.nextSpawnTime += self.spawnRate
 		
 		return Task.cont
+		
 		
 	def start(self):
 		base.setBackgroundColor(0,0,0) #set the background color to black
@@ -88,7 +92,9 @@ class World (DirectObject):
 		self.enemyManager = EnemyManager(self.musicController)
 		self.tunnel = Tunnel(self.musicController)
 		
-		self.spawnRate = 100
+		self.spawnRate = self.musicController.secondsPerSixteenth * 16
+		self.nextSpawnTime = globalClock.getRealTime() + self.spawnRate
+		taskMgr.add(self.spawnMoreEnemy, "spawnMoreEnemy")
 		
 		self.accept('r', self.player.hitByEnemy)
 		
