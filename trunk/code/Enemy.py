@@ -30,13 +30,19 @@ class Enemy (DirectObject):
 		
 		taskMgr.add(self.update, "EnemyUpdate" + str(self.uid))
 		
-		self.model = Actor("..//assets//models//enemies//" + str(self.data['anim']) + ".egg")
-		self.model.loadAnims({"die":"..//assets//models//enemies//" + str(self.data['anim']) + ".egg"})
+		self.model = NodePath(PandaNode("Enemy" + str(self.uid)))
 		self.model.reparentTo(self.handle)
 		self.model.setScale(self.data['scale'])
 		self.model.setPos(startPos)
 		self.model.setHpr(startHpr)
-		self.model.reparentTo(self.handle)
+		
+		self.idleModel = loader.loadModelCopy("..//assets//models//enemies//" + str(self.data['model']) + ".egg")
+		self.idleModel.reparentTo(self.model)
+		
+		self.actor = Actor("..//assets//models//enemies//" + str(self.data['anim']) + ".egg")
+		self.actor.loadAnims({"die":"..//assets//models//enemies//" + str(self.data['anim']) + ".egg"})
+		self.actor.reparentTo(self.model)
+		self.actor.hide()
 		
 		self.billboard = loader.loadModelCopy('..//assets//models//plane.egg.pz')
 		self.billboard.reparentTo(self.model)
@@ -85,15 +91,23 @@ class Enemy (DirectObject):
 		
 	def destroy(self):
 		if not self.destroyed:
-			self.model.play('die')
-			if (self.model.getCurrentAnim() == 'die'):
-				self.model.getAnimControl('die').setPlayRate(self.data['playRate'])
+			self.idleModel.hide()
+			self.actor.show()
+			self.actor.play('die')
+			
+			if (self.actor.getCurrentAnim() == 'die'):
+				self.actor.getAnimControl('die').setPlayRate(self.data['playRate'])
+			else:
+				print "Enemy anim file ", self.data['anim'], " has no 'die' animation"
+				
 			base.cTrav.removeCollider(self.cNodePath)
 			self.cNodePath.remove()
 			self.destroyed = True
 	
 	def cleanup(self):
-		self.model.cleanup()
+		self.actor.cleanup()
+		self.actor.remove()
+		self.idleModel.remove()
 		self.model.remove()
 		self.handle.setTag("enemyChildren", str(int(self.handle.getTag("enemyChildren")) - 1))
 		taskMgr.remove("EnemyUpdate" + str(self.uid))
@@ -101,6 +115,6 @@ class Enemy (DirectObject):
 		self.deleteMe = True
 	
 	def update(self, task):
-		if (self.destroyed and (self.model.getCurrentAnim() != 'die' or not self.model.getAnimControl('die').isPlaying())):
+		if (self.destroyed and (self.actor.getCurrentAnim() != 'die' or not self.actor.getAnimControl('die').isPlaying())):
 			self.cleanup()
 		return Task.cont

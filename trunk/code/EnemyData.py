@@ -35,20 +35,7 @@ levelData = [
 ]
 
 enemyData = \
-{
-	'testEnemy':
-	{
-		'model':		'enmod01',
-		'anim':			'enemy01animation',
-		'playRate':		3.0,
-		'scale':		0.25,
-		'cScale':		2,
-		'music':		'Game2Stereo_Shane Rhythm Guitar.wav',
-		'lighting':		('ALred', 'DLRblue', 'DLBwhite'),
-		'beatsPulse':	[0,14,56,60,64,78,84,92,100,108,116,124,132,140,148,156,164,172,180,188,196,204,212,220,228,236,244,252,260,268],
-		'beatsLight':	[],
-	},
-	
+{	
 	#level 1 enemy
 	'pyramid_hon': #pyramid dudes
 	{
