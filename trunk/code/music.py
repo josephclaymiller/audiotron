@@ -5,7 +5,7 @@ from direct.showbase.Loader import Loader #for loading & unloading SFX
 #import direct.directbase.DirectStart #for loading SFX old(not sure if this is needed)
 from pandac.PandaModules import AudioSound #for setTime()
 import colorsys #so I can change RGB to HSB
-from pandac.PandaModules import Vec4 #for Vec4
+from pandac.PandaModules import Vec4, Vec3 #for Vec4
 #import math
 
 class MusicController(DirectObject):
@@ -171,7 +171,12 @@ class MusicController(DirectObject):
 
 		deflate=(time-self.lastPulseTime)*(.25/(self.secondsPerLoop/self.numMeasures))
 		fade=(time-self.lastPulseTime)*(-2.0/(self.secondsPerLoop/self.numMeasures))
+		#bar=(time-self.lastPulseTime)*1.3
 		#print str(fade)
+		
+		#self.beatBarR.setScale(Vec3(.015,0,self.beatBarR.getSz()-bar))
+		#self.beatBarL.setScale(Vec3(.015,0,self.beatBarR.getSz()-bar))
+		
 		
 		#decrease scale of all pulsing elements
 		for element in self.pulseElements:
@@ -194,6 +199,10 @@ class MusicController(DirectObject):
 				element = self.destructionQueue.pop(0)
 				self.dieSFX.play()
 				element.destroy()
+			
+			#if self.sixteenth%4==0:
+			#	self.beatBarR.setScale(Vec3(.015,0,.6))
+			#	self.beatBarL.setScale(Vec3(.015,0,.6))
 				
 			#increment sixteenth and check if a new loop has started
 			self.sixteenth+=1
