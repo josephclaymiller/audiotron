@@ -50,6 +50,7 @@ class Player (DirectObject):
 		
 		self.lives=3
 		self.health=4
+		self.score=0
 
 		self.targetImage = OnscreenImage(image = "..//assets//images//targetCursor.png", pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
 		self.targetImage.setTransparency(TransparencyAttrib.MAlpha)
@@ -141,6 +142,7 @@ class Player (DirectObject):
 		self.musicController.addDestructionElements(self.targettedEnemies)
 		self.targettedEnemies = []
 		#self.HUD.killCombo()
+		self.HUD.updateScore(self.score)
 		messenger.send("EnemiesComboed", [combo])
 	
 	def hitByEnemy(self):

@@ -60,7 +60,7 @@ enemyData = \
 	{
 		'model':		'enmod01',
 		'anim':			'enemy01animation',
-		'points':		1,
+		'points':		11,
 		'hud':			0,
 		'playRate':		3.0,
 		'scale':		0.25,
@@ -85,7 +85,7 @@ enemyData = \
 	{
 		'model':		'enmod12',
 		'anim':			'enemy12animation',
-		'points':		1,
+		'points':		21,
 		'hud':			1,
 		'playRate':		3.0,
 		'scale':		0.075,
@@ -102,7 +102,7 @@ enemyData = \
 	{
 		'model':		'enmod03',
 		'anim':			'enemy03animation',
-		'points':		1,
+		'points':		31,
 		'hud':			2,
 		'playRate':		3.0,
 		'scale':		0.05,
@@ -119,7 +119,7 @@ enemyData = \
 	{
 		'model':		'enmod09',
 		'anim':			'enemy09animation',
-		'points':		1,
+		'points':		31,
 		'hud':			3,
 		'playRate':		3.0,
 		'scale':		0.0625,
@@ -136,7 +136,7 @@ enemyData = \
 	{
 		'model':		'enmod10',
 		'anim':			'enemy10animation',
-		'points':		1,
+		'points':		41,
 		'hud':			4,
 		'playRate':		3.0,
 		'scale':		0.075,
@@ -153,7 +153,7 @@ enemyData = \
 	{
 		'model':		'enmod06',
 		'anim':			'enemy06animation',
-		'points':		1,
+		'points':		41,
 		'hud':			5,
 		'playRate':		3.0,
 		'scale':		0.075,
@@ -170,7 +170,7 @@ enemyData = \
 	{
 		'model':		'enmod08',
 		'anim':			'enemy08animation',
-		'points':		1,
+		'points':		51,
 		'hud':			6,
 		'playRate':		3.0,
 		'scale':		0.05,
@@ -182,12 +182,12 @@ enemyData = \
 		'beatsLight':	[0,14,56,60,64,78,84,92,100,108,116,124,132,140,148,156,164,172,180,188,196,204,212,220,228,236,244,252,260,268],
 	},
 	
-	#level 6 enemy
+	#level 5 enemy
 	'spikey_vocals': #spikes
 	{
 		'model':		'enmod13',
 		'anim':			'enemy13animation',
-		'points':		1,
+		'points':		51,
 		'hud':			7,
 		'playRate':		3.0,
 		'scale':		0.075,
