@@ -42,8 +42,12 @@ class HUD(DirectObject):
 		self.combo = {}
 		self.comboTag = {}
 		
+		self.score=0
+		self.newScore=0
+		
 		self.comboTXT = OnscreenText(text = 'combo\n0/4', pos = (1.1,.9), scale = 0.075, fg=(1,0,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 		self.multTXT = OnscreenText(text = 'mult\nx2', pos = (-1.1,.9), scale = 0.075, fg=(1,1,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
+		self.scoreTXT = OnscreenText(text = 'score\n0', pos = (1.275,-.85), scale = 0.075, fg=(1,1,1,1), align=TextNode.ARight, font=self.HUDfont, mayChange=True)
 		
 		for x in range(0, len(levelData)):
 			for y in range(0, len(levelData[x])):
@@ -82,6 +86,7 @@ class HUD(DirectObject):
 			self.enemyMove.loop()
 		
 		self.billboard[0].show()
+		taskMgr.add(self.incScore, "incScore")
 	
 	def hit(self, lives, health):
 		if health < 4:
@@ -120,3 +125,13 @@ class HUD(DirectObject):
 		else:
 			for x in range(0, len(levelData[self.level])):
 				self.billboard[enemyData[levelData[self.level][x][0]]['hud']].show()
+	
+	def updateScore(self, score):
+		self.newScore=score
+		#taskMgr.add(self.incScore, "incScore"+str(score))
+	
+	def incScore(self, task):
+		if self.score < self.newScore:
+			self.score+=int((self.newScore-self.score)/100)+1
+			self.scoreTXT.setText('score\n'+str(self.score))
+		return Task.cont
