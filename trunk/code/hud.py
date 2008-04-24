@@ -46,6 +46,8 @@ class HUD(DirectObject):
 		self.comboTXT = OnscreenText(text = 'combo\n0/4', pos = (1.1,.9), scale = 0.075, fg=(1,0,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 		self.multTXT = OnscreenText(text = 'mult\nx2', pos = (-1.1,.9), scale = 0.075, fg=(1,1,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 		self.scoreTXT = OnscreenText(text = 'score\n0', pos = (1.275,-.85), scale = 0.075, fg=(1,1,1,1), align=TextNode.ARight, font=self.HUDfont, mayChange=True)
+		self.endGameTXT = OnscreenText(text = '', pos = (0,0), scale = 0.2, fg=(1,0,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
+		self.fadeTime=0
 		
 		for x in range(0, len(levelData)):
 			for y in range(0, len(levelData[x])):
@@ -133,3 +135,19 @@ class HUD(DirectObject):
 			self.score+=int((self.newScore-self.score)/100)+1
 			self.scoreTXT.setText('score\n'+str(self.score))
 		return Task.cont
+	
+	def endGame(self, message):
+		self.endGameTXT.setText(message)
+		self.endGameTXT.setFg((0,0,0,1))
+		self.fadeTime=globalClock.getRealTime()
+		taskMgr.add(self.fadeText, "FadeText")
+
+	
+	def fadeText(self, task):
+		fade=(globalClock.getRealTime()-self.fadeTime)/3
+		if fade >= 1:
+			self.endGameTXT.setFg((1,1,1,1))
+			return Task.done
+		self.endGameTXT.setFg((fade,fade,fade,1))
+		return Task.cont
+		
