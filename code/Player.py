@@ -35,6 +35,8 @@ class Player (DirectObject):
 		self.musicController = musicController
 		self.HUD = HUD
 		
+		self.alive=True
+		
 		self.handle.reparentTo(render)
 		base.camera.reparentTo(self.handle)
 
@@ -78,33 +80,34 @@ class Player (DirectObject):
 		taskMgr.add(self.update, "PlayerUpdate")
 	
 	def fireButtonDown(self):
-		time = globalClock.getRealTime()
-		self.HUD.killCombo()
-		self.targetting = True
+		if self.alive:
+			time = globalClock.getRealTime()
+			self.HUD.killCombo()
+			self.targetting = True
+			
+			#finding fireButtonUp time
+			targetSixteenth = int((time - self.musicController.loopStartTime) / self.musicController.secondsPerSixteenth)
+			beat = targetSixteenth % 4
+			#making targetSixteenth always be on beat!
+			targetSixteenth += (4 - beat)
+			
+			#print str(beat)
 		
-		#finding fireButtonUp time
-		targetSixteenth = int((time - self.musicController.loopStartTime) / self.musicController.secondsPerSixteenth)
-		beat = targetSixteenth % 4
-		#making targetSixteenth always be on beat!
-		targetSixteenth += (4 - beat)
-		
-		#print str(beat)
-		
-		if (self.musicController.isOnBeatNow(time)):
-			print "nice job"
-			self.maxCombo = 800
-			targetSixteenth += 28
-			if beat == 3:
-				targetSixteenth += 4
-			self.targetImage.setColor(1,1,0,1)
-			self.onBeat=True
-		else:
-			self.maxCombo = 400
-			targetSixteenth += 12
-			self.onBeat=False
-		
-		self.targetTime = self.musicController.loopStartTime + targetSixteenth * self.musicController.secondsPerSixteenth
-		taskMgr.add(self.fireTimer, "fireTimer")
+			if (self.musicController.isOnBeatNow(time)):
+				print "nice job"
+				self.maxCombo = 800
+				targetSixteenth += 28
+				if beat == 3:
+					targetSixteenth += 4
+				self.targetImage.setColor(1,1,0,1)
+				self.onBeat=True
+			else:
+				self.maxCombo = 400
+				targetSixteenth += 12
+				self.onBeat=False
+			
+			self.targetTime = self.musicController.loopStartTime + targetSixteenth * self.musicController.secondsPerSixteenth
+			taskMgr.add(self.fireTimer, "fireTimer")
 	
 	def fireTimer(self, task):
 		time = globalClock.getRealTime()
@@ -146,15 +149,18 @@ class Player (DirectObject):
 		messenger.send("EnemiesComboed", [combo])
 	
 	def hitByEnemy(self):
-		self.health-=1
-		if self.health<1:
-			self.health=2
-			self.lives-=1
-			if self.lives<0:
-				print "you loose"
-		
-		self.HUD.hit(self.lives, self.health)
-		print "Player hit by enemy!"
+		if self.alive:
+			self.health-=1
+			if self.health<1:
+				self.health=2
+				self.lives-=1
+				if self.lives<0:
+					self.HUD.endGame('you lose')
+					self.alive=False
+					print "you loose"
+			
+			self.HUD.hit(self.lives, self.health)
+			print "Player hit by enemy!"
 	
 	def update(self, task):
 		self.wm.pointerLock.acquire()
