@@ -27,10 +27,8 @@ class HUD(DirectObject):
 		self.handle = handle
 		
 		self.life = []
-		for x in range(0,4):
-			y=((x%2)*-2)+1
-			z=x/2
-			self.life.append(OnscreenImage(image='..\\assets\\HUD\\heart4.png', pos=Vec3(.055*y+y*z*.11,0,-.9), scale=Vec3(.045,0,.045)))
+		for x in range(0,8):
+			self.life.append(OnscreenImage(image='..\\assets\\HUD\\heart.PNG', pos=Vec3(-1.235+x*.11,0,-.9), scale=Vec3(.04625,0,.04625)))
 			self.life[x].setTransparency(TransparencyAttrib.MAlpha)
 		
 		self.level=0
@@ -89,8 +87,8 @@ class HUD(DirectObject):
 		taskMgr.add(self.incScore, "incScore")
 	
 	def hit(self, lives, health):
-		if health < 4:
-			self.life[lives].setImage('..\\assets\\HUD\\heart'+str(health)+'.png')
+		if health < 2:
+			self.life[lives].setImage('..\\assets\\HUD\\heart'+str(health)+'.PNG')
 			self.life[lives].setTransparency(TransparencyAttrib.MAlpha)
 		else:
 			self.life[lives+1].hide()

@@ -48,8 +48,8 @@ class Player (DirectObject):
 		self.targetTime = 0
 		self.onBeat=False
 		
-		self.lives=3
-		self.health=4
+		self.lives=7
+		self.health=2
 		self.score=0
 
 		self.targetImage = OnscreenImage(image = "..//assets//images//targetCursor.png", pos = (0, 0, 0), scale = (32.0/self.wm.SCREEN_WIDTH, 0, 32.0/self.wm.SCREEN_HEIGHT), parent = render2d)
@@ -148,7 +148,7 @@ class Player (DirectObject):
 	def hitByEnemy(self):
 		self.health-=1
 		if self.health<1:
-			self.health=4
+			self.health=2
 			self.lives-=1
 			if self.lives<0:
 				print "you loose"
