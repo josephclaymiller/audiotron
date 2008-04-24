@@ -142,7 +142,7 @@ enemyData = \
 		'scale':		0.075,
 		'cScale':		6.66,
 		'music':		'Game2Stereo_Kevin Backup Guitar.wav',
-		'lighting':		('ALyellow', 'DLRred', 'DLLblue', 'pulseLight4'),
+		'lighting':		('ALyellow', 'DLRblue', 'DLLblue', 'pulseLight4'),
 		'light':		4,
 		'beatsPulse':	[],
 		'beatsLight':	[],

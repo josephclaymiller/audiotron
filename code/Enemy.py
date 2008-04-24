@@ -84,6 +84,7 @@ class Enemy (DirectObject):
 	def shotByPlayer(self, id, player):
 		if (id == self.uid and not self.targetted):
 			self.billboard.show()
+			player.HUD.updateCombo(self.type)
 			print "Enemy", self.uid, " shot by player!"
 			player.targettedEnemies.append(self)
 			self.targetted = True
