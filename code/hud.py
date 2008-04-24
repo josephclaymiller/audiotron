@@ -44,7 +44,7 @@ class HUD(DirectObject):
 		self.newScore=0
 		
 		self.comboTXT = OnscreenText(text = 'combo\n0/4', pos = (1.1,.9), scale = 0.075, fg=(1,0,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
-		self.multTXT = OnscreenText(text = 'mult\nx2', pos = (-1.1,.9), scale = 0.075, fg=(1,1,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
+		self.multTXT = OnscreenText(text = 'mult\nx1', pos = (-1.1,.9), scale = 0.075, fg=(1,0,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 		self.scoreTXT = OnscreenText(text = 'score\n0', pos = (1.275,-.85), scale = 0.075, fg=(1,1,1,1), align=TextNode.ARight, font=self.HUDfont, mayChange=True)
 		self.endGameTXT = OnscreenText(text = '', pos = (0,0), scale = 0.2, fg=(1,0,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 		self.fadeTime=0
@@ -126,8 +126,13 @@ class HUD(DirectObject):
 			for x in range(0, len(levelData[self.level])):
 				self.billboard[enemyData[levelData[self.level][x][0]]['hud']].show()
 	
-	def updateScore(self, score):
+	def updateScore(self, score, mult):
 		self.newScore=score
+		self.multTXT.setText('mult\nx'+str(mult))
+		if mult>1:
+			self.multTXT.setFg((1,1,0,1))
+		else:
+			self.multTXT.setFg((1,0,0,1))
 		#taskMgr.add(self.incScore, "incScore"+str(score))
 	
 	def incScore(self, task):

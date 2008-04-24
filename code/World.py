@@ -108,7 +108,7 @@ class World (DirectObject):
 		self.musicController = MusicController()
 		self.HUD = HUD(self.playerHandle)
 		self.player = Player(self.playerHandle, self.wiimoteManager, self.musicController, self.HUD)
-		self.enemyManager = EnemyManager(self.musicController, self.HUD)
+		self.enemyManager = EnemyManager(self.musicController, self.HUD, self.player)
 		self.tunnel = Tunnel(self.musicController)
 		
 		self.spawnRate = self.musicController.secondsPerSixteenth * 16

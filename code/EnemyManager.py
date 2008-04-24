@@ -19,9 +19,10 @@ from EnemyData import enemyData, levelData
 
 class EnemyManager (DirectObject):
 
-	def __init__(self, musicController, HUD):
+	def __init__(self, musicController, HUD, player):
 		self.musicController = musicController
 		self.HUD=HUD
+		self.player=player
 		
 		self.level = 0
 		self.sublevels = [0]
@@ -42,7 +43,8 @@ class EnemyManager (DirectObject):
 	def processCombo(self, combo):
 		if (self.level < len(levelData)):
 			for type, count in combo.iteritems():
-				#hud.sendcombo(type, count)
+				if count > levelData[self.level][0][1]:
+					self.player.combo=True
 				for sublevel in self.sublevels:
 				
 					(sublevelType, sublevelCount) = levelData[self.level][sublevel]
@@ -63,6 +65,8 @@ class EnemyManager (DirectObject):
 				if (self.level < len(levelData)):
 					self.sublevels = range(len(levelData[self.level]))
 				else:
+					self.player.alive=False
+					self.HUD.endGame('you win!')
 					self.sublevels = []
 	
 	def playMusic(self, musicFile):

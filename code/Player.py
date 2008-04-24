@@ -37,6 +37,9 @@ class Player (DirectObject):
 		
 		self.alive=True
 		
+		self.mult=1
+		self.combo=False
+		
 		self.handle.reparentTo(render)
 		base.camera.reparentTo(self.handle)
 
@@ -142,10 +145,17 @@ class Player (DirectObject):
 			else:
 				combo[enemy.type] = 1
 		
+		if self.combo:
+			if self.mult<self.HUD.level+2:
+				self.mult+=1
+		else:
+			self.mult=1
+		self.combo=False
+		
 		self.musicController.addDestructionElements(self.targettedEnemies)
 		self.targettedEnemies = []
 		#self.HUD.killCombo()
-		self.HUD.updateScore(self.score)
+		self.HUD.updateScore(self.score, self.mult)
 		messenger.send("EnemiesComboed", [combo])
 	
 	def hitByEnemy(self):
