@@ -59,6 +59,7 @@ class EnemyManager (DirectObject):
 						
 			if (len(self.sublevels) == 0):
 				self.level += 1
+				self.HUD.updateLevel(self.level)
 				if (self.level < len(levelData)):
 					self.sublevels = range(len(levelData[self.level]))
 				else:

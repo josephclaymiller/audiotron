@@ -78,6 +78,7 @@ class Player (DirectObject):
 	
 	def fireButtonDown(self):
 		time = globalClock.getRealTime()
+		self.HUD.killCombo()
 		self.targetting = True
 		
 		#finding fireButtonUp time
@@ -139,6 +140,7 @@ class Player (DirectObject):
 		
 		self.musicController.addDestructionElements(self.targettedEnemies)
 		self.targettedEnemies = []
+		#self.HUD.killCombo()
 		messenger.send("EnemiesComboed", [combo])
 	
 	def hitByEnemy(self):

@@ -32,13 +32,18 @@ class HUD(DirectObject):
 			z=x/2
 			self.life.append(OnscreenImage(image='..\\assets\\HUD\\heart4.png', pos=Vec3(.055*y+y*z*.11,0,-.9), scale=Vec3(.045,0,.045)))
 			self.life[x].setTransparency(TransparencyAttrib.MAlpha)
-			
+		
+		self.level=0
 		self.enemies = []
 		self.billboard =[]
 		self.idleModel = []
 		self.enemyTypes = []
+		self.maxCombo=0
 		self.combo = {}
 		self.comboTag = {}
+		
+		self.comboTXT = OnscreenText(text = 'combo\n0/4', pos = (1.1,.9), scale = 0.075, fg=(1,0,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
+		self.multTXT = OnscreenText(text = 'mult\nx2', pos = (-1.1,.9), scale = 0.075, fg=(1,1,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 		
 		for x in range(0, len(levelData)):
 			for y in range(0, len(levelData[x])):
@@ -48,7 +53,7 @@ class HUD(DirectObject):
 			data=enemyData[self.enemyTypes[x]]
 			
 			self.combo[self.enemyTypes[x]] = 0
-			self.comboTag[self.enemyTypes[x]] = OnscreenText(text = str(x), pos = (-.85+x*.225,.75), scale = 0.075, fg=(1,1,1,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
+			self.comboTag[self.enemyTypes[x]] = OnscreenText(text="0", pos = (-.85+x*.225,.75), scale = 0.075, fg=(1,1,1,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 			
 			self.enemies.append(NodePath(PandaNode("Enemy"+str(self.enemyTypes[x]))))
 			self.enemies[x].reparentTo(self.handle)
@@ -75,6 +80,8 @@ class HUD(DirectObject):
 								startHpr=VBase3(0,0,0)
 								)
 			self.enemyMove.loop()
+		
+		self.billboard[0].show()
 	
 	def hit(self, lives, health):
 		if health < 4:
@@ -83,16 +90,33 @@ class HUD(DirectObject):
 		else:
 			self.life[lives+1].hide()
 	
-	def updateShoot(self, beat):
-		if beat<4:
-			self.shoot[beat].setImage('..\\assets\\HUD\\shoot2.png')
-			self.shoot[beat].setTransparency(TransparencyAttrib.MAlpha)
-		else:
-			beat=beat%4
-			self.shoot[beat].setImage('..\\assets\\HUD\\shoot3.png')
-			self.shoot[beat].setTransparency(TransparencyAttrib.MAlpha)
-			if beat >= 3:
-				for x in range(0,4):
-					self.shoot[x].setImage('..\\assets\\HUD\\shoot1.png')
-					self.shoot[x].setTransparency(TransparencyAttrib.MAlpha)
+	def updateCombo(self, type):
+		self.combo[type]+=1
+		self.comboTag[type].setText(str(self.combo[type]))
+		if self.combo[type] >= levelData[self.level][0][1]:
+			self.comboTag[type].setFg((1,1,0,1))
 		
+		if self.combo[type]>self.maxCombo:
+			self.maxCombo=self.combo[type]
+			self.comboTXT.setText('combo\n' + str(self.maxCombo) + '/' + str(levelData[self.level][0][1]))
+			if self.maxCombo>=levelData[self.level][0][1]:
+				self.comboTXT.setFg((1,1,0,1))
+		
+	def killCombo(self):
+		for x in range(0,len(self.enemyTypes)):
+			self.combo[self.enemyTypes[x]]=0
+			self.comboTag[self.enemyTypes[x]].setText("")
+			self.comboTag[self.enemyTypes[x]].setFg((1,0,0,1))
+			self.maxCombo=0
+			self.comboTXT.setText('combo\n0/'+str(levelData[self.level][0][1]))
+			self.comboTXT.setFg((1,0,0,1))
+		
+	def updateLevel(self, level):
+		for x in range(0, len(levelData[self.level])):
+			self.billboard[enemyData[levelData[self.level][x][0]]['hud']].hide()
+		self.level=level
+		if self.level>4:
+			self.level=4
+		else:
+			for x in range(0, len(levelData[self.level])):
+				self.billboard[enemyData[levelData[self.level][x][0]]['hud']].show()
