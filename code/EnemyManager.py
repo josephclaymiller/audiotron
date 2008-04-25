@@ -24,12 +24,13 @@ class EnemyManager (DirectObject):
 		self.HUD=HUD
 		self.player=player
 		
+		self.musicPlaying = {}
+		self.setupLights()
+		
 		self.level = 0
 		self.sublevels = [0]
 		
 		self.enemies = []
-		self.enemiesSpawned = 0
-		
 		self.deadEnemies = {}
 		self.deadHandle = NodePath(PandaNode("DeadEnemies"))
 		self.deadHandle.setTag("enemyChildren", str(0))
@@ -44,11 +45,31 @@ class EnemyManager (DirectObject):
 			self.deadEnemies[type] = deadguys
 		
 		self.handles = []
-		self.handlesCreated = 0
+		self.unusedHandles = {}
 		
-		self.musicPlaying = {}
-		
-		self.setupLights()
+		uid = 0
+		for type, data in enemyData.iteritems():
+			handles = []
+			
+			for i in range(20):
+				handle = NodePath(PandaNode("EnemyHandle"+str(uid)))
+				handle.reparentTo(render)
+				handle.setTag("enemyChildren", str(0))
+				handle.setTag("type", type)
+				handles.append(handle)
+				
+				for lightName in data['lighting']:
+					handle.setLight(self.lights[lightName])
+				
+				if len(data['beatsPulse']) > 0:
+					self.musicController.addPulsingElement(handle, data['beatsPulse'])
+				
+				if len(data['beatsLight']) > 0:
+					self.musicController.addLitElement(self.pulseLight[data['light']], data['beatsLight'])
+					
+				uid += 1
+				
+			self.unusedHandles[type] = handles
 		
 		taskMgr.add(self.cleanupEnemies, "EnemyCleanup")
 		self.accept("EnemiesComboed", self.processCombo)
@@ -110,24 +131,12 @@ class EnemyManager (DirectObject):
 			enemy.spawn(handle, startPos, startHpr)
 	
 	def createHandle(self, enemyType, startPos = Point3(0,20,0)):
-		handle = NodePath(PandaNode("EnemyHandle"+str(self.handlesCreated)))
-		handle.reparentTo(render)
-		handle.setPos(startPos)
-		handle.setTag("enemyChildren", str(0))
-		self.handlesCreated += 1
-		self.handles.append(handle)
-		
-		for lightName in enemyData[enemyType]['lighting']:
-			handle.setLight(self.lights[lightName])
-		
-		if len(enemyData[enemyType]['beatsPulse']) > 0:
-			self.musicController.addPulsingElement(handle, enemyData[enemyType]['beatsPulse'])
-		
-		if len(enemyData[enemyType]['beatsLight']) > 0:
-			self.musicController.addLitElement(self.pulseLight[enemyData[enemyType]['light']], enemyData[enemyType]['beatsLight'])
-		
-		return handle
-		
+		if (len(self.unusedHandles[enemyType]) > 0):
+			handle = self.unusedHandles[enemyType][0]
+			self.handles.append(handle)
+			self.unusedHandles[enemyType].remove(handle)
+			handle.setPos(startPos)
+			return handle
 	
 	def cleanupEnemies(self, task):
 		for enemy in self.enemies:
@@ -138,11 +147,9 @@ class EnemyManager (DirectObject):
 			
 		for handle in self.handles:
 			if (int(handle.getTag("enemyChildren")) == 0):
-				print "Removing ", handle.getName()
-				self.musicController.removePulsingElement(handle)
 				self.handles.remove(handle)
-				handle.removeNode()
-				
+				type = handle.getTag("type")
+				self.unusedHandles[type].append(handle)
 				
 		return Task.cont
 		

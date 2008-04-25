@@ -68,7 +68,15 @@ class WiimoteManager(threading.Thread):
 				wiiuse.set_ir_position(wm, wiiuse.IR_ABOVE)
 
 		while (True):
-			wiiuse.poll(self.wiimotes, 2)
+			try:
+				wiiuse.poll(self.wiimotes, 2)
+			except:
+				print "***\nWiiuse Poll Failed!\n***"
+				print "self:\t", self
+				print "wiimotes:\t", self.wiimotes
+				print "wiimotes 0:\t", self.wiimotes[0].contents
+				print "wiimotes 1:\t", self.wiimotes[1].contents
+				raise
 
 
 	def handle_status(self, wmp, attachment, speaker, ir, led, battery_level):
@@ -79,6 +87,9 @@ class WiimoteManager(threading.Thread):
 
 	def handle_event(self, wmp):
 		wm = wmp.contents
+		#print "self:\t", self
+		#print "wmp:\t", wmp
+		#print "wm:\t", wm
 		
 		if (wm.unid == self.WM_ID_TRACKER):
 			self.trackerLock.acquire()
