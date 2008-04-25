@@ -9,6 +9,7 @@ from pandac.PandaModules import PandaNode
 from pandac.PandaModules import Point3
 from pandac.PandaModules import BillboardEffect
 from direct.interval.LerpInterval import LerpHprInterval #needed to move and rotate enemies
+from direct.interval.LerpInterval import LerpScaleInterval #needed to move and rotate enemies
 from pandac.PandaModules import VBase3, VBase4
 
 from EnemyData import enemyData
@@ -23,12 +24,10 @@ class Enemy (DirectObject):
 		self.data = enemyData[type]
 		self.handle = handle
 		self.targetted = False
-		self.destroyed = False
-		self.deleteMe = False
+		self.dying = False
+		self.destroyed = True
 		
 		handle.setTag("enemyChildren", str(int(handle.getTag("enemyChildren")) + 1))
-		
-		taskMgr.add(self.update, "EnemyUpdate" + str(self.uid))
 		
 		self.model = NodePath(PandaNode("Enemy" + str(self.uid)))
 		self.model.reparentTo(self.handle)
@@ -59,12 +58,7 @@ class Enemy (DirectObject):
 		cNodePath.node().setFromCollideMask(CollisionBitMasks.enemyMask)
 		cNodePath.node().setIntoCollideMask(CollisionBitMasks.shootRayMask)
 		#cNodePath.show()
-		base.cTrav.addCollider(cNodePath, base.cHandler)
 		self.cNodePath = cNodePath
-		
-		self.accept('EnemyTargetted', self.shotByPlayer)
-		self.accept('cEnemy' + str(self.uid) + '-into-cEnemyKillPlane', self.hitKillPlane)
-		self.accept('cEnemy' + str(self.uid) + '-into-cPlayerSphere', self.hitPlayer)
 		
 		#rotate stuff
 		self.enemyMove = LerpHprInterval(self.model,
@@ -73,6 +67,51 @@ class Enemy (DirectObject):
 							startHpr=VBase3(0,0,0)
 							)
 		self.enemyMove.loop()
+		
+	def spawn(self, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
+		self.destroyed = False
+		self.handle = handle
+		self.model.reparentTo(handle)
+		handle.setTag("enemyChildren", str(int(handle.getTag("enemyChildren")) + 1))
+		
+		self.model.setPos(startPos)
+		self.model.setHpr(startHpr)
+		self.idleModel.show()
+		
+		base.cTrav.addCollider(self.cNodePath, base.cHandler)
+		self.accept('EnemyTargetted', self.shotByPlayer)
+		self.accept('cEnemy' + str(self.uid) + '-into-cEnemyKillPlane', self.hitKillPlane)
+		self.accept('cEnemy' + str(self.uid) + '-into-cPlayerSphere', self.hitPlayer)
+		
+	def destroy(self):
+		if not self.dying:
+			self.idleModel.hide()
+			self.actor.show()
+			self.actor.play('die')
+			
+			if (self.actor.getCurrentAnim() == 'die'):
+				self.actor.getAnimControl('die').setPlayRate(self.data['playRate'])
+			else:
+				print "Enemy anim file ", self.data['anim'], " has no 'die' animation"
+			
+			i = LerpScaleInterval(self.billboard, 1, 0.0, self.billboard.getScale())
+			i.start()
+			base.cTrav.removeCollider(self.cNodePath)
+			self.dying = True
+	
+	def cleanup(self, deathHandle):
+		self.dying = False
+		self.destroyed = True
+		self.actor.hide()
+		self.billboard.hide()
+		self.handle.setTag("enemyChildren", str(int(self.handle.getTag("enemyChildren")) - 1))
+		self.handle = deathHandle
+		self.handle.setTag("enemyChildren", str(int(self.handle.getTag("enemyChildren")) + 1))
+		taskMgr.remove("EnemyUpdate" + str(self.uid))
+		self.ignoreAll()
+	
+	def finishedDying(self):
+		return self.dying and not self.actor.getAnimControl('die').isPlaying()
 		
 	def hitKillPlane(self, event):
 		if not self.targetted:
@@ -85,39 +124,8 @@ class Enemy (DirectObject):
 		if (id == self.uid and not self.targetted):
 			self.billboard.show()
 			player.HUD.updateCombo(self.type)
-			
 			player.score+=enemyData[self.type]['points']*player.mult
 			print "Enemy", self.uid, " shot by player!"
 			player.targettedEnemies.append(self)
 			self.targetted = True
-
-		
-	def destroy(self):
-		if not self.destroyed:
-			self.idleModel.hide()
-			self.actor.show()
-			self.actor.play('die')
-			
-			if (self.actor.getCurrentAnim() == 'die'):
-				self.actor.getAnimControl('die').setPlayRate(self.data['playRate'])
-			else:
-				print "Enemy anim file ", self.data['anim'], " has no 'die' animation"
-				
-			base.cTrav.removeCollider(self.cNodePath)
-			self.cNodePath.remove()
-			self.destroyed = True
 	
-	def cleanup(self):
-		self.actor.cleanup()
-		self.actor.remove()
-		self.idleModel.remove()
-		self.model.remove()
-		self.handle.setTag("enemyChildren", str(int(self.handle.getTag("enemyChildren")) - 1))
-		taskMgr.remove("EnemyUpdate" + str(self.uid))
-		self.ignoreAll()
-		self.deleteMe = True
-	
-	def update(self, task):
-		if (self.destroyed and (self.actor.getCurrentAnim() != 'die' or not self.actor.getAnimControl('die').isPlaying())):
-			self.cleanup()
-		return Task.cont
