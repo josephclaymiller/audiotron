@@ -189,7 +189,7 @@ class Player (DirectObject):
 		messenger.send("EnemiesComboed", [combo])
 	
 	def hitByEnemy(self):
-		if self.alive:
+		if self.alive and not config.INVULNERABILITY:
 			self.health-=1
 			if self.health<1:
 				self.health=2

@@ -40,43 +40,43 @@ class WiimoteManager(threading.Thread):
 		
 		
 	def run(self):
-		self.wiimotes = wiiuse.init(self.nmotes, [self.WM_ID_TRACKER, self.WM_ID_POINTER], self.handle_event, self.handle_status, self.handle_disconnect)
+		while(True):
+			self.wiimotes = wiiuse.init(self.nmotes, [self.WM_ID_TRACKER, self.WM_ID_POINTER], self.handle_event, self.handle_status, self.handle_disconnect)
 
-		found = wiiuse.find(self.wiimotes, self.nmotes, 5)
-		if not found:
-			print 'No wiimotes found'
-			sys.exit(1)
+			found = wiiuse.find(self.wiimotes, self.nmotes, 5)
+			if not found:
+				print 'No wiimotes found'
+				sys.exit(1)
 
-		connected = wiiuse.connect(self.wiimotes, self.nmotes)
-		if connected:
-			print 'Connected to %i wiimotes (of %i found).' % (connected, found)
-		else:
-			print 'failed to connect to any wiimote.'
-			sys.exit(1)
-
-		for i in range(self.nmotes):
-			wm = self.wiimotes[i]
-			wiiuse.set_leds(wm, wiiuse.LED[i])
-			wiiuse.set_ir(wm, 1)
-			wiiuse.motion_sensing(wm, 1)
-			wiiuse.set_aspect_ratio(wm, wiiuse.ASPECT_4_3)
-			wiiuse.set_ir_vres(wm, 800, 600)
-			#wiiuse.set_ir_sensitivity(wm, 5)
-			if (wm.contents.unid == self.WM_ID_POINTER):
-				wiiuse.set_ir_position(wm, wiiuse.IR_BELOW)
+			connected = wiiuse.connect(self.wiimotes, self.nmotes)
+			if connected:
+				print 'Connected to %i wiimotes (of %i found).' % (connected, found)
 			else:
-				wiiuse.set_ir_position(wm, wiiuse.IR_ABOVE)
+				print 'failed to connect to any wiimote.'
+				sys.exit(1)
 
-		while (True):
-			try:
-				wiiuse.poll(self.wiimotes, 2)
-			except:
-				print "***\nWiiuse Poll Failed!\n***"
-				print "self:\t", self
-				print "wiimotes:\t", self.wiimotes
-				print "wiimotes 0:\t", self.wiimotes[0].contents
-				print "wiimotes 1:\t", self.wiimotes[1].contents
-				raise
+			for i in range(self.nmotes):
+				wm = self.wiimotes[i]
+				wiiuse.set_leds(wm, wiiuse.LED[i])
+				wiiuse.set_ir(wm, 1)
+				wiiuse.motion_sensing(wm, 1)
+				wiiuse.set_aspect_ratio(wm, wiiuse.ASPECT_4_3)
+				wiiuse.set_ir_vres(wm, 800, 600)
+				#wiiuse.set_ir_sensitivity(wm, 5)
+				if (wm.contents.unid == self.WM_ID_POINTER):
+					wiiuse.set_ir_position(wm, wiiuse.IR_BELOW)
+				else:
+					wiiuse.set_ir_position(wm, wiiuse.IR_ABOVE)
+
+			reconnectFlag = False
+			while (not reconnectFlag):
+				try:
+					wiiuse.poll(self.wiimotes, 2)
+				except:
+					print "Poll failed, reconnecting wiimotes!"
+					wiiuse.disconnect(self.wiimotes[0])
+					wiiuse.disconnect(self.wiimotes[1])
+					reconnectFlag = True
 
 
 	def handle_status(self, wmp, attachment, speaker, ir, led, battery_level):
