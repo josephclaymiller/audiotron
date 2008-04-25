@@ -85,6 +85,7 @@ class Enemy (DirectObject):
 		if (id == self.uid and not self.targetted):
 			self.billboard.show()
 			player.HUD.updateCombo(self.type)
+			
 			player.score+=enemyData[self.type]['points']*player.mult
 			print "Enemy", self.uid, " shot by player!"
 			player.targettedEnemies.append(self)

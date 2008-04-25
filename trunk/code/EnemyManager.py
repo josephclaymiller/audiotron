@@ -43,8 +43,8 @@ class EnemyManager (DirectObject):
 	def processCombo(self, combo):
 		if (self.level < len(levelData)):
 			for type, count in combo.iteritems():
-				if count > levelData[self.level][0][1]:
-					self.player.combo=True
+				#if count > levelData[self.level][0][1]:
+				#	self.player.combo=True
 				for sublevel in self.sublevels:
 				
 					(sublevelType, sublevelCount) = levelData[self.level][sublevel]
