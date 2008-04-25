@@ -199,6 +199,13 @@ class Player (DirectObject):
 					self.alive=False
 					print "you loose"
 			
+			if self.lives<1 and self.musicController.music[14].status()==1:
+				self.musicController.addSound(14)
+				self.musicController.showNote('very low health!\ntrack unlocked!')
+			elif self.lives<2 and self.musicController.music[13].status()==1:
+				self.musicController.addSound(13)
+				self.musicController.showNote('low health!\ntrack unlocked!')
+			
 			self.HUD.hit(self.lives, self.health)
 			print "Player hit by enemy!"
 	
