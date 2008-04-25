@@ -190,6 +190,8 @@ class Player (DirectObject):
 	
 	def hitByEnemy(self):
 		if self.alive and not config.INVULNERABILITY:
+			self.musicController.hitSFX.play()
+			print "play!!"
 			self.health-=1
 			if self.health<1:
 				self.health=2
