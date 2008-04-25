@@ -28,6 +28,12 @@ class MusicController(DirectObject):
 		
 		self.HUDfont = loader.loadFont('..//assets//HUD//ElectricBoots.TTF')
 		self.dieSFX = loader.loadSfx("..//assets//audio//FX_135.wav")
+		self.unlock = loader.loadSfx("..//assets//audio//sfx//SOUND_0398.mp3")
+		self.hitSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0389.mp3")
+		self.selectSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0440.mp3")
+		
+		
+		
 		
 		#enemy music
 		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Tom Hon Solo.wav"))			#0
