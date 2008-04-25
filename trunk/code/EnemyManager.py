@@ -84,7 +84,7 @@ class EnemyManager (DirectObject):
 					(sublevelType, sublevelCount) = levelData[self.level][sublevel]
 					
 					if (type == sublevelType and count >= sublevelCount):
-						self.playMusic(enemyData[type]['music'])
+						self.playMusic(enemyData[type]['music'], type)
 						print "Unlock music ", enemyData[type]['music']
 						
 						#light enemy in HUD
@@ -103,11 +103,11 @@ class EnemyManager (DirectObject):
 					self.HUD.endGame('you win!')
 					self.sublevels = []
 	
-	def playMusic(self, musicFile):
+	def playMusic(self, musicFile, type):
 		if musicFile in self.musicPlaying:
 			self.musicPlaying[musicFile]['count'] += 1
 		else:
-			index = self.musicController.addSound("..//assets//audio//" + musicFile)
+			index = self.musicController.addSound(enemyData[type]['hud'])
 			self.musicPlaying[musicFile] = {'count': 1, 'index': index}
 	
 	def getUnlockedEnemyTypes(self):
