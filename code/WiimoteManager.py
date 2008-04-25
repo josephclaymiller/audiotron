@@ -62,7 +62,7 @@ class WiimoteManager(threading.Thread):
 			wiiuse.set_aspect_ratio(wm, wiiuse.ASPECT_4_3)
 			wiiuse.set_ir_vres(wm, 800, 600)
 			#wiiuse.set_ir_sensitivity(wm, 5)
-			if (wm.unid == self.WM_ID_POINTER):
+			if (wm.contents.unid == self.WM_ID_POINTER):
 				wiiuse.set_ir_position(wm, wiiuse.IR_BELOW)
 			else:
 				wiiuse.set_ir_position(wm, wiiuse.IR_ABOVE)

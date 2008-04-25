@@ -47,12 +47,9 @@ class World (DirectObject):
 			self.wiimoteEmulator = WiimoteEmulator(self.wiimoteManager)
 		
 		self.accept('escape', sys.exit)
-		self.accept('m', self.garbageDebug)
-		#self.accept('r', self.toggleRumble)
+		#self.accept('m', self.garbageDebug)
+		#self.accept('s', self.spawnMoreEnemy)
 	
-	#def toggleRumble(self):
-	#	wm = self.wiimoteManager.wiimotes[0]
-	#	WiimoteManager.wiiuse.toggle_rumble(wm, 1)
 	
 	def garbageDebug(self):
 		#print gc.get_objects()
@@ -60,7 +57,7 @@ class World (DirectObject):
 		render.ls()
 			
 	def spawnMoreEnemy(self, task):
-		time = globalClock.getRealTime()
+		time = task.time #globalClock.getRealTime()
 		
 		if (self.enemyManager.level == len(levelData)):
 			return Task.done
@@ -88,7 +85,14 @@ class World (DirectObject):
 				elif formation == 1:
 					handle = self.enemyManager.spawnSpiral(typeToSpawn, numToSpawn, random.uniform(0.5, 2.5), random.choice((-1, 1)), startPos = pos)
 				else:
-					handle = self.enemyManager.spawnRect(typeToSpawn, numToSpawn, startPos = pos)
+					if (numToSpawn % 3 == 0):
+						cols = 3
+					elif (numToSpawn % 2 == 0 or numToSpawn > 5):
+						cols = 2
+					else:
+						cols = 1
+						
+					handle = self.enemyManager.spawnRect(typeToSpawn, int(math.floor(numToSpawn / cols)), cols, startPos = pos)
 				
 				movement = random.randint(0, 1)
 				if movement == 0:
