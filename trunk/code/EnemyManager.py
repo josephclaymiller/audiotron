@@ -248,18 +248,15 @@ class EnemyManager (DirectObject):
 		
 		return handle
 		
-		
-	def spawnRect(self, type = "testEnemy", num = 5, spacing = 1.0, startPos = Point3(0,20,0)):
+
+	def spawnRect(self, type = "testEnemy", rows = 3, cols = 2, spacing = 1.0, startPos = Point3(0,20,0)):
 		handle = self.createHandle(type, startPos)
-		
-		cols = int(math.floor(math.sqrt(num)))
-		rows = int(math.floor(num / cols))
 		
 		right = cols * spacing / 2
 		top = rows * spacing / 2
 		
-		for i in range(rows + 1):
-			for j in range(cols + 1):
+		for i in range(rows):
+			for j in range(cols):
 				x = right - spacing * j
 				z = top - spacing * i
 				self.spawnEnemy(type, handle, Point3(x,0,z))
