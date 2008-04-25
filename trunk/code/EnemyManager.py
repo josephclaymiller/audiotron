@@ -30,6 +30,19 @@ class EnemyManager (DirectObject):
 		self.enemies = []
 		self.enemiesSpawned = 0
 		
+		self.deadEnemies = {}
+		self.deadHandle = NodePath(PandaNode("DeadEnemies"))
+		self.deadHandle.setTag("enemyChildren", str(0))
+		self.deadHandle.hide()
+		
+		uid = 0
+		for type, data in enemyData.iteritems():
+			deadguys = []
+			for i in range(50):
+				deadguys.append(Enemy(uid, type, self.deadHandle))
+				uid += 1
+			self.deadEnemies[type] = deadguys
+		
 		self.handles = []
 		self.handlesCreated = 0
 		
@@ -90,10 +103,11 @@ class EnemyManager (DirectObject):
 		return currentTypes
 		
 	def spawnEnemy(self, type, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
-		enemy = Enemy(self.enemiesSpawned, type, handle, startPos, startHpr)
-		self.enemies.append(enemy)
-		self.enemiesSpawned += 1
-		#self.playMusic(enemyData[type]['music'])
+		if len(self.deadEnemies[type]) > 0:
+			enemy = self.deadEnemies[type][0]
+			self.enemies.append(enemy)
+			self.deadEnemies[type].remove(enemy)
+			enemy.spawn(handle, startPos, startHpr)
 	
 	def createHandle(self, enemyType, startPos = Point3(0,20,0)):
 		handle = NodePath(PandaNode("EnemyHandle"+str(self.handlesCreated)))
@@ -117,14 +131,10 @@ class EnemyManager (DirectObject):
 	
 	def cleanupEnemies(self, task):
 		for enemy in self.enemies:
-			if (enemy.deleteMe):
+			if (enemy.finishedDying()):
+				enemy.cleanup(self.deadHandle)
+				self.deadEnemies[enemy.type].append(enemy)
 				self.enemies.remove(enemy)
-				
-				#musicFile = enemyData[enemy.type]['music']
-				#self.musicPlaying[musicFile]['count'] -= 1
-				#if (self.musicPlaying[musicFile]['count'] == 0):
-				#	self.musicController.fadeOutSound(self.musicPlaying[musicFile]['index'])
-				#	del self.musicPlaying[musicFile]
 			
 		for handle in self.handles:
 			if (int(handle.getTag("enemyChildren")) == 0):
