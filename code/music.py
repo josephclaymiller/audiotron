@@ -236,16 +236,16 @@ class MusicController(DirectObject):
 		thirtysecond=(time-self.loopStartTime)/(self.secondsPerSixteenth/2)
 		beat = int(thirtysecond)%8
 		
-		print "sixteenth" + str(self.sixteenth)
-		print "time: " + str(time-self.loopStartTime)
-		print "shot time: " + str(thirtysecond)
-		print "shot beat: " + str(beat)
+		#print "sixteenth" + str(self.sixteenth)
+		#print "time: " + str(time-self.loopStartTime)
+		#print "shot time: " + str(thirtysecond)
+		#print "shot beat: " + str(beat)
 		
 		if beat == 0 or beat == 7:
-			print "true"
+			#print "true"
 			return True
 		
-		print "false"
+		#print "false"
 		return False
 	
 	def showNote(self, note):
