@@ -21,10 +21,40 @@ class MusicController(DirectObject):
 		self.loopStartTime=globalClock.getRealTime()
 		self.loopEndTime=0 #initialized at 0 to start loop at game start! ***NOTE: should be set to self.loopStartTime+self.secondsPerLoop :NOTE***
 		self.music = [] #needs to be filled with sounds loaded like "self.music.append(loader.loadSfx("SoundFile.wav"))"
+		self.isPlaying = []
 		self.tempMusic = [] #a temp array for playing music...gets cleared every new loop
 		
 		self.dieSFX = loader.loadSfx("..//assets//audio//FX_135.wav")
-		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Drums Least.wav")) #always load drum track
+		
+		#enemy music
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Tom Hon Solo.wav"))			#0
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Rhythm Guitar.wav"))		#1
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane upbeat Vidaurri.wav"))	#2
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Kevin hachacha.wav"))			#3
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Kevin Backup Guitar.wav"))		#4
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Brian Backup Trumpet.wav"))	#5
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Brian Backup Vocals Hi.wav"))	#6
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Brian Backup Vocals.wav"))		#7
+		
+		for x in range(0,8):
+			self.music[x].stop()
+		
+		#drums
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Drums Least.wav"))		#8
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Drums Mid.wav"))			#9
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Drums Full.wav"))		#10
+		
+		#melody
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Brian Melody Trumpet.wav"))	#11
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Melody Guitar.wav"))		#12
+		
+		for x in range(9, 13):
+			self.music[x].stop()
+			
+		for x in range(0,13):
+			self.isPlaying.append(False)
+		self.isPlaying[8]=True
+		
 		
 		self.blinker=OnscreenImage(image='..//assets//HUD//blinker.png', pos=Vec3(0,0,0), scale=Vec3(1.33,0,1))
 		self.blinker.setColor(1,1,0,1)
@@ -66,34 +96,22 @@ class MusicController(DirectObject):
 			#TRIAL
 			#self.loopEndTime=time+self.music[0].length() #TRIAL DELETE
 			
-			#delete temp sound clips
-			for i in range(len(self.tempMusic)):
-				#print "delete"
-				self.tempMusic[0].stop()
-				loader.unloadSfx(self.tempMusic[0])
-				del self.tempMusic[0]
-			
 			#play sound clips
 			for i in range(len(self.music)):
-				self.music[i].setTime(globalClock.getRealTime()-time)
-				self.music[i].play()
-				#print i
+				if self.isPlaying[i]:
+					self.music[i].setTime(globalClock.getRealTime()-time)
+					self.music[i].play()
+					#print i
 		
 		#print str(len(self.music))
 		return Task.cont
 	
-	def addSound(self, name):
-		i=len(self.music)
-		#print i
-		if (i+len(self.tempMusic))<self.maxSounds:
-			self.music.append(loader.loadSfx(name))
-			self.music[i].setTime(globalClock.getRealTime()-self.loopStartTime)
-			self.music[i].setVolume(0)
-			self.music[i].play()
-			taskMgr.add(self.fadeInSound, "fadeInSound"+str(i), extraArgs=[i, globalClock.getRealTime(), self.music])
-			return i
-		#print len(self.music)
-		return -1
+	def addSound(self, typeNum):
+		self.music[typeNum].setTime(globalClock.getRealTime()-self.loopStartTime)
+		self.music[typeNum].setVolume(0)
+		self.music[typeNum].play()
+		self.isPlaying[typeNum]=True
+		taskMgr.add(self.fadeInSound, "fadeInSound"+str(typeNum), extraArgs=[typeNum, globalClock.getRealTime(), self.music])
 	
 	def fadeInSound(task, x, time, music):
 		realTime=globalClock.getRealTime()
@@ -103,18 +121,10 @@ class MusicController(DirectObject):
 		
 		music[x].setVolume(1)
 		return Task.done
-	
-	def queueSound(self, name):
-		i=len(self.music)
-		#print i
-		if (i+len(self.tempMusic))<self.maxSounds:
-			self.music.append(loader.loadSfx(name))
-			return i
-		#print len(self.music)
-		return -1
 		
 	def fadeOutSound(self, x):
 		if x<len(self.music):
+			self.isPlaying[x]=False
 			taskMgr.add(self.fader, "fader"+str(x), extraArgs=[x, globalClock.getRealTime(), self.music])
 			return x
 		return -1
@@ -126,54 +136,8 @@ class MusicController(DirectObject):
 			return Task.cont
 		
 		music[x].stop()
-		loader.unloadSfx(music[x])
-		del music[x]
 		return Task.done
 		
-	
-	def removeSound(self, x):
-		i=len(self.tempMusic)
-		if x<len(self.music):
-			#print len(self.music)
-			self.music[x].stop()
-			self.tempMusic.append(self.music.pop(x))
-			self.tempMusic[i].setTime(globalClock.getRealTime()-self.loopStartTime)
-			self.tempMusic[i].play()
-			#print len(self.music)
-			return i
-		return -1
-	
-	def killSound(self, x):
-		if x<len(self.music):
-			#print len(self.music)
-			self.music[x].stop()
-			loader.unloadSfx(self.music[x])
-			del self.music[x]
-			#print len(self.music)
-			return x
-		return -1
-	
-	#put one sound, "x", in the TEMP LOOP and QUEUE a new sound, "name"
-	def swapSound(self, x, name):
-		i=self.queueSound(name)
-		if i<0:
-			self.killSound(x)
-			#print "hi"
-			return self.queueSound(name)
-		#print "remove"
-		self.removeSound(x)
-		return i
-	
-	def replaceSound(self, x, name):
-		if x<len(self.music):
-			self.music[x].stop()
-			loader.unloadSfx(self.music[x])
-			self.music[x]=loader.loadSfx(name)
-			self.music[x].setTime(globalClock.getRealTime()-self.loopStartTime)
-			self.music[x].play()
-			return x
-		return -1
-	
 	def pulseManager(self, task):
 		time=globalClock.getRealTime()
 
