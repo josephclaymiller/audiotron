@@ -48,7 +48,7 @@ class World (DirectObject):
 		
 		self.accept('escape', sys.exit)
 		#self.accept('m', self.garbageDebug)
-		#self.accept('s', self.spawnMoreEnemy)
+		#self.accept('e', self.spawnMoreEnemy)
 	
 	
 	def garbageDebug(self):
@@ -57,7 +57,7 @@ class World (DirectObject):
 		render.ls()
 			
 	def spawnMoreEnemy(self, task):
-		time = task.time #globalClock.getRealTime()
+		time = globalClock.getRealTime()
 		
 		if (self.enemyManager.level == len(levelData)):
 			return Task.done

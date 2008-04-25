@@ -40,3 +40,5 @@ loader.loadSfx("..//assets//audio//FX_135.wav")
 world = World()
 world.start()
 run()
+
+print "Got here!?"

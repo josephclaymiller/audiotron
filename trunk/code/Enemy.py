@@ -70,6 +70,7 @@ class Enemy (DirectObject):
 		
 	def spawn(self, handle, startPos=Point3(0,0,0), startHpr=Point3(0,0,0)):
 		self.destroyed = False
+		self.targetted = False
 		self.handle = handle
 		self.model.reparentTo(handle)
 		handle.setTag("enemyChildren", str(int(handle.getTag("enemyChildren")) + 1))
@@ -77,6 +78,7 @@ class Enemy (DirectObject):
 		self.model.setPos(startPos)
 		self.model.setHpr(startHpr)
 		self.idleModel.show()
+		self.billboard.setScale(1 / self.data['scale'])
 		
 		base.cTrav.addCollider(self.cNodePath, base.cHandler)
 		self.accept('EnemyTargetted', self.shotByPlayer)
