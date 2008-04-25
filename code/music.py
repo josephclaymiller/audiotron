@@ -51,10 +51,13 @@ class MusicController(DirectObject):
 		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Brian Melody Trumpet.wav"))	#11
 		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Shane Melody Guitar.wav"))		#12
 		
-		for x in range(9, 13):
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Violin Death.wav"))		#13
+		self.music.append(loader.loadSfx("..//assets//audio//Game2Stereo_Violin Death 2.wav"))		#14
+		
+		for x in range(9, 15):
 			self.music[x].stop()
 			
-		for x in range(0,13):
+		for x in range(0,15):
 			self.isPlaying.append(False)
 		self.isPlaying[8]=True
 		
