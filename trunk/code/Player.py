@@ -157,6 +157,35 @@ class Player (DirectObject):
 			self.mult=1
 		
 		self.HUD.updateScore(self.score, self.mult)
+		
+		#playing drum tracks based on score or time
+		if self.score > 6000:
+			if self.musicController.music[10].status()==1:
+				self.musicController.addSound(10)
+				self.musicController.showNote('6000 points!\ndrums unlocked!')
+				for x in range(8,10):
+					if self.musicController.music[x].status()==2:
+						self.musicController.fadeOutSound(x)
+		elif self.score > 2000:
+			if self.musicController.music[9].status()==1:
+				self.musicController.addSound(9)
+				self.musicController.showNote('2000 points!\ndrums unlocked!')
+				if self.musicController.music[8].status()==2:
+					self.musicController.fadeOutSound(8)
+					
+		if self.HUD.maxCombo >= 20:
+			if self.musicController.music[12].status()==1:
+				self.musicController.addSound(12)
+				self.musicController.showNote('20+ combo!\nmelody unlocked!')
+				if self.musicController.music[11].status()==2:
+					self.musicController.fadeOutSound(11)
+		elif self.HUD.maxCombo >= 10:
+			if self.musicController.music[11].status()==1:
+				self.musicController.addSound(11)
+				self.musicController.showNote('10+ combo!\nmelody unlocked!')
+				if self.musicController.music[12].status()==2:
+					self.musicController.fadeOutSound(12)
+		
 		messenger.send("EnemiesComboed", [combo])
 	
 	def hitByEnemy(self):

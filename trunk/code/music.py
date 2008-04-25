@@ -7,6 +7,8 @@ from pandac.PandaModules import AudioSound #for setTime()
 import colorsys #so I can change RGB to HSB
 from direct.gui.OnscreenImage import OnscreenImage
 from pandac.PandaModules import TransparencyAttrib
+from direct.gui.OnscreenText import OnscreenText
+from pandac.PandaModules import TextNode
 from pandac.PandaModules import Vec4, Vec3
 #import math
 
@@ -24,6 +26,7 @@ class MusicController(DirectObject):
 		self.isPlaying = []
 		self.tempMusic = [] #a temp array for playing music...gets cleared every new loop
 		
+		self.HUDfont = loader.loadFont('..//assets//HUD//ElectricBoots.TTF')
 		self.dieSFX = loader.loadSfx("..//assets//audio//FX_135.wav")
 		
 		#enemy music
@@ -71,6 +74,9 @@ class MusicController(DirectObject):
 		self.destructionQueue = []
 		self.lastPulseTime=globalClock.getRealTime()
 		
+		self.noteTXT = OnscreenText(text = '', pos = (0,.6), scale = 0.1, fg=(1,1,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
+		self.note = False
+		self.noteCount = 0
 				
 		#initialize pulse queue
 		for i in range(0,self.numSixteenths):
@@ -175,12 +181,20 @@ class MusicController(DirectObject):
 				self.blinkFade=1
 			#	self.beatBarR.setScale(Vec3(.015,0,.6))
 			#	self.beatBarL.setScale(Vec3(.015,0,.6))
+			
+			if self.note:
+				self.noteCount+=1
+				if self.noteCount>=16:
+					self.note=False
+					self.noteTXT.setText('')
 				
 			#increment sixteenth and check if a new loop has started
 			#print self.sixteenth, " ", time-self.loopStartTime
 			self.sixteenth+=1
 		
 		self.blinker.setColor(self.blinkFade,self.blinkFade,0,1)
+		if self.note:
+			self.noteTXT.setFg((1,1,1-self.blinkFade,1))
 		self.lastPulseTime=time
 		return Task.cont
 	
@@ -230,6 +244,11 @@ class MusicController(DirectObject):
 		
 		print "false"
 		return False
+	
+	def showNote(self, note):
+		self.noteTXT.setText(note)
+		self.note=True
+		self.noteCount=0
 	
 	def debugPrint(self):
 		print "\n****************"

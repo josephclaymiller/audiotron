@@ -107,6 +107,7 @@ class EnemyManager (DirectObject):
 		if musicFile in self.musicPlaying:
 			self.musicPlaying[musicFile]['count'] += 1
 		else:
+			self.musicController.showNote('new track unlocked!')
 			index = self.musicController.addSound(enemyData[type]['hud'])
 			self.musicPlaying[musicFile] = {'count': 1, 'index': index}
 	

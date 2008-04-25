@@ -57,12 +57,12 @@ class HUD(DirectObject):
 			data=enemyData[self.enemyTypes[x]]
 			
 			self.combo[self.enemyTypes[x]] = 0
-			self.comboTag[self.enemyTypes[x]] = OnscreenText(text="0", pos = (-.85+x*.225,.75), scale = 0.075, fg=(1,1,1,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
+			self.comboTag[self.enemyTypes[x]] = OnscreenText(text="0", pos = (-.805+x*.225,.75), scale = 0.075, fg=(1,1,1,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 			
 			self.enemies.append(NodePath(PandaNode("Enemy"+str(self.enemyTypes[x]))))
 			self.enemies[x].reparentTo(self.handle)
 			self.enemies[x].setScale(data['scale']*.08)
-			self.enemies[x].setPos(Point3(-.45+x*.12,2,.48))
+			self.enemies[x].setPos(Point3(-.43+x*.12,2,.48))
 			#self.enemies[x].setHpr(startHpr)
 			
 			self.idleModel.append(loader.loadModelCopy("..//assets//models//enemies//" + str(data['model']) + ".egg"))
