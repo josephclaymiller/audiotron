@@ -28,9 +28,9 @@ class MusicController(DirectObject):
 		
 		self.HUDfont = loader.loadFont('..//assets//HUD//ElectricBoots.TTF')
 		self.dieSFX = loader.loadSfx("..//assets//audio//FX_135.wav")
-		self.unlock = loader.loadSfx("..//assets//audio//sfx//SOUND_0398.mp3")
-		self.hitSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0389.mp3")
-		self.selectSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0440.mp3")
+		self.unlockSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0398.ogg")
+		self.hitSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0389.ogg")
+		self.selectSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0440.ogg")
 		
 		
 		
@@ -122,6 +122,7 @@ class MusicController(DirectObject):
 		return Task.cont
 	
 	def addSound(self, typeNum):
+		self.unlockSFX.play()
 		self.music[typeNum].setTime(globalClock.getRealTime()-self.loopStartTime)
 		self.music[typeNum].setVolume(0)
 		self.music[typeNum].play()
