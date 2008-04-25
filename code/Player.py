@@ -196,6 +196,12 @@ class Player (DirectObject):
 				self.lives-=1
 				if self.lives<0:
 					self.HUD.endGame('you lose')
+					for x in range(0,13):
+						if self.musicController.music[x].status()==2:
+							self.musicController.fadeOutSound(x)
+					for x in range(13,15):
+						if self.musicController.music[x].status()==1:
+							self.musicController.addSound(x)
 					self.alive=False
 					print "you loose"
 			
