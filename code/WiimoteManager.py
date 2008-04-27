@@ -2,12 +2,18 @@ import PyWiiUse as wiiuse
 import threading
 import sys
 import config
+import math
+
 
 class IRPoint:
-	def __init__(self):
-		self.x = 0
-		self.y = 0
+	def __init__(self, x = 0, y = 0):
+		self.x = x
+		self.y = y
 		self.valid = False
+		self.dist = 0
+	
+	def __cmp__(self, other):
+		return cmp(self.dist, other.dist)
 
 class WMData:
 	def __init__(self):
@@ -15,6 +21,51 @@ class WMData:
 		self.ir = IRPoint()
 		self.ir1 = IRPoint()
 		self.ir2 = IRPoint()
+		self.samples = []
+		self.maxSamples = 5
+
+	def update (self, vis, x, y):
+		if (vis):
+			self.samples.append(IRPoint(x, y))
+			
+		numSamples = len(self.samples)
+		if (numSamples > self.maxSamples):
+			self.samples.pop(0)
+			numSamples -= 1
+		
+		if (numSamples <= 0):
+			self.ir.valid = False
+			self.screen.valid = False
+		else:
+			average = IRPoint()
+			for point in self.samples:
+				average.x += point.x
+				average.y += point.y
+			
+			average.x /= numSamples
+			average.y /= numSamples
+			
+			#for point in self.samples:
+			#	point.dist = (point.x - average.x) * (point.x - average.x) + (point.y - average.y) * (point.y - average.y)
+			
+			#samplesSorted = self.samples[:]
+			#samplesSorted.sort()
+			
+			#median = samplesSorted[int(math.floor(numSamples / 2))]
+			#if (numSamples
+			#if (numSamples % 2 == 1):
+			#	median = samplesSorted[math.floor(numSamples / 2)]
+			#else:
+			#	meds = samplesSorted[numSamples / 2 - 1 : numSamples / 2]
+			#	median = IRPoint((meds[0].x + meds[1].x) / 2, (meds[0].y + meds[1].y) / 2)
+			
+			self.ir = average #median
+			self.ir.valid = True
+			
+			self.screen.x = (self.ir.x - (800/2.0)) / (800/2.0)
+			self.screen.y = ((600/2.0) - self.ir.y) / (600/2.0)
+			self.screen.valid = True
+		
 
 class WiimoteManager(threading.Thread):
 
@@ -108,7 +159,8 @@ class WiimoteManager(threading.Thread):
 				messenger.send("FireButtonUp")
 
 		if (wiiuse.using_ir(wm)):
-			if (wm.ir.dot[0].visible):
+			wmdata.update(wm.ir.num_dots >= 2, wm.ir.x, wm.ir.y)
+			'''if (wm.ir.dot[0].visible):
 				wmdata.ir1.valid = True
 				wmdata.ir1.x = wm.ir.dot[0].rx
 				wmdata.ir1.y = wm.ir.dot[0].ry
@@ -123,14 +175,12 @@ class WiimoteManager(threading.Thread):
 				wmdata.ir2.valid = False
 			
 			if (wm.ir.num_dots >= 1):
-				wmdata.ir.valid = True
-				wmdata.ir.x = wm.ir.x
-				wmdata.ir.y = wm.ir.y
+				wmdata.update(wm.ir.
 				wmdata.screen.valid = True
 				wmdata.screen.x = (wmdata.ir.x - (self.SCREEN_WIDTH/2.0)) / (self.SCREEN_WIDTH/2.0)
 				wmdata.screen.y = ((self.SCREEN_HEIGHT/2.0) - wmdata.ir.y) / (self.SCREEN_HEIGHT/2.0)
 			else:
-				wmdata.ir.valid = False
+				wmdata.ir.valid = False'''
 		
 		if (wm.unid == self.WM_ID_TRACKER):
 			self.trackerLock.release()

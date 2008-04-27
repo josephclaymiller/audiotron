@@ -14,8 +14,8 @@ class HeadTracker(DirectObject):
 		self.headPos = Point3(self.basePos)
 		self.lookPos = Point3(0, 100, 0)
 		
-		self.rangeX = 4.0
-		self.rangeZ = 4.0
+		self.rangeX = 8.0
+		self.rangeZ = 8.0
 		
 		self.cameraCenterX = self.wm.SCREEN_WIDTH / 2
 		self.cameraCenterY = self.wm.SCREEN_HEIGHT / 2
