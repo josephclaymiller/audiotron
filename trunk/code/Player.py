@@ -71,7 +71,7 @@ class Player (DirectObject):
 		self.cSphereNode = self.handle.attachNewNode(CollisionNode('cPlayerSphere'))
 		self.cSphereNode.node().setFromCollideMask(BitMask32.allOff())
 		self.cSphereNode.node().setIntoCollideMask(CollisionBitMasks.enemyMask)
-		self.cSphereNode.node().addSolid(CollisionSphere(0, 1.35, 0, 0.35))
+		self.cSphereNode.node().addSolid(CollisionSphere(0, 1.35, 0, 0.25))
 		#self.cSphereNode.show()
 		
 		self.cHandler = CollisionHandlerQueue()

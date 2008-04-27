@@ -52,7 +52,7 @@ class Enemy (DirectObject):
 		self.billboard.setBillboardPointEye()
 		self.billboard.hide()
 
-		cs = CollisionSphere(0, 0, 0, self.data['cScale']) #used to be (0,0,0,5)
+		cs = CollisionSphere(0, 0, 0, self.data['cScale'] * 1.5) #used to be (0,0,0,5)
 		cNodePath = self.model.attachNewNode(CollisionNode('cEnemy' + str(self.uid)))
 		cNodePath.node().addSolid(cs)
 		cNodePath.node().setFromCollideMask(CollisionBitMasks.enemyMask)

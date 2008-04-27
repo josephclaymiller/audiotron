@@ -55,6 +55,12 @@ class World (DirectObject):
 		#print gc.get_objects()
 		#self.musicController.debugPrint()
 		render.ls()
+	
+	def startSpawning(self):
+		self.spawnRate = self.musicController.secondsPerSixteenth * 16
+		self.nextSpawnTime = globalClock.getRealTime() + self.spawnRate
+		taskMgr.add(self.spawnMoreEnemy, "spawnMoreEnemy")
+		self.ignore('FireButtonUp')
 			
 	def spawnMoreEnemy(self, task):
 		time = globalClock.getRealTime()
@@ -115,11 +121,8 @@ class World (DirectObject):
 		self.enemyManager = EnemyManager(self.musicController, self.HUD, self.player)
 		self.tunnel = Tunnel(self.musicController)
 		
-		self.spawnRate = self.musicController.secondsPerSixteenth * 16
-		self.nextSpawnTime = globalClock.getRealTime() + self.spawnRate
-		taskMgr.add(self.spawnMoreEnemy, "spawnMoreEnemy")
-		
-		self.accept('r', self.player.hitByEnemy)
+		#self.accept('r', self.player.hitByEnemy)
+		self.accept('FireButtonUp', self.startSpawning)
 		
 		if config.EMULATE_WIIMOTE:
 			taskMgr.add(self.wiimoteEmulator.update, "updateEmulator")
