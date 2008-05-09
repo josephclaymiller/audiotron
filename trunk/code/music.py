@@ -10,11 +10,12 @@ from pandac.PandaModules import TransparencyAttrib
 from direct.gui.OnscreenText import OnscreenText
 from pandac.PandaModules import TextNode
 from pandac.PandaModules import Vec4, Vec3
+from pandac.PandaModules import VBase4
 #import math
 
 class MusicController(DirectObject):
 	
-	def __init__(self):
+	def __init__(self, wii):
 		self.bpm=130
 		self.numMeasures=17
 		self.numSixteenths=self.numMeasures*16
@@ -28,11 +29,10 @@ class MusicController(DirectObject):
 		
 		self.HUDfont = loader.loadFont('..//assets//HUD//ElectricBoots.TTF')
 		self.dieSFX = loader.loadSfx("..//assets//audio//FX_135.wav")
-		self.unlockSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0398.ogg")
-		self.hitSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0389.ogg")
-		self.selectSFX = loader.loadSfx("..//assets//audio//sfx//SOUND_0440.ogg")
-		
-		
+		self.hitSFX = loader.loadSfx("..//assets//audio//sfx//hit.wav")
+		self.hitSFX.setVolume(.75)
+		self.enterSFX = loader.loadSfx("..//assets//audio//sfx//enter.wav")
+		self.enterSFX.setPlayRate(.75)
 		
 		
 		#enemy music
@@ -83,7 +83,11 @@ class MusicController(DirectObject):
 		self.destructionQueue = []
 		self.lastPulseTime=globalClock.getRealTime()
 		
-		self.noteTXT = OnscreenText(text = '', pos = (0,.6), scale = 0.1, fg=(1,1,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
+		#start at Pos(0,0), clear the text and go to pos(0,.4) once the game actually starts!
+		if not wii:
+			self.noteTXT = OnscreenText(text = 'press the trigger (b button) to start the game', pos = (0,0), scale = 0.1, fg=(1,1,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
+		else:
+			self.noteTXT = OnscreenText(text = 'press the left mouse button to start the game', pos = (0,0), scale = 0.1, fg=(1,1,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 		self.note = False
 		self.noteCount = 0
 				
@@ -122,7 +126,7 @@ class MusicController(DirectObject):
 		return Task.cont
 	
 	def addSound(self, typeNum):
-		self.unlockSFX.play()
+		#self.unlockSFX.play()
 		self.music[typeNum].setTime(globalClock.getRealTime()-self.loopStartTime)
 		self.music[typeNum].setVolume(0)
 		self.music[typeNum].play()

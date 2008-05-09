@@ -15,6 +15,7 @@ from pandac.PandaModules import BitMask32
 from pandac.PandaModules import NodePath
 from pandac.PandaModules import PandaNode
 from pandac.PandaModules import Vec3
+from pandac.PandaModules import VBase4
 
 from EnemyData import levelData
 
@@ -40,6 +41,9 @@ class Player (DirectObject):
 		self.alive=True
 		
 		self.mult=1
+		
+		self.shotTimer=OnscreenImage(image='..//assets//HUD//blinker.png', pos=Vec3(0,0,0), scale=Vec3(1.43,0,1.1))
+		self.shotTimer.setTransparency(TransparencyAttrib.MAlpha)
 		
 		self.handle.reparentTo(render)
 		base.camera.reparentTo(self.handle)
@@ -112,8 +116,9 @@ class Player (DirectObject):
 			
 			self.targetTime = self.musicController.loopStartTime + targetSixteenth * self.musicController.secondsPerSixteenth
 			taskMgr.add(self.fireTimer, "fireTimer")
+			
 	
-	def fireTimer(self, task):
+	def fireTimer(self, task): 
 		time = globalClock.getRealTime()
 		fade = 1
 		if self.onBeat:
@@ -191,6 +196,10 @@ class Player (DirectObject):
 	def hitByEnemy(self):
 		if self.alive and not config.INVULNERABILITY:
 			self.musicController.hitSFX.play()
+			self.HUD.flashColor=VBase4(1,0,0,1)
+			self.HUD.flash.show()
+			self.HUD.flashTime=globalClock.getRealTime()
+			taskMgr.add(self.HUD.flasher, 'flasher' + str(self.HUD.flashTime))
 			print "play!!"
 			self.health-=1
 			if self.health<1:

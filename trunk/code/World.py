@@ -57,6 +57,9 @@ class World (DirectObject):
 		render.ls()
 	
 	def startSpawning(self):
+		self.musicController.noteTXT.setPos(0,.4)
+		self.musicController.noteTXT.setText('')
+		self.musicController.enterSFX.play()
 		self.spawnRate = self.musicController.secondsPerSixteenth * 16
 		self.nextSpawnTime = globalClock.getRealTime() + self.spawnRate
 		taskMgr.add(self.spawnMoreEnemy, "spawnMoreEnemy")
@@ -115,7 +118,7 @@ class World (DirectObject):
 		base.setBackgroundColor(0,0,0) #set the background color to black
 		self.playerHandle=NodePath(PandaNode("PlayerHandle"))
 		self.setupCollision()
-		self.musicController = MusicController()
+		self.musicController = MusicController(config.EMULATE_WIIMOTE)
 		self.HUD = HUD(self.playerHandle)
 		self.player = Player(self.playerHandle, self.wiimoteManager, self.musicController, self.HUD)
 		self.enemyManager = EnemyManager(self.musicController, self.HUD, self.player)

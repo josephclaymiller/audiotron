@@ -125,8 +125,8 @@ class Enemy (DirectObject):
 	def shotByPlayer(self, id, player):
 		if (id == self.uid and not self.targetted):
 			self.billboard.show()
-			player.musicController.selectSFX.play()
-			player.HUD.updateCombo(self.type)
+			#player.musicController.selectSFX.play()
+			player.HUD.updateCombo(self.type, player)
 			player.score+=enemyData[self.type]['points']*player.mult
 			player.targettedEnemies.append(self)
 			self.targetted = True
