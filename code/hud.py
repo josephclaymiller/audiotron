@@ -39,9 +39,16 @@ class HUD(DirectObject):
 		self.maxCombo=0
 		self.combo = {}
 		self.comboTag = {}
+		self.newCombo={}
 		
 		self.score=0
 		self.newScore=0
+		
+		self.flash = OnscreenImage(image='..\\assets\\HUD\\flash.png', pos=Vec3(0,0,0), scale=Vec3(1.5,0,1))
+		self.flash.setTransparency(TransparencyAttrib.MAlpha)
+		self.flash.hide()
+		self.flashColor= VBase4(1,1,1,1)
+		self.flashTime=globalClock.getRealTime()
 		
 		self.comboTXT = OnscreenText(text = 'combo\n0/4', pos = (1.1,.9), scale = 0.075, fg=(1,0,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
 		self.multTXT = OnscreenText(text = 'mult\nx1', pos = (-1.1,.9), scale = 0.075, fg=(1,0,0,1), align=TextNode.ACenter, font=self.HUDfont, mayChange=True)
@@ -52,6 +59,7 @@ class HUD(DirectObject):
 		for x in range(0, len(levelData)):
 			for y in range(0, len(levelData[x])):
 				self.enemyTypes.append(levelData[x][y][0])
+				self.newCombo[levelData[x][y][0]]=True
 		
 		for x in range(0, len(self.enemyTypes)):
 			data=enemyData[self.enemyTypes[x]]
@@ -95,7 +103,7 @@ class HUD(DirectObject):
 		else:
 			self.life[lives+1].hide()
 	
-	def updateCombo(self, type):
+	def updateCombo(self, type, player):
 		self.combo[type]+=1
 		self.comboTag[type].setText(str(self.combo[type]))
 		if self.combo[type] >= levelData[self.level][0][1]:
@@ -106,6 +114,12 @@ class HUD(DirectObject):
 			self.comboTXT.setText('combo\n' + str(self.maxCombo) + '/' + str(levelData[self.level][0][1]))
 			if self.maxCombo>=levelData[self.level][0][1]:
 				self.comboTXT.setFg((1,1,0,1))
+				if self.newCombo[type]:
+					self.newCombo[type]=False
+					#self.flashColor=VBase4(1,1,0,1)
+					#self.flash.show()
+					#self.flashTime=globalClock.getRealTime()
+					#taskMgr.add(self.flasher, 'flasher' + str(self.flashTime))
 		
 	def killCombo(self):
 		for x in range(0,len(self.enemyTypes)):
@@ -115,6 +129,8 @@ class HUD(DirectObject):
 			self.maxCombo=0
 			self.comboTXT.setText('combo\n0/'+str(levelData[self.level][0][1]))
 			self.comboTXT.setFg((1,0,0,1))
+			for x in range(0, len(self.enemyTypes)):
+				self.newCombo[self.enemyTypes[x]]=True
 		
 	def updateLevel(self, level):
 		for x in range(0, len(levelData[self.level])):
@@ -155,4 +171,18 @@ class HUD(DirectObject):
 			return Task.done
 		self.endGameTXT.setFg((fade,fade,fade,1))
 		return Task.cont
+	
+	def flasher(self, task):
+		fade=(globalClock.getRealTime()-self.flashTime)*1.5
+		
+		if fade >= 1:
+			self.flash.hide()
+			return Task.done
+		
+		self.flash.setColor(self.flashColor*(1-fade))
+		#self.flash.setHpr(fade*90,fade*90,fade*90)
+		#self.flash.setScale(1.33*(1-fade),0,(1-fade))
+		return Task.cont
+			
+		
 		
