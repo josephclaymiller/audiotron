@@ -1,0 +1,1 @@
+Move the contents of the 'packages' folder into 'C:\Panda3D-1.4.2\python\Lib\site-packages'
