@@ -22,6 +22,8 @@
 #Game2Stereo_Brian Backup Vocals
 #[0,14,56,60,64,78,84,92,100,108,116,124,132,140,148,156,164,172,180,188,196,204,212,220,228,236,244,252,260,268]
 
+foobar = "pie"
+
 measures = 17
 sixteenths = measures * 16
 
