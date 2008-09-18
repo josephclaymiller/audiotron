@@ -22,7 +22,7 @@ class WMData:
 		self.ir1 = IRPoint()
 		self.ir2 = IRPoint()
 		self.samples = []
-		self.maxSamples = 5
+		self.maxSamples = 100
 
 	def update (self, vis, x, y):
 		if (vis):
