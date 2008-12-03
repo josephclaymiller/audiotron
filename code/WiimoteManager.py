@@ -1,9 +1,11 @@
-import PyWiiUse as wiiuse
 import threading
 import sys
 import config
 import math
 
+if not config.EMULATE_WIIMOTE:
+    import PyWiiUse as wiiuse
+    
 
 class IRPoint:
 	def __init__(self, x = 0, y = 0):
